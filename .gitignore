@@ -75,7 +75,12 @@ Testing/
 *.user
 *.userosscache
 *.sln.docstates
-
+📁 x64/
+📁 Debug/
+📁 Release/
+*.tlog
+*.idb
+*.lastbuildstate
 
 # 2. 빌드 데이터베이스 및 인덱스 파일 무시
 *.db
