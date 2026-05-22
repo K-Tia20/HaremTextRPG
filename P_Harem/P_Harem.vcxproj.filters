@@ -1,22 +1,66 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    <ClCompile Include="P_Harem.cpp" />
+    <ClCompile Include="Item.cpp" />
+    <ClCompile Include="World.cpp">
+      <Filter>GameManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Areas.cpp">
+      <Filter>Maps\Areas</Filter>
+    </ClCompile>
+    <ClCompile Include="Creature.cpp">
+      <Filter>Creatures</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="GameManager">
+      <UniqueIdentifier>{71bcc5a4-f5f9-4527-b49d-b84d0bbd4917}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    <Filter Include="Framework">
+      <UniqueIdentifier>{2ff99042-6e32-478d-996b-658ee84d8e73}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    <Filter Include="Maps">
+      <UniqueIdentifier>{9893d6dc-5ac3-4df1-9ac3-6d5fa9624c61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Creatures">
+      <UniqueIdentifier>{aaa8eb8d-5c25-4d98-89b3-6fae5855f62e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects">
+      <UniqueIdentifier>{7b0d0e5b-8988-42a1-a66a-d31a29d7cb73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects\Items">
+      <UniqueIdentifier>{c0a4fa89-fe68-4e09-b3a1-f60a29d73968}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Maps\Areas">
+      <UniqueIdentifier>{170036ea-9492-4ae4-8e6a-106859f1b7b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Maps\AreaObjects">
+      <UniqueIdentifier>{73d04261-0ee6-4a88-a524-26abdf9782b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Player">
+      <UniqueIdentifier>{41f06cc8-e9b5-492b-aa1a-e64e641872fb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="P_Harem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
+    <ClInclude Include="Item.h" />
+    <ClInclude Include="Framework.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="World.h">
+      <Filter>GameManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Areas.h">
+      <Filter>Maps\Areas</Filter>
+    </ClInclude>
+    <ClInclude Include="Creature.h">
+      <Filter>Creatures</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
