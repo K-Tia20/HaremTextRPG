@@ -69,22 +69,29 @@ Testing/
 .cache/
 
 
-# 1. Visual Studio 기본 임시/설정 파일 무시
+# Visual Studio 기본 임시/설정 파일 무시
 .vs/
 *.suo
 *.user
+*.user.filters
 *.userosscache
 *.sln.docstates
-📁 x64/
-📁 Debug/
-📁 Release/
 *.tlog
 *.idb
 *.lastbuildstate
 
-# 2. 빌드 데이터베이스 및 인덱스 파일 무시
+# 빌드 결과물
+x64/
+Debug/
+Release/
+
+# 빌드 데이터베이스 및 인덱스 파일 무시
 *.db
 *.ipch
 *.vsidx
+
+# JetBrains 개발 툴 (CLion 등) 임시 설정 파일 무시
+.idea/
+*.xml
 
 
