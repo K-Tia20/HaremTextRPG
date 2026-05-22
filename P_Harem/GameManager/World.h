@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 class C_Player;
 class C_Area;
@@ -53,17 +53,20 @@ public: // 게임 진행 로직들
 	// 초식녀로 설정
 	void SetChosicGirl();
 
+	// 플레이어 및 히로인 설정 확인 후 
+	bool CheckInit();
+
 private:
 	// 변수명 편하게 바꿔주세요
 
 	// 플레이어
-	shared_ptr<C_Player> Player;
+	std::shared_ptr<C_Player> Player;
 
 	// 현재 위치
-	shared_ptr<C_Area> CurrentArea;
+	std::shared_ptr<C_Area> CurrentArea;
 
 	// World가 알고 있는 위치정도 찾아서 설정해주기 위한 용도
-	unordered_map<WorldArea, shared_ptr<C_Area>> Areas;
+	std::unordered_map<WorldArea, std::shared_ptr<C_Area>> Areas;
 
 	// World의 게임상태
 	WorldState WS = WorldState::MainMenu;
