@@ -1,6 +1,7 @@
+
 #pragma once
 
-class Battle
+class C_BattleSystem
 {
 
 };

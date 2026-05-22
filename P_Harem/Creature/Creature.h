@@ -1,5 +1,6 @@
 #pragma once
-class Creature
+
+class C_Creature
 {
 };
 
