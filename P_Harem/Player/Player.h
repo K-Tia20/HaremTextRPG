@@ -1,138 +1,60 @@
 
 #pragma once
 
-#include <iostream>
-#include <string.h>
+#include "../Framework/Framework.h"
 
-using namespace std;
+class C_Creature;
+class C_Item;
+class C_Inventory;
 
-class Charater 
+class C_Player
 {
 public:
+	C_Player();
 
-	Charater(string name, int hp, int mp, int attack, int defense, int like) : name(name), hp(hp), mp(mp), attack(attack), defense(defense), like(like) {}; //  ÃÊ±âÈ­ 
-	virtual ~Charater() {} // ºÎ¸ğ Å¬·¡½ºÀÇ ¼Ò¸êÀÚ´Â ¹İµå½Ã virtual
-
-protected:
-
-	string name; //ÇÃ·¹ÀÌ¾î ÀÌ¸§
-	int hp = 200; //Ã¼·Â
-	int mp = 100; //¸¶³ª
-	int attack = 30; //°ø°İ·Â
-	int defense; //¹æ¾î·Â
-	int like; //È£°¨µµ
-
-};
-
-class Player : public Charater
-{
-public:
-
-	Player(string name, int hp, int mp, int attack, int defense, int like) : Charater(name, hp, mp, attack, defense,like){} //ÇÃ·¹ÀÌ¾îÀÇ Á¤º¸ ¼³Á¤ (Ã¼·Â, ¸¶³ª, °ø°İ·Â, ¹æ¾î·Â, È£°¨µµ)
-	
-	//·¹º§ÀÌ ¿Ã¶ó°¥ ¶§ Ã³¸®ÇÏ´Â ÇÔ¼ö ¹­À½ 
-
-	void hpUP() { hp *= playerexp; }
-	void mpUP() { mp *= playerexp; }
-	void attackUP() { attack *= playerexp; }
-	void defenseUP() { defense *= playerexp; }
-	void likeUP() { like *= playerexp; }
-
-	~Player(){}; //ÇÃ·¹ÀÌ¾îÀÇ Á¤º¸ ÃÊ±âÈ­
-
-protected:
-
-	int playerexp = 0; //°æÇèÄ¡
-	int like; //È£°¨µµ
-	int level = 1; //·¹º§
-
-};
-
-
-class Enemy : public Charater // Àû Ä³¸¯ÅÍÀÇ Á¤º¸ ¼³Á¤ (Ã¼·Â, ¸¶³ª, °ø°İ·Â, ¹æ¾î·Â, È£°¨µµ)
-{
-public:
-
-	Enemy(string name, int hp, int mp, int attack, int defense, int like); //Àû Ä³¸¯ÅÍÀÇ Á¤º¸ ¼³Á¤ (Ã¼·Â, ¸¶³ª, °ø°İ·Â, ¹æ¾î·Â, È£°¨µµ)
-
-	void hpUP() {} // LevelÀÌ ¿Ã¶ó°¡¸é Ã¼·ÂÀÌ Áõ°¡ÇÏ´Â ÇÔ¼ö
-	void mpUP() {} // LevelÀÌ ¿Ã¶ó°¡¸é ¸¶·ÂÀÌ Áõ°¡ÇÏ´Â ÇÔ¼ö
-	void attackUP() {} // LevelÀÌ ¿Ã¶ó°¡¸é °ø°İ·ÂÀÌ Áõ°¡ÇÏ´Â ÇÔ¼ö
-	void defenseUP() {} // LevelÀÌ ¿Ã¶ó°¡¸é ¹æ¾î·Â Áõ°¡ÇÏ´Â ÇÔ¼ö
-
-	~Enemy(){}; //Àû Ä³¸¯ÅÍÀÇ Á¤º¸ ÃÊ±âÈ­
-
-protected:
-
-	string name; //Àû Ä³¸¯ÅÍ ÀÌ¸§
-	string dropbitemname; //Àû Ä³¸¯ÅÍ°¡ µå¶øÇÏ´Â ¾ÆÀÌÅÛ
-	int enemylevel; //Àû Ä³¸¯ÅÍÀÇ ·¹º§
-	int enemyhp; //Àû Ä³¸¯ÅÍÀÇ Ã¼·Â
-	int enemymp; //Àû Ä³¸¯ÅÍÀÇ ¸¶³ª
-	int enemylike; //Àû Ä³¸¯ÅÍÀÇ È£°¨µµ
-	int enemyattack; //Àû Ä³¸¯ÅÍÀÇ °ø°İ·Â
-	int enemydefense; //Àû Ä³¸¯ÅÍÀÇ ¹æ¾î·Â
-	int dropcoin; //Àû Ä³¸¯ÅÍ°¡ µå¶øÇÏ´Â ÄÚÀÎ
-	int dropexp; //Àû Ä³¸¯ÅÍ°¡ µå¶øÇÏ´Â °æÇèÄ¡
-
-};
-
-class FireEnemy : public Enemy, Player // ºÒ ¼Ó¼ºÀÇ Àû Ä³¸¯ÅÍ (ÇÖ³à)
-{
-	FireEnemy(string name, int hp, int mp, int attack, int defense, int like); //ºÒ ¼Ó¼ºÀÇ Àû Ä³¸¯ÅÍÀÇ Á¤º¸ ¼³Á¤ (Ã¼·Â, ¸¶³ª, °ø°İ·Â, ¹æ¾î·Â, È£°¨µµ)
-
-	void ElementEffect() // »ó¼º°ü°è ·ÎÁ÷ ÇÔ¼ö
+	template<typename T>
+	T Input()
 	{
-
-	}
-
-private:
-
-	int enemytype = 0; //Àû Ä³¸¯ÅÍÀÇ Å¸ÀÔ (ºÒ, ¹°, Ç®)
-
-};
-
-class WaterEnemy : public Enemy, Player // ¹° ¼Ó¼ºÀÇ Àû Ä³¸¯ÅÍ (³Ã¹Ì³à)
-{
-	WaterEnemy(string name, int hp, int mp, int attack, int defense, int like); //¹° ¼Ó¼ºÀÇ Àû Ä³¸¯ÅÍÀÇ Á¤º¸ ¼³Á¤ (Ã¼·Â, ¸¶³ª, °ø°İ·Â, ¹æ¾î·Â, È£°¨µµ)
-
-	void ElementEffect() // »ó¼º°ü°è ·ÎÁ÷ ÇÔ¼ö
-	{
-
-	}
-
-private :
-
-	int enemytype = 1; //Àû Ä³¸¯ÅÍÀÇ Å¸ÀÔ (ºÒ, ¹°, Ç®)
-
-};
-
-class FlowerEnemy : public Enemy, Player // Ç® ¼Ó¼ºÀÇ Àû Ä³¸¯ÅÍ (ÃÊ½Ä³à)
-{
-	FlowerEnemy(string name, int hp, int mp, int attack, int defense, int like); //Ç® ¼Ó¼ºÀÇ Àû Ä³¸¯ÅÍÀÇ Á¤º¸ ¼³Á¤ (Ã¼·Â, ¸¶³ª, °ø°İ·Â, ¹æ¾î·Â, È£°¨µµ)
-	
-	void ElementEffect() // »ó¼º°ü°è ·ÎÁ÷ ÇÔ¼ö
-	{
-
-	}
-	
-private:
-
-	int enemytype = 2; //Àû Ä³¸¯ÅÍÀÇ Å¸ÀÔ (ºÒ, ¹°, Ç®)
-
-};
-
-class NormalEnemy : public Enemy, Player //ÀÏ¹İ ¼Ó¼ºÀÇ Àû Ä³¸¯ÅÍ (ÀÏ¹İ³à)
-{
-	NormalEnemy(string name, int hp, int mp, int attack, int defense, int like);
-	
-	void ElementEffect() // »ó¼º°ü°è ·ÎÁ÷ ÇÔ¼ö
-	{
+		T value;
 		
+		cin >> value;
+
+		return value;
 	}
 
+	template<>
+	int Input<int>()
+	{
+		int value;
+
+		while (true)
+		{
+			if (std::cin >> value)
+			{
+				if (std::cin.peek() == '\n')
+				{
+					return value;
+				}
+			}
+
+			std::cout << "ì •ìˆ˜ë§Œ ì…ë ¥í•´ì£¼ì„¸ìš”." << std::endl;
+
+			std::cin.clear();
+			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+		}
+	}
+
+	// ê²Ÿí„°
+	std::string GetName() const { return Name; }
+	int GetMonny() const { return monny; }
+	std::vector<std::shared_ptr<C_Creature>> GetGirlFrends() const { return GirlFrends; }
+
+	// ì…‹í„°
+	void SetName(std::string name);
+
 private:
-
-	int enemytype = 3; //Àû Ä³¸¯ÅÍÀÇ Å¸ÀÔ (ºÒ, ¹°, Ç®)
-
+	std::string Name;
+	std::vector<std::shared_ptr<C_Creature>> GirlFrends;
+	std::shared_ptr<C_Inventory> Inventory;
+	int monny = 0;
 };
