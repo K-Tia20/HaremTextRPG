@@ -1,0 +1,76 @@
+#pragma once
+
+class C_Player;
+class C_Area;
+
+// 현재 World의 게임진행 상황
+enum class WorldState
+{
+	MainMenu,
+	NewGame,
+	StartGame,
+	InProgress,
+	QuitGame
+};
+
+// Player의 위치
+enum class WorldArea
+{
+	City,
+	Club,
+	Store
+};
+
+class C_World
+{
+public: // 게임 진행 함수
+	C_World();
+
+	// 메인메뉴
+	void MainMenu();
+	// 새 게임 진행
+	void NewGame();
+	// 게임 시작 부분 (이부분의 끝나면 WS를 InProgress로 변경)
+	void StartGame();
+
+	// Tick처럼 지속적으로 업데이트 
+	void Update();
+
+public: // 게임 진행 로직들
+
+	// 이름 설정 로직
+	void SetName();
+
+	// 첫 여자친구 설정 로직
+	void SetGirlFrends();
+
+	// 테토걸로 설정
+	void SetTetoGirl();
+
+	// 쿨미녀걸로 설정
+	void SetCoolPretyGirl();
+
+	// 초식녀로 설정
+	void SetChosicGirl();
+
+private:
+	// 변수명 편하게 바꿔주세요
+
+	// 플레이어
+	shared_ptr<C_Player> Player;
+
+	// 현재 위치
+	shared_ptr<C_Area> CurrentArea;
+
+	// World가 알고 있는 위치정도 찾아서 설정해주기 위한 용도
+	unordered_map<WorldArea, shared_ptr<C_Area>> Areas;
+
+	// World의 게임상태
+	WorldState WS = WorldState::MainMenu;
+
+	// CurrentLocatoin이라는 뜻
+	WorldArea CL;
+
+	// 게임종료 로직에 사용될 변수
+	bool IsRunning;
+};
