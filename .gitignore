@@ -69,14 +69,21 @@ Testing/
 .cache/
 
 
-# Visual Studio 전용 임시 폴더 및 개인 설정 파일
+# 1. Visual Studio 기본 임시/설정 파일 무시
 .vs/
 *.suo
 *.user
 *.userosscache
 *.sln.docstates
 
-# Visual Studio 빌드 데이터베이스 및 인덱스 파일
+
+# 2. 빌드 데이터베이스 및 인덱스 파일 무시
 *.db
 *.ipch
 *.vsidx
+
+# 3. ₩ 나 특수문자로 경로 깨진 임시 파일 방어
+.vs*
+*₩*
+*#*
+
