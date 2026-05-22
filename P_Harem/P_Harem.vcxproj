@@ -135,7 +135,6 @@
     <ClInclude Include="Areas\Area.h" />
     <ClInclude Include="Battle\BattleSystem.h" />
     <ClInclude Include="Creature\Creature.h" />
-    <ClInclude Include="Framework\Defs.h" />
     <ClInclude Include="Framework\Framework.h" />
     <ClInclude Include="GameManager\World.h" />
     <ClInclude Include="Objects\Items\Item.h" />
