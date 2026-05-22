@@ -124,6 +124,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Areas.cpp" />
+    <ClCompile Include="BattleSystem.cpp" />
     <ClCompile Include="Creature.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -132,6 +133,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Areas.h" />
+    <ClInclude Include="BattleSystem.h" />
     <ClInclude Include="Creature.h" />
     <ClInclude Include="Framework.h" />
     <ClInclude Include="Item.h" />

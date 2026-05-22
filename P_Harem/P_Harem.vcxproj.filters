@@ -2,65 +2,20 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="P_Harem.cpp" />
+    <ClCompile Include="World.cpp" />
+    <ClCompile Include="Areas.cpp" />
+    <ClCompile Include="Creature.cpp" />
+    <ClCompile Include="BattleSystem.cpp" />
     <ClCompile Include="Item.cpp" />
-    <ClCompile Include="World.cpp">
-      <Filter>GameManager</Filter>
-    </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>Player</Filter>
-    </ClCompile>
-    <ClCompile Include="Areas.cpp">
-      <Filter>Maps\Areas</Filter>
-    </ClCompile>
-    <ClCompile Include="Creature.cpp">
-      <Filter>Creatures</Filter>
-    </ClCompile>
+    <ClCompile Include="Player.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="GameManager">
-      <UniqueIdentifier>{71bcc5a4-f5f9-4527-b49d-b84d0bbd4917}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Framework">
-      <UniqueIdentifier>{2ff99042-6e32-478d-996b-658ee84d8e73}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Maps">
-      <UniqueIdentifier>{9893d6dc-5ac3-4df1-9ac3-6d5fa9624c61}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Creatures">
-      <UniqueIdentifier>{aaa8eb8d-5c25-4d98-89b3-6fae5855f62e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Objects">
-      <UniqueIdentifier>{7b0d0e5b-8988-42a1-a66a-d31a29d7cb73}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Objects\Items">
-      <UniqueIdentifier>{c0a4fa89-fe68-4e09-b3a1-f60a29d73968}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Maps\Areas">
-      <UniqueIdentifier>{170036ea-9492-4ae4-8e6a-106859f1b7b6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Maps\AreaObjects">
-      <UniqueIdentifier>{73d04261-0ee6-4a88-a524-26abdf9782b3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Player">
-      <UniqueIdentifier>{41f06cc8-e9b5-492b-aa1a-e64e641872fb}</UniqueIdentifier>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
+    <ClInclude Include="World.h" />
+    <ClInclude Include="Framework.h" />
+    <ClInclude Include="Areas.h" />
+    <ClInclude Include="Creature.h" />
+    <ClInclude Include="BattleSystem.h" />
     <ClInclude Include="Item.h" />
-    <ClInclude Include="Framework.h">
-      <Filter>Framework</Filter>
-    </ClInclude>
-    <ClInclude Include="World.h">
-      <Filter>GameManager</Filter>
-    </ClInclude>
-    <ClInclude Include="Player.h">
-      <Filter>Player</Filter>
-    </ClInclude>
-    <ClInclude Include="Areas.h">
-      <Filter>Maps\Areas</Filter>
-    </ClInclude>
-    <ClInclude Include="Creature.h">
-      <Filter>Creatures</Filter>
-    </ClInclude>
+    <ClInclude Include="Player.h" />
   </ItemGroup>
 </Project>
