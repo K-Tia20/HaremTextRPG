@@ -1,4 +1,4 @@
-
+﻿
 #pragma once
 
 #include "../Framework/Framework.h"
@@ -12,12 +12,13 @@ class C_Player
 public:
 	C_Player();
 
+
 	template<typename T>
 	T Input()
 	{
 		T value;
 		
-		cin >> value;
+		std::cin >> value;
 
 		return value;
 	}
@@ -51,6 +52,7 @@ public:
 
 	// 셋터
 	void SetName(std::string name);
+	void AddGirlFrends(std::shared_ptr<C_Creature> girlfrend);
 
 private:
 	std::string Name;

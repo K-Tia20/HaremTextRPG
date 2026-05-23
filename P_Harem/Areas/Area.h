@@ -1,5 +1,4 @@
-
-#pragma once
+﻿#pragma once
 
 // 지역들의 부모 클래스
 class C_World;
@@ -15,7 +14,7 @@ public:
 	virtual void Encounter() = 0;
 
 	// 월드 가져오는 용도 (월드의 상태를 변경하기 위함)
-	void SetWorld(C_World* world);
+	//void SetWorld(C_World* world);
 	C_World* GetWorld() { return World; }
 
 private:
