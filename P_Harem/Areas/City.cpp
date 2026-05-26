@@ -64,7 +64,6 @@ void C_City::SelectMenu()
 	}
 }
 
-
 void C_City::MoveArea()
 {
 	// 지역을 이동하는 곳 입니다. 로그가 필요합니다.
