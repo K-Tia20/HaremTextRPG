@@ -6,6 +6,7 @@ using namespace std;
 
 int main()
 {
+	srand(static_cast<unsigned int>(time(nullptr)));
 	shared_ptr<C_World> World = make_shared<C_World>();
 
 	while (true)
