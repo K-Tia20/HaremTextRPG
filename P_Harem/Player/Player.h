@@ -4,7 +4,7 @@
 #include "../Framework/Framework.h"
 
 class C_Creature;
-class C_Item;
+class C_Items;
 class C_Inventory;
 
 class C_Player
@@ -47,16 +47,17 @@ public:
 
 	/* 겟터 */
 	std::string GetName() { return Name; } // 플레이어 이름
-	std::vector<std::shared_ptr<C_Creature>>GetGirlFrends() { return GirlFrends; }
+	std::vector<std::shared_ptr<C_Creature>>GetGirlFrends() { return GirlFrends; } // 가진 여자친구
 	int GetMonny() { return Money; } // 플레이어가 가진 돈
-
 
 	/* 셋터 */
 	void SetName(std::string name); // 플레이어 이름 정하기
-	void AddGirlFrends(std::shared_ptr<C_Creature> girlfrend); // 가진 여자친구
+	void AddGirlFrends(std::shared_ptr<C_Creature> girlfrend); // 여자친구 얻기
 	std::shared_ptr<C_Creature> SetFightGirl(); // 이걸로 전투할 여친 고르기
-	void AddMoney(int addMoney);
-	void SubMoney(int subMoney);
+	void AddMoney(int addMoney); // 돈먹기
+	void SubMoney(int subMoney); // 돈빼앗기기
+	void AddItem(std::shared_ptr<C_Items> item); // 아이템먹기
+	int UsingItem(); // 아이템빼앗기기 (사용이라는 뜻)
 
 private:
 	std::string Name;

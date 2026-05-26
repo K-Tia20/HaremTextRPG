@@ -15,4 +15,3 @@ public:
 private:
 	std::shared_ptr<C_Player> Player;
 };
-

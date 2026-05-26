@@ -1,0 +1,306 @@
+﻿  Alba.cpp
+D:\UnrealC++\HaremTextRPG\P_Harem\GameManager\World.h(65,7): error C2039: 'shared_ptr': is not a member of 'std'
+  (compiling source file 'Areas/Alba.cpp')
+      D:\UnrealC++\HaremTextRPG\P_Harem\predefined C++ types (compiler internal)(357,11):
+      see declaration of 'std'
+  
+D:\UnrealC++\HaremTextRPG\P_Harem\GameManager\World.h(65,17): error C2143: syntax error: missing ';' before '<'
+  (compiling source file 'Areas/Alba.cpp')
+  
+D:\UnrealC++\HaremTextRPG\P_Harem\GameManager\World.h(65,7): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+  (compiling source file 'Areas/Alba.cpp')
+  
+D:\UnrealC++\HaremTextRPG\P_Harem\GameManager\World.h(65,39): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+  (compiling source file 'Areas/Alba.cpp')
+  
+D:\UnrealC++\HaremTextRPG\P_Harem\GameManager\World.h(71,7): error C2039: 'shared_ptr': is not a member of 'std'
+  (compiling source file 'Areas/Alba.cpp')
+      D:\UnrealC++\HaremTextRPG\P_Harem\predefined C++ types (compiler internal)(357,11):
+      see declaration of 'std'
+  
+D:\UnrealC++\HaremTextRPG\P_Harem\GameManager\World.h(71,17): error C2143: syntax error: missing ';' before '<'
+  (compiling source file 'Areas/Alba.cpp')
+  
+D:\UnrealC++\HaremTextRPG\P_Harem\GameManager\World.h(71,7): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+  (compiling source file 'Areas/Alba.cpp')
+  
+D:\UnrealC++\HaremTextRPG\P_Harem\GameManager\World.h(71,34): error C2238: unexpected token(s) preceding ';'
+  (compiling source file 'Areas/Alba.cpp')
+  
+D:\UnrealC++\HaremTextRPG\P_Harem\GameManager\World.h(74,7): error C2039: 'shared_ptr': is not a member of 'std'
+  (compiling source file 'Areas/Alba.cpp')
+      D:\UnrealC++\HaremTextRPG\P_Harem\predefined C++ types (compiler internal)(357,11):
+      see declaration of 'std'
+  
+D:\UnrealC++\HaremTextRPG\P_Harem\GameManager\World.h(74,17): error C2143: syntax error: missing ';' before '<'
+  (compiling source file 'Areas/Alba.cpp')
+  
+D:\UnrealC++\HaremTextRPG\P_Harem\GameManager\World.h(74,7): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+  (compiling source file 'Areas/Alba.cpp')
+  
+D:\UnrealC++\HaremTextRPG\P_Harem\GameManager\World.h(74,37): error C2238: unexpected token(s) preceding ';'
+  (compiling source file 'Areas/Alba.cpp')
+  
+D:\UnrealC++\HaremTextRPG\P_Harem\GameManager\World.h(77,7): error C2039: 'unordered_map': is not a member of 'std'
+  (compiling source file 'Areas/Alba.cpp')
+      D:\UnrealC++\HaremTextRPG\P_Harem\predefined C++ types (compiler internal)(357,11):
+      see declaration of 'std'
+  
+D:\UnrealC++\HaremTextRPG\P_Harem\GameManager\World.h(77,20): error C2143: syntax error: missing ';' before '<'
+  (compiling source file 'Areas/Alba.cpp')
+  
+D:\UnrealC++\HaremTextRPG\P_Harem\GameManager\World.h(77,7): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+  (compiling source file 'Areas/Alba.cpp')
+  
+D:\UnrealC++\HaremTextRPG\P_Harem\GameManager\World.h(77,37): error C2039: 'shared_ptr': is not a member of 'std'
+  (compiling source file 'Areas/Alba.cpp')
+      D:\UnrealC++\HaremTextRPG\P_Harem\predefined C++ types (compiler internal)(357,11):
+      see declaration of 'std'
+  
+D:\UnrealC++\HaremTextRPG\P_Harem\GameManager\World.h(77,62): error C2238: unexpected token(s) preceding ';'
+  (compiling source file 'Areas/Alba.cpp')
+  
+D:\UnrealC++\HaremTextRPG\P_Harem\Areas\Alba.cpp(10,18): error C2039: 'GetPlayer': is not a member of 'C_World'
+      D:\UnrealC++\HaremTextRPG\P_Harem\GameManager\World.h(23,7):
+      see declaration of 'C_World'
+  
+  Area.cpp
+  City.cpp
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\xutility(476,61): error C2248: 'And::And': cannot access private member declared in class 'And'
+  (compiling source file 'Areas/City.cpp')
+      D:\UnrealC++\HaremTextRPG\P_Harem\Creature\And.h(7,2):
+      see declaration of 'And::And'
+      D:\UnrealC++\HaremTextRPG\P_Harem\Creature\And.h(5,7):
+      see declaration of 'And'
+      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\xutility(476,61):
+      the template instantiation context (the oldest one first) is
+          D:\UnrealC++\HaremTextRPG\P_Harem\Areas\City.cpp(24,23):
+          see reference to function template instantiation 'std::shared_ptr<And> std::make_shared<And,>(void)' being compiled
+          C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\memory(2913,46):
+          see reference to function template instantiation 'std::_Ref_count_obj2<And>::_Ref_count_obj2<>(void)' being compiled
+          C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\memory(2100,18):
+          see reference to function template instantiation 'void std::_Construct_in_place<_Ty,>(_Ty &) noexcept(false)' being compiled
+          with
+          [
+              _Ty=And
+          ]
+  
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\xutility(476,61): error C2248: 'Chashrin::Chashrin': cannot access private member declared in class 'Chashrin'
+  (compiling source file 'Areas/City.cpp')
+      D:\UnrealC++\HaremTextRPG\P_Harem\Creature\Chashrin.h(7,2):
+      see declaration of 'Chashrin::Chashrin'
+      D:\UnrealC++\HaremTextRPG\P_Harem\Creature\Chashrin.h(5,7):
+      see declaration of 'Chashrin'
+      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\xutility(476,61):
+      the template instantiation context (the oldest one first) is
+          D:\UnrealC++\HaremTextRPG\P_Harem\Areas\City.cpp(25,23):
+          see reference to function template instantiation 'std::shared_ptr<Chashrin> std::make_shared<Chashrin,>(void)' being compiled
+          C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\memory(2913,46):
+          see reference to function template instantiation 'std::_Ref_count_obj2<Chashrin>::_Ref_count_obj2<>(void)' being compiled
+          C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\memory(2100,18):
+          see reference to function template instantiation 'void std::_Construct_in_place<_Ty,>(_Ty &) noexcept(false)' being compiled
+          with
+          [
+              _Ty=Chashrin
+          ]
+  
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\xutility(476,61): error C2248: 'Codelia::Codelia': cannot access private member declared in class 'Codelia'
+  (compiling source file 'Areas/City.cpp')
+      D:\UnrealC++\HaremTextRPG\P_Harem\Creature\Codelia.h(7,2):
+      see declaration of 'Codelia::Codelia'
+      D:\UnrealC++\HaremTextRPG\P_Harem\Creature\Codelia.h(5,7):
+      see declaration of 'Codelia'
+      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\xutility(476,61):
+      the template instantiation context (the oldest one first) is
+          D:\UnrealC++\HaremTextRPG\P_Harem\Areas\City.cpp(26,23):
+          see reference to function template instantiation 'std::shared_ptr<Codelia> std::make_shared<Codelia,>(void)' being compiled
+          C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\memory(2913,46):
+          see reference to function template instantiation 'std::_Ref_count_obj2<Codelia>::_Ref_count_obj2<>(void)' being compiled
+          C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\memory(2100,18):
+          see reference to function template instantiation 'void std::_Construct_in_place<_Ty,>(_Ty &) noexcept(false)' being compiled
+          with
+          [
+              _Ty=Codelia
+          ]
+  
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\xutility(476,61): error C2248: 'Lina::Lina': cannot access private member declared in class 'Lina'
+  (compiling source file 'Areas/City.cpp')
+      D:\UnrealC++\HaremTextRPG\P_Harem\Creature\Lina.h(7,2):
+      see declaration of 'Lina::Lina'
+      D:\UnrealC++\HaremTextRPG\P_Harem\Creature\Lina.h(5,7):
+      see declaration of 'Lina'
+      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\xutility(476,61):
+      the template instantiation context (the oldest one first) is
+          D:\UnrealC++\HaremTextRPG\P_Harem\Areas\City.cpp(27,23):
+          see reference to function template instantiation 'std::shared_ptr<Lina> std::make_shared<Lina,>(void)' being compiled
+          C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\memory(2913,46):
+          see reference to function template instantiation 'std::_Ref_count_obj2<Lina>::_Ref_count_obj2<>(void)' being compiled
+          C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\memory(2100,18):
+          see reference to function template instantiation 'void std::_Construct_in_place<_Ty,>(_Ty &) noexcept(false)' being compiled
+          with
+          [
+              _Ty=Lina
+          ]
+  
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\xutility(476,61): error C2248: 'Marry::Marry': cannot access private member declared in class 'Marry'
+  (compiling source file 'Areas/City.cpp')
+      D:\UnrealC++\HaremTextRPG\P_Harem\Creature\Marry.h(7,2):
+      see declaration of 'Marry::Marry'
+      D:\UnrealC++\HaremTextRPG\P_Harem\Creature\Marry.h(5,7):
+      see declaration of 'Marry'
+      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\xutility(476,61):
+      the template instantiation context (the oldest one first) is
+          D:\UnrealC++\HaremTextRPG\P_Harem\Areas\City.cpp(28,23):
+          see reference to function template instantiation 'std::shared_ptr<Marry> std::make_shared<Marry,>(void)' being compiled
+          C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\memory(2913,46):
+          see reference to function template instantiation 'std::_Ref_count_obj2<Marry>::_Ref_count_obj2<>(void)' being compiled
+          C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\memory(2100,18):
+          see reference to function template instantiation 'void std::_Construct_in_place<_Ty,>(_Ty &) noexcept(false)' being compiled
+          with
+          [
+              _Ty=Marry
+          ]
+  
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\xutility(476,61): error C2248: 'Oplier::Oplier': cannot access private member declared in class 'Oplier'
+  (compiling source file 'Areas/City.cpp')
+      D:\UnrealC++\HaremTextRPG\P_Harem\Creature\Oplier.h(7,2):
+      see declaration of 'Oplier::Oplier'
+      D:\UnrealC++\HaremTextRPG\P_Harem\Creature\Oplier.h(5,7):
+      see declaration of 'Oplier'
+      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\xutility(476,61):
+      the template instantiation context (the oldest one first) is
+          D:\UnrealC++\HaremTextRPG\P_Harem\Areas\City.cpp(29,23):
+          see reference to function template instantiation 'std::shared_ptr<Oplier> std::make_shared<Oplier,>(void)' being compiled
+          C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\memory(2913,46):
+          see reference to function template instantiation 'std::_Ref_count_obj2<Oplier>::_Ref_count_obj2<>(void)' being compiled
+          C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\memory(2100,18):
+          see reference to function template instantiation 'void std::_Construct_in_place<_Ty,>(_Ty &) noexcept(false)' being compiled
+          with
+          [
+              _Ty=Oplier
+          ]
+  
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\xutility(476,61): error C2248: 'Zhad::Zhad': cannot access private member declared in class 'Zhad'
+  (compiling source file 'Areas/City.cpp')
+      D:\UnrealC++\HaremTextRPG\P_Harem\Creature\Zhad.h(7,2):
+      see declaration of 'Zhad::Zhad'
+      D:\UnrealC++\HaremTextRPG\P_Harem\Creature\Zhad.h(5,7):
+      see declaration of 'Zhad'
+      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\xutility(476,61):
+      the template instantiation context (the oldest one first) is
+          D:\UnrealC++\HaremTextRPG\P_Harem\Areas\City.cpp(30,23):
+          see reference to function template instantiation 'std::shared_ptr<Zhad> std::make_shared<Zhad,>(void)' being compiled
+          C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\memory(2913,46):
+          see reference to function template instantiation 'std::_Ref_count_obj2<Zhad>::_Ref_count_obj2<>(void)' being compiled
+          C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\memory(2100,18):
+          see reference to function template instantiation 'void std::_Construct_in_place<_Ty,>(_Ty &) noexcept(false)' being compiled
+          with
+          [
+              _Ty=Zhad
+          ]
+  
+  Shop.cpp
+D:\UnrealC++\HaremTextRPG\P_Harem\GameManager\World.h(65,7): error C2039: 'shared_ptr': is not a member of 'std'
+  (compiling source file 'Areas/Shop.cpp')
+      D:\UnrealC++\HaremTextRPG\P_Harem\predefined C++ types (compiler internal)(357,11):
+      see declaration of 'std'
+  
+D:\UnrealC++\HaremTextRPG\P_Harem\GameManager\World.h(65,17): error C2143: syntax error: missing ';' before '<'
+  (compiling source file 'Areas/Shop.cpp')
+  
+D:\UnrealC++\HaremTextRPG\P_Harem\GameManager\World.h(65,7): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+  (compiling source file 'Areas/Shop.cpp')
+  
+D:\UnrealC++\HaremTextRPG\P_Harem\GameManager\World.h(65,39): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+  (compiling source file 'Areas/Shop.cpp')
+  
+D:\UnrealC++\HaremTextRPG\P_Harem\GameManager\World.h(71,7): error C2039: 'shared_ptr': is not a member of 'std'
+  (compiling source file 'Areas/Shop.cpp')
+      D:\UnrealC++\HaremTextRPG\P_Harem\predefined C++ types (compiler internal)(357,11):
+      see declaration of 'std'
+  
+D:\UnrealC++\HaremTextRPG\P_Harem\GameManager\World.h(71,17): error C2143: syntax error: missing ';' before '<'
+  (compiling source file 'Areas/Shop.cpp')
+  
+D:\UnrealC++\HaremTextRPG\P_Harem\GameManager\World.h(71,7): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+  (compiling source file 'Areas/Shop.cpp')
+  
+D:\UnrealC++\HaremTextRPG\P_Harem\GameManager\World.h(71,34): error C2238: unexpected token(s) preceding ';'
+  (compiling source file 'Areas/Shop.cpp')
+  
+D:\UnrealC++\HaremTextRPG\P_Harem\GameManager\World.h(74,7): error C2039: 'shared_ptr': is not a member of 'std'
+  (compiling source file 'Areas/Shop.cpp')
+      D:\UnrealC++\HaremTextRPG\P_Harem\predefined C++ types (compiler internal)(357,11):
+      see declaration of 'std'
+  
+D:\UnrealC++\HaremTextRPG\P_Harem\GameManager\World.h(74,17): error C2143: syntax error: missing ';' before '<'
+  (compiling source file 'Areas/Shop.cpp')
+  
+D:\UnrealC++\HaremTextRPG\P_Harem\GameManager\World.h(74,7): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+  (compiling source file 'Areas/Shop.cpp')
+  
+D:\UnrealC++\HaremTextRPG\P_Harem\GameManager\World.h(74,37): error C2238: unexpected token(s) preceding ';'
+  (compiling source file 'Areas/Shop.cpp')
+  
+D:\UnrealC++\HaremTextRPG\P_Harem\GameManager\World.h(77,7): error C2039: 'unordered_map': is not a member of 'std'
+  (compiling source file 'Areas/Shop.cpp')
+      D:\UnrealC++\HaremTextRPG\P_Harem\predefined C++ types (compiler internal)(357,11):
+      see declaration of 'std'
+  
+D:\UnrealC++\HaremTextRPG\P_Harem\GameManager\World.h(77,20): error C2143: syntax error: missing ';' before '<'
+  (compiling source file 'Areas/Shop.cpp')
+  
+D:\UnrealC++\HaremTextRPG\P_Harem\GameManager\World.h(77,7): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+  (compiling source file 'Areas/Shop.cpp')
+  
+D:\UnrealC++\HaremTextRPG\P_Harem\GameManager\World.h(77,37): error C2039: 'shared_ptr': is not a member of 'std'
+  (compiling source file 'Areas/Shop.cpp')
+      D:\UnrealC++\HaremTextRPG\P_Harem\predefined C++ types (compiler internal)(357,11):
+      see declaration of 'std'
+  
+D:\UnrealC++\HaremTextRPG\P_Harem\GameManager\World.h(77,62): error C2238: unexpected token(s) preceding ';'
+  (compiling source file 'Areas/Shop.cpp')
+  
+D:\UnrealC++\HaremTextRPG\P_Harem\Areas\Shop.cpp(10,18): error C2039: 'GetPlayer': is not a member of 'C_World'
+      D:\UnrealC++\HaremTextRPG\P_Harem\GameManager\World.h(23,7):
+      see declaration of 'C_World'
+  
+  BattleSystem.cpp
+D:\UnrealC++\HaremTextRPG\P_Harem\Battle\BattleSystem.cpp(39,13): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+  And.cpp
+  Chashrin.cpp
+  Codelia.cpp
+  Creature.cpp
+  Lina.cpp
+  Marry.cpp
+  Oplier.cpp
+  Zhad.cpp
+  Defs.cpp
+  World.cpp
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\xmemory(2218,9): error C2259: 'C_Shop': cannot instantiate abstract class
+  (compiling source file 'GameManager/World.cpp')
+      D:\UnrealC++\HaremTextRPG\P_Harem\Areas\Shop.h(18,7):
+      see declaration of 'C_Shop'
+      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\xmemory(2218,9):
+      due to following members:
+      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\xmemory(2218,9):
+      'void C_Area::MoveArea(void)': is abstract
+      D:\UnrealC++\HaremTextRPG\P_Harem\Areas\Area.h(12,15):
+      see declaration of 'C_Area::MoveArea'
+      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\xmemory(2218,9):
+      'void C_Area::Encounter(void)': is abstract
+      D:\UnrealC++\HaremTextRPG\P_Harem\Areas\Area.h(14,15):
+      see declaration of 'C_Area::Encounter'
+      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\xmemory(2218,9):
+      the template instantiation context (the oldest one first) is
+          D:\UnrealC++\HaremTextRPG\P_Harem\GameManager\World.cpp(17,28):
+          see reference to function template instantiation 'std::shared_ptr<C_Shop> std::make_shared<C_Shop,C_World*>(C_World *&&)' being compiled
+          C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\memory(2913,26):
+          see reference to class template instantiation 'std::_Ref_count_obj2<C_Shop>' being compiled
+          C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\memory(2113,33):
+          see reference to class template instantiation 'std::_Wrap<C_Shop>' being compiled
+  
+  Inventory.cpp
+  Player.cpp
+  P_Harem.cpp
+  Generating Code...
