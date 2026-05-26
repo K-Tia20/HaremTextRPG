@@ -128,12 +128,15 @@ void C_World::SetGirlFrends()
 	switch (choice)
 	{
 	case 1:
+		// 뜨거운 여자 고르기
 		SetTetoGirl();
 		break;
 	case 2:
+		// 차가운 여가 고르기
 		SetCoolPretyGirl();
 		break;
 	case 3:
+		// 풀내나는 여자 고르기
 		SetChosicGirl();
 		break;
 	default:

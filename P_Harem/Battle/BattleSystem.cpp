@@ -2,13 +2,25 @@
 
 #include "BattleSystem.h"
 
+C_LevelSystem LevelSystem; // 레벨 시스템 인스턴스 생성
 
-
-int C_BattleSystem::CalculateDamage(int Attack, int Defense) const
+int C_BattleSystem::CalculateDamage(std::shared_ptr<C_Creature> Attacker, std::shared_ptr<C_Creature> Defenser) const
 {
-	int Damage = (int)floor(Attack * (10.0f / (10 + Defense)));
-	return Damage > 0 ? Damage : 1;
-	// 방어도에 따라 데미지가 감소하며 최소 데미지는 1로 설정;
+	int Damage;
+
+	if (StileMultiplier(Attacker, Defenser) == 2)
+	{
+		Damage = (int)floor(Attacker->GetAttack() * 1.5);
+	}
+	else if (StileMultiplier(Attacker, Defenser) == 0)
+	{
+		Damage = (int)floor(Attacker->GetAttack() * 0.5);
+	}
+	else
+	{
+		Damage = Attacker->GetAttack();
+	}
+	return Damage;
 }
 
 float C_BattleSystem::StileMultiplier(std::shared_ptr<C_Creature> Attacker, std::shared_ptr<C_Creature> Defenser) const
@@ -20,13 +32,13 @@ float C_BattleSystem::StileMultiplier(std::shared_ptr<C_Creature> Attacker, std:
 		(AttackerStile == C_Stile::IceGirl && DefenserStile == C_Stile::GrassGirl) ||
 		(AttackerStile == C_Stile::GrassGirl && DefenserStile == C_Stile::HotGirl))
 	{
-		return 0.5; // 상성 불리: 데미지 절반;
+		return 0; // 상성 불리: 데미지 절반;
 	}
 	else if ((AttackerStile == C_Stile::HotGirl && DefenserStile == C_Stile::GrassGirl) ||
 		(AttackerStile == C_Stile::IceGirl && DefenserStile == C_Stile::HotGirl) ||
 		(AttackerStile == C_Stile::GrassGirl && DefenserStile == C_Stile::IceGirl))
 	{
-		return 1.5; // 상성 유리 : 데미지 1.5배;
+		return 2; // 상성 유리 : 데미지 1.5배;
 	}
 	else
 	{
@@ -34,40 +46,46 @@ float C_BattleSystem::StileMultiplier(std::shared_ptr<C_Creature> Attacker, std:
 	}
 }
 
-void C_BattleSystem::Attack(std::shared_ptr<C_Creature> Attacker, std::shared_ptr<C_Creature> Defenser)
+void C_BattleSystem::Attack(std::shared_ptr<C_Creature> Attacker, std::shared_ptr<C_Creature> Defenser) const
 {
 	int Damage = Attacker->GetAttack() * StileMultiplier(Attacker, Defenser);
 	//공격력에 스타일 상성을 곱하고 소수점 버림;
-	// 로그에 공격 대사 출력;
-	Sleep(1000); // 1초 대기
 	if (OnAttack)
 	{
-		OnAttack(Defenser->GetName() + "은(는) ", Damage, "의 피해를 입었다!");
+		OnAttack(Attacker->GetName());
+	}
+	if (OnHit)
+	{
+		OnHit(Defenser->GetName(), Damage, (int)StileMultiplier(Attacker, Defenser));
+		// 공격자의 이름, 데미지, 상성을 전달;
+		// Multiplier(상성)은 유리하면2 불리하면0 중립이면1;
 	}
 	Defenser->TakeDamage(Damage);// 입은 데미지만큼 체력 감소;
 }
 
 
-void C_BattleSystem::Battle(std::shared_ptr<C_Creature> Player, std::shared_ptr<C_Creature> Enemy)
+void C_BattleSystem::Battle(std::shared_ptr<C_Creature> Player, std::shared_ptr<C_Creature> Enemy) const
 {
 	while (!Player->IsDefeated() && !Enemy->IsDefeated())
 	{
-		if (rand() % 100 < 30)
-		{
-			std::cout << "아이템";
-		}
 		Attack(Player, Enemy); // 플레이어가 먼저 공격;
 		Sleep(1000); // 1초 대기
 		if (Enemy->IsDefeated())
 		{
-			std::cout << Enemy->GetName() << "을(를) 쓰러뜨렸다!" << std::endl;
-			//경험치 및 아이템 보상 함수 호출 (구현 필요);
+			if (OnDefeat)
+			{
+				OnDefeat(Enemy->GetName()); // 쓰러뜨린 적의 이름 전달;
+			}
+			LevelSystem.GainAffinity(Player, 50); // 경험치 획득;
 			break;
 		}
 		Attack(Enemy, Player); // 적의 공격
 		if (Player->IsDefeated())
 		{
-			std::cout << Player->GetName() << "이(가) 패배했다..." << std::endl;
+			if (OnDefeat)
+			{
+				OnDefeat(Player->GetName());
+			}
 			// 패배 처리 함수 호출 (구현 필요);
 			break;
 		}
