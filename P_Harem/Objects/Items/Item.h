@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <string>
 
@@ -44,4 +44,3 @@ public:
 private:
 	ItemDatas Item;
 };
-
