@@ -4,7 +4,7 @@
 #include "../Framework/Framework.h"
 
 class C_World;
-class C_Item;
+class C_Items;
 class C_Player;
 
 enum class ShopState
@@ -26,7 +26,7 @@ public:
 	void Exit();
 
 private:
-	std::vector<std::shared_ptr<C_Item>> Items;
+	std::vector<std::shared_ptr<C_Items>> Items;
 	std::shared_ptr<C_Player> Player;
 	ShopState SS = ShopState::SelectMenu;
 };
