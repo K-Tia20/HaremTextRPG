@@ -124,19 +124,26 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Areas\Area.cpp" />
+    <ClCompile Include="Areas\City.cpp" />
+    <ClCompile Include="Areas\Shop.cpp" />
     <ClCompile Include="Battle\BattleSystem.cpp" />
     <ClCompile Include="Creature\Creature.cpp" />
     <ClCompile Include="GameManager\World.cpp" />
+    <ClCompile Include="Inventory\Inventory.cpp" />
     <ClCompile Include="Objects\Items\Item.cpp" />
     <ClCompile Include="Player\Player.cpp" />
     <ClCompile Include="P_Harem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Areas\Area.h" />
+    <ClInclude Include="Areas\City.h" />
+    <ClInclude Include="Areas\Shop.h" />
     <ClInclude Include="Battle\BattleSystem.h" />
     <ClInclude Include="Creature\Creature.h" />
+    <ClInclude Include="Framework\Defs.h" />
     <ClInclude Include="Framework\Framework.h" />
     <ClInclude Include="GameManager\World.h" />
+    <ClInclude Include="Inventory\Inventory.h" />
     <ClInclude Include="Objects\Items\Item.h" />
     <ClInclude Include="Player\Player.h" />
   </ItemGroup>
