@@ -38,11 +38,13 @@ void C_BattleSystem::Attack(std::shared_ptr<C_Creature> Attacker, std::shared_pt
 {
 	int Damage = Attacker->GetAttack() * StileMultiplier(Attacker, Defenser);
 	//공격력에 스타일 상성을 곱하고 소수점 버림;
-	// 로그에 공격 대사 출력;
-	Sleep(1000); // 1초 대기
 	if (OnAttack)
 	{
-		OnAttack(Defenser->GetName() + "은(는) ", Damage, "의 피해를 입었다!");
+		OnAttack(Attacker->GetName());
+	}
+	if (OnHit)
+	{
+		OnHit(Defenser->GetName(), Damage);
 	}
 	Defenser->TakeDamage(Damage);// 입은 데미지만큼 체력 감소;
 }
@@ -52,24 +54,28 @@ void C_BattleSystem::Battle(std::shared_ptr<C_Creature> Player, std::shared_ptr<
 {
 	while (!Player->IsDefeated() && !Enemy->IsDefeated())
 	{
-		if (rand() % 100 < 30)
-		{
-			std::cout << "아이템";
-		}
 		Attack(Player, Enemy); // 플레이어가 먼저 공격;
 		Sleep(1000); // 1초 대기
 		if (Enemy->IsDefeated())
 		{
-			std::cout << Enemy->GetName() << "을(를) 쓰러뜨렸다!" << std::endl;
+			if (OnDefeat)
+			{
+				OnDefeat(Enemy->GetName());
+			}
 			//경험치 및 아이템 보상 함수 호출 (구현 필요);
 			break;
 		}
 		Attack(Enemy, Player); // 적의 공격
 		if (Player->IsDefeated())
 		{
-			std::cout << Player->GetName() << "이(가) 패배했다..." << std::endl;
+			if (OnDefeat)
+			{
+				OnDefeat(Player->GetName());
+			}
 			// 패배 처리 함수 호출 (구현 필요);
 			break;
 		}
 	}
 }
+
+
