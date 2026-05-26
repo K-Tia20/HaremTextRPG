@@ -8,6 +8,8 @@
 
 using namespace std;
 
+using namespace std;
+
 // 생성자에서 World를 받음
 C_City::C_City()
 {
@@ -19,6 +21,7 @@ C_City::C_City(C_World* world)
 
 	Player = World->GetPlayer();
 	// TODO : Creature적들 전부 생성되면 작업
+
 	//Girls.push_back(make_shared</*히로인들 클래스*/>());
 	//Girls.push_back(make_shared</*히로인들 클래스*/>());
 	//Girls.push_back(make_shared</*히로인들 클래스*/>());
@@ -31,8 +34,6 @@ C_City::C_City(C_World* world)
 
 void C_City::SelectMenu()
 {
-	// City의 기본 메뉴입니다. 로그를 적어주세요.
-
 	int choice = Player->Input<int>();
 
 	switch (choice)
@@ -50,14 +51,7 @@ void C_City::SelectMenu()
 			cout << "오늘은 허탕 쳤습니다." << endl;
 		}
 	}
-		break;
-	case 2:
-		CS = CityState::MoveArea;
-		break;
-	default:
-		break;
-	}
-}
+
 
 void C_City::MoveArea()
 {
