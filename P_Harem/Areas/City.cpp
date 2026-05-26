@@ -1,9 +1,19 @@
-
+﻿
 #include "../Framework/Framework.h"
+#include "../Battle/BattleSystem.h"
+#include "../Areas/Area.h"
+#include "../GameManager/World.h"
+#include "../Player/Player.h"
+#include "../Framework/CreatureInclude.h"
 #include "City.h"
 
+using namespace std;
 
 // 생성자에서 World를 받음
+C_City::C_City()
+{
+}
+
 C_City::C_City(C_World* world)
 {
 	C_Area::SetWorld(world);
@@ -53,7 +63,6 @@ void C_City::SelectMenu()
 		break;
 	}
 }
-
 
 void C_City::MoveArea()
 {
