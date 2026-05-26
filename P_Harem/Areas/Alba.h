@@ -1,16 +1,11 @@
 ﻿#pragma once
 
 #include "Area.h"
-#include "../Framework/Framework.h"
 
-class C_World;
-class C_Item;
-class C_Player;
-
-class C_Shop : public C_Area
+class C_Alba : public C_Area
 {
 public:
-	C_Shop(C_World* world);
+	C_Alba(C_World* world);
 
 	virtual void SelectMenu() override;
 	virtual void MoveArea() override;
@@ -18,7 +13,6 @@ public:
 	virtual void Encounter() override;
 
 private:
-	std::vector<std::shared_ptr<C_Item>> Items;
 	std::shared_ptr<C_Player> Player;
 };
 
