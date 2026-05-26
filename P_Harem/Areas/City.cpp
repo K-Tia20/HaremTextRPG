@@ -110,8 +110,15 @@ void C_City::Encounter()
 
 void C_City::Gatcha()
 {
-	// 싸운여자 획득
-	Player->AddGirlFrends(BattleGirl);
-	// 지역에서 여자 빼내기
-	Girls.erase(std::remove(Girls.begin(), Girls.end(), BattleGirl), Girls.end());
+	int randomIndex = rand() % 100;
+
+	if (randomIndex < 30)
+	{
+		// 싸운여자 획득
+		BattleGirl->SetMaxHp(200);
+		BattleGirl->SetAttack(30);
+		Player->AddGirlFrends(BattleGirl);
+		// 지역에서 여자 빼내기
+		Girls.erase(std::remove(Girls.begin(), Girls.end(), BattleGirl), Girls.end());
+	}
 }
