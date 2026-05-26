@@ -1,30 +1,25 @@
-
+﻿
 #include "Item.h"
+#include "../../Framework/Framework.h"
+#include "../../Creature/Creature.h"
 
-C_Items::C_Items()
+C_Items::C_Items(std::string name,int price, int value)
 {
+	SetItem(name, price, value);
 }
 
-void C_Items::SetItemName(std::string itemname)
+void C_Items::SetItem(std::string name, int price, int Value)
 {
+	Item = { name, price, 1, Value };
 }
 
-void C_Items::SetPrice(int price)
+
+void C_Items::Add()
 {
+	Item.Quantity++;
 }
 
-void C_Items::UsingItem()
+void C_Items::Sub()
 {
-}
-
-void C_Items::UsingHpItem()
-{
-}
-
-void C_Items::UsingPowerItem()
-{
-}
-
-void C_Items::UsingDefenceItem()
-{
+	Item.Quantity--;
 }
