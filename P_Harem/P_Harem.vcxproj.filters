@@ -8,6 +8,9 @@
     <ClCompile Include="Creature\Creature.cpp" />
     <ClCompile Include="GameManager\World.cpp" />
     <ClCompile Include="Objects\Items\Item.cpp" />
+    <ClCompile Include="Areas\City.cpp" />
+    <ClCompile Include="Areas\Shop.cpp" />
+    <ClCompile Include="Inventory\Inventory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Player\Player.h" />
@@ -17,5 +20,9 @@
     <ClInclude Include="Framework\Framework.h" />
     <ClInclude Include="GameManager\World.h" />
     <ClInclude Include="Objects\Items\Item.h" />
+    <ClInclude Include="Framework\Defs.h" />
+    <ClInclude Include="Areas\City.h" />
+    <ClInclude Include="Areas\Shop.h" />
+    <ClInclude Include="Inventory\Inventory.h" />
   </ItemGroup>
 </Project>
