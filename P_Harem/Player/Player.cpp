@@ -23,6 +23,8 @@ std::shared_ptr<C_Creature> C_Player::SetFightGirl()
 			std::cout << i << ". " << Girls->GetName() << std::endl;
 		}
 
+		std::cout << "0. 안싸우기" << std::endl;
+
 		choice = Input<int>() - 1;
 	}
 

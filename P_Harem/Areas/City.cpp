@@ -4,9 +4,8 @@
 #include "../Areas/Area.h"
 #include "../GameManager/World.h"
 #include "../Player/Player.h"
+#include "../Framework/CreatureInclude.h"
 #include "City.h"
-
-using namespace std;
 
 using namespace std;
 
@@ -22,18 +21,19 @@ C_City::C_City(C_World* world)
 	Player = World->GetPlayer();
 	// TODO : Creature적들 전부 생성되면 작업
 
-	//Girls.push_back(make_shared</*히로인들 클래스*/>());
-	//Girls.push_back(make_shared</*히로인들 클래스*/>());
-	//Girls.push_back(make_shared</*히로인들 클래스*/>());
-	//Girls.push_back(make_shared</*히로인들 클래스*/>());
-	//Girls.push_back(make_shared</*히로인들 클래스*/>());
-	//Girls.push_back(make_shared</*히로인들 클래스*/>());
-	//Girls.push_back(make_shared</*히로인들 클래스*/>());
-	//Girls.push_back(make_shared</*히로인들 클래스*/>());
+	Girls.push_back(std::make_shared<And>());
+	Girls.push_back(std::make_shared<Chashrin>());
+	Girls.push_back(std::make_shared<Codelia>());
+	Girls.push_back(std::make_shared<Lina>());
+	Girls.push_back(std::make_shared<Marry>());
+	Girls.push_back(std::make_shared<Oplier>());
+	Girls.push_back(std::make_shared<Zhad>());
+	Girls.push_back(std::make_shared<C_Creature>("평범녀", C_Stile::NormalGirl, 200, 30));
 }
 
 void C_City::SelectMenu()
 {
+	// 로그가 필요합니다...
 	int choice = Player->Input<int>();
 
 	switch (choice)
@@ -44,13 +44,25 @@ void C_City::SelectMenu()
 
 		if (randomIndex < 70)
 		{
+			// 여자 랜덤 인카운터
 			Encounter();
 		}
 		else
 		{
+			// 30퍼로 여자 못 만남
 			cout << "오늘은 허탕 쳤습니다." << endl;
 		}
 	}
+		break;
+	case 2:
+		// 지역 이동
+		CS = CityState::MoveArea;
+		break;
+	default:
+		// 잘못된 입력 다시!
+		break;
+	}
+}
 
 
 void C_City::MoveArea()
@@ -79,16 +91,27 @@ void C_City::Update()
 	switch (CS)
 	{
 	case CityState::SelectMenu:
-		SelectMenu();
+		SelectMenu(); // 메뉴 고르기
 		break;
 	case CityState::MoveArea:
-		MoveArea();
+		MoveArea(); // 지역 이동하기
 		break;
 	}
 }
 
+// 여자 인카운터
 void C_City::Encounter()
 {
 	int randomIndex = rand() % Girls.size();
-	Battle->Battle(Player->SetFightGirl(), /*랜덤한 여성*/);
+	BattleGirl = Girls[randomIndex];
+
+	Battle->Battle(Player->SetFightGirl(), Girls[randomIndex]);
+}
+
+void C_City::Gatcha()
+{
+	// 싸운여자 획득
+	Player->AddGirlFrends(BattleGirl);
+	// 지역에서 여자 빼내기
+	Girls.erase(std::remove(Girls.begin(), Girls.end(), BattleGirl), Girls.end());
 }
