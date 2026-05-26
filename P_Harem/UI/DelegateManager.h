@@ -1,10 +1,13 @@
-#pragma once 
-class UIManager;
-class C_World; // 모든 로직의 집합체
+#pragma once
 
-class DelegateManager
-{
+class UIManager;
+class C_BattleSystem;
+
+/**
+ * @class DelegateManager
+ * @brief 각 시스템 간의 이벤트 바인딩을 중재합니다.
+ */
+class DelegateManager {
 public:
-    // "조립 한 줄"을 담당할 함수
-    static void Connect(C_World& world, UIManager& ui);
+    void BindAll(UIManager* ui, C_BattleSystem* battleSys);
 };

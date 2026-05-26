@@ -5,14 +5,12 @@
 
 using namespace UI_LAYOUT;
 
-void UIManager::gotoxy(int x, int y) 
-{
+void UIManager::gotoxy(int x, int y) {
     COORD pos = { (SHORT)x, (SHORT)y };
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
 }
 
-int UIManager::GetVisualLength(const std::string& str) 
-{
+int UIManager::GetVisualLength(const std::string& str) {
     int visualLen = 0;
     for (size_t i = 0; i < str.length(); ) {
         if ((unsigned char)str[i] >= 0x80) { 
@@ -27,27 +25,21 @@ int UIManager::GetVisualLength(const std::string& str)
     return visualLen;
 }
 
-void UIManager::DrawSolidBox(int startX, int startY, int width, int height, std::string title) 
-{
-    // 1. 모서리 출력
+void UIManager::DrawSolidBox(int startX, int startY, int width, int height, std::string title) {
     gotoxy(startX, startY); std::cout << "┌";
     gotoxy(startX + width - 1, startY); std::cout << "┐";
     gotoxy(startX, startY + height - 1); std::cout << "└";
     gotoxy(startX + width - 1, startY + height - 1); std::cout << "┘";
 
-    // 2. 가로선 (─)
     for (int x = 1; x < width - 1; x++) {
         gotoxy(startX + x, startY); std::cout << "─";
         gotoxy(startX + x, startY + height - 1); std::cout << "─";
     }
-
-    // 3. 세로선 (│)
     for (int y = 1; y < height - 1; ++y) {
         gotoxy(startX, startY + y); std::cout << "│";
         gotoxy(startX + width - 1, startY + y); std::cout << "│";
     }
 
-    // 4. 타이틀 중앙 정렬 (가로선 위에 덮어쓰기)
     if (!title.empty()) {
         int vLen = GetVisualLength(title) + 2;
         int offset = (width - vLen) / 2;
@@ -57,15 +49,10 @@ void UIManager::DrawSolidBox(int startX, int startY, int width, int height, std:
     }
 }
 
-void UIManager::DrawSmartphoneFrame(int startX, int startY, int width, int height)
-{
-    // 전용 프레임 (스마트폰은 둥근 모서리 느낌을 위해 다른 문자 사용 가능하지만 통일감을 위해 유지)
+void UIManager::DrawSmartphoneFrame(int startX, int startY, int width, int height) {
     DrawSolidBox(startX, startY, width, height, "");
-    
     int mid = width / 2;
-    // 상단 리시버
     gotoxy(startX + mid - 3, startY); std::cout << "┰╍┰";
-    // 하단 버튼
     gotoxy(startX + mid - 2, startY + height - 1); std::cout << "[O]";
 }
 
@@ -77,8 +64,7 @@ void UIManager::Init() {
     style &= ~(WS_THICKFRAME | WS_MAXIMIZEBOX);
     SetWindowLong(hwnd, GWL_STYLE, style);
 
-    CONSOLE_FONT_INFOEX cfi;
-    cfi.cbSize = sizeof(cfi);
+    CONSOLE_FONT_INFOEX cfi = { sizeof(cfi) };
     cfi.nFont = 0;
     cfi.dwFontSize.X = 12;
     cfi.dwFontSize.Y = 24;
@@ -108,19 +94,10 @@ void UIManager::Init() {
 }
 
 void UIManager::RenderMainUI() {
-    // 1. 날짜 창 (독립 분리)
     DrawSolidBox(DATE_X, DATE_Y, DATE_W, DATE_H, "DATE");
-
-    // 2. 유저 정보 창
     DrawSolidBox(USER_INFO_X, USER_INFO_Y, USER_INFO_W, USER_INFO_H, "STATUS");
-    
-    // 3. 히로인 목록 (스마트폰 프레임)
     DrawSmartphoneFrame(PHONE_X, PHONE_Y, PHONE_W, PHONE_H);
-    
-    // 4. 메인 뷰포트
     DrawSolidBox(VIEWPORT_X, VIEWPORT_Y, VIEWPORT_W, VIEWPORT_H, "WORLD VIEW");
-    
-    // 5. 메시지 로그
     DrawSolidBox(LOG_X, LOG_Y, LOG_W, LOG_H, "LOG");
 }
 
@@ -130,10 +107,18 @@ void UIManager::PrintLog(const std::string& text) {
     if (logs.size() > (size_t)(LOG_H - 4)) logs.erase(logs.begin());
 
     for (int i = 0; i < (int)logs.size(); ++i) {
-        gotoxy(LOG_X + 3, LOG_Y + 2 + i);
+        int targetY = LOG_Y + 2 + i;
+        gotoxy(LOG_X + 3, targetY);
         std::string line = ">> " + logs[i];
-        int padding = (LOG_W - 6) - GetVisualLength(line);
-        std::cout << line << (padding > 0 ? std::string(padding, ' ') : "");
+        
+        int maxInnerW = LOG_W - 6; 
+        int padding = maxInnerW - GetVisualLength(line);
+        
+        std::cout << line;
+        if (padding > 0) std::cout << std::string(padding, ' ');
+
+        gotoxy(LOG_X + LOG_W - 1, targetY);
+        std::cout << "│";
     }
 }
 
@@ -173,8 +158,6 @@ void UIManager::UpdateHeroineList(const std::vector<HeroineDisplayData>& list) {
         
         gotoxy(PHONE_X + 3, baseY + 1);
         std::cout << "HP [";
-        // 너비 재계산: PHONE_W(40) - 여백(3) - "HP ["(4) - "] 100/100"(최대 8) = 약 25?
-        // 테두리를 뚫지 않도록 확실하게 15칸으로 제한합니다.
         int barW = 15; 
         int hpBar = (list[i].maxHp > 0) ? (list[i].hp * barW / list[i].maxHp) : 0;
         for (int b = 0; b < barW; ++b) {
@@ -195,31 +178,22 @@ void UIManager::ClearMainViewport() {
 
 void UIManager::DrawImage(const std::string& imageAnsi) {
     if (imageAnsi.empty()) return;
-
-    // 뷰포트 내부 시작 좌표 (테두리 안쪽)
     int startX = VIEWPORT_X + 1;
     int startY = VIEWPORT_Y + 1;
     
-    // 이미지 줄 수 계산 (세로 중앙 정렬용)
     int lineCount = 0;
     for (char c : imageAnsi) if (c == '\n') lineCount++;
     
-    // 세로 중앙 오프셋
     int yOffset = ( (VIEWPORT_H - 2) - lineCount ) / 2;
     if (yOffset < 0) yOffset = 0;
     
     int currentY = startY + yOffset;
-
-    // 문자열을 줄 단위로 파싱하여 출력
     std::string line;
     std::stringstream ss(imageAnsi);
     while (std::getline(ss, line)) {
         if (currentY >= VIEWPORT_Y + VIEWPORT_H - 1) break;
-        
         gotoxy(startX, currentY++);
         std::cout << line;
     }
-    
-    // 출력 후 커서를 안전한 곳으로 이동
     gotoxy(0, CONSOLE_HEIGHT - 1);
 }

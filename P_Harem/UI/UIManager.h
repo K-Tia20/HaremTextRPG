@@ -1,8 +1,13 @@
 #pragma once
+
 #include <string>
 #include <vector>
 #include "UILayoutDefs.h"
 
+/**
+ * @class UIManager
+ * @brief 콘솔 렌더링 및 레이아웃 제어를 담당하는 핵심 클래스입니다.
+ */
 class UIManager {
 private:
     int GetVisualLength(const std::string& str);
@@ -14,7 +19,7 @@ public:
     void Init(); 
     void RenderMainUI(); 
 
-    // 데이터 업데이트 API
+    // Update APIs
     void PrintLog(const std::string& text); 
     void UpdateMoney(int money);
     void UpdateDate(const std::string& date);
@@ -31,32 +36,3 @@ public:
     void ClearMainViewport();
     void DrawImage(const std::string& imageAnsi);
 };
-
-/*
-// --- main.cpp ---
-#include "UIManager.h"
-#include "DelegateManager.h"
-#include "BattleSystem.h" // 예시
-#include <iostream>
-
-int main() {
-    // 1. 객체 생성
-    UIManager ui;
-    DelegateManager delegateMgr;
-    BattleSystem battleSys; 
-
-    // 2. UI 초기화 및 렌더링
-    ui.Init();
-    ui.RenderMainUI();
-
-    // 3. 델리게이트 매니저를 통해 UI와 시스템의 통신선 연결
-    delegateMgr.BindAll(&ui, &battleSys);
-
-    // 4. 게임 메인 루프 시작...
-    // 유저 입력 등에 따라 battleSys.StartBattle(); 이 실행되면
-    // 자동으로 UI에 텍스트가 뜹니다!
-    
-    std::cin.get();
-    return 0;
-}
- */
