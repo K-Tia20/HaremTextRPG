@@ -4,9 +4,10 @@
 
 #include "../Framework/Framework.h"
 #include "../Creature/Creature.h"
+#include "../Framework/Defs.h"
 
 
-using OnBattleTextNumNumDelegate = std::function<void(std::string, int, int)>; 
+using OnBattleTextNumNumDelegate = std::function<void(std::string, int, int)>;
 // 텍스트와 숫자 2개를 전달하는 델리게이트;
 
 using OnBattleTextNumDelegate = std::function<void(std::string, int)>;
@@ -32,4 +33,3 @@ public:
 	void Attack(std::shared_ptr<C_Creature> Attacker, std::shared_ptr<C_Creature> Defenser) const; // 공격을 실행시키는 함수;
 	void Battle(std::shared_ptr<C_Creature> Player, std::shared_ptr<C_Creature> Enemy) const; // 전투 로직을 처리하는 함수;
 };
-

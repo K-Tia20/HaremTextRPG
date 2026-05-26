@@ -2,7 +2,7 @@
 
 #include "BattleSystem.h"
 
-
+C_LevelSystem LevelSystem; // 레벨 시스템 인스턴스 생성
 
 int C_BattleSystem::CalculateDamage(std::shared_ptr<C_Creature> Attacker, std::shared_ptr<C_Creature> Defenser) const
 {
@@ -74,9 +74,9 @@ void C_BattleSystem::Battle(std::shared_ptr<C_Creature> Player, std::shared_ptr<
 		{
 			if (OnDefeat)
 			{
-				OnDefeat(Enemy->GetName());
+				OnDefeat(Enemy->GetName()); // 쓰러뜨린 적의 이름 전달;
 			}
-			
+			LevelSystem.GainAffinity(Player, 50); // 경험치 획득;
 			break;
 		}
 		Attack(Enemy, Player); // 적의 공격
@@ -91,5 +91,3 @@ void C_BattleSystem::Battle(std::shared_ptr<C_Creature> Player, std::shared_ptr<
 		}
 	}
 }
-
-
