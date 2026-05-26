@@ -1,4 +1,5 @@
-﻿#pragma once
+
+#pragma once
 
 // 지역들의 부모 클래스
 class C_World;
@@ -17,7 +18,7 @@ public:
 	void SetWorld(C_World* world);
 	C_World* GetWorld() { return World; }
 
-protected:
+private:
 	C_World* World = nullptr;
 };
 
