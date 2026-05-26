@@ -2,8 +2,8 @@
 
 #include "Creature.h"
 
-C_Creature::C_Creature(std::string Name, C_Stile Stile, int MaxHp, int Attack, int Affinity)
-	: Name(Name), Stile(Stile), MaxHp(MaxHp), CurrentHp(MaxHp), Attack(Attack), Affinity(Affinity)
+C_Creature::C_Creature(std::string Name, C_Stile Stile, int MaxHp, int Attack)
+	: Name(Name), Stile(Stile), MaxHp(MaxHp), CurrentHp(MaxHp), Attack(Attack)
 {
 
 }
