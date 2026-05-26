@@ -5,8 +5,7 @@
 
 class C_Creature;
 class C_BattleSystem;
-class C_World;
-class Player;
+class C_Player;
 
 enum class CityState
 {
