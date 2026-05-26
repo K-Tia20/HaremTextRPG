@@ -1,6 +1,7 @@
 #include "UIManager.h"
 #include <iostream>
 #include <windows.h>
+#include <sstream>
 
 using namespace UI_LAYOUT;
 
@@ -193,20 +194,32 @@ void UIManager::ClearMainViewport() {
 }
 
 void UIManager::DrawImage(const std::string& imageAnsi) {
+    if (imageAnsi.empty()) return;
+
     // 뷰포트 내부 시작 좌표 (테두리 안쪽)
     int startX = VIEWPORT_X + 1;
     int startY = VIEWPORT_Y + 1;
     
-    int currentY = startY;
-    gotoxy(startX, currentY);
+    // 이미지 줄 수 계산 (세로 중앙 정렬용)
+    int lineCount = 0;
+    for (char c : imageAnsi) if (c == '\n') lineCount++;
+    
+    // 세로 중앙 오프셋
+    int yOffset = ( (VIEWPORT_H - 2) - lineCount ) / 2;
+    if (yOffset < 0) yOffset = 0;
+    
+    int currentY = startY + yOffset;
 
-    for (size_t i = 0; i < imageAnsi.length(); ++i) {
-        if (imageAnsi[i] == '\n') {
-            currentY++;
-            if (currentY >= VIEWPORT_Y + VIEWPORT_H - 1) break;
-            gotoxy(startX, currentY);
-        } else {
-            std::cout << imageAnsi[i];
-        }
+    // 문자열을 줄 단위로 파싱하여 출력
+    std::string line;
+    std::stringstream ss(imageAnsi);
+    while (std::getline(ss, line)) {
+        if (currentY >= VIEWPORT_Y + VIEWPORT_H - 1) break;
+        
+        gotoxy(startX, currentY++);
+        std::cout << line;
     }
+    
+    // 출력 후 커서를 안전한 곳으로 이동
+    gotoxy(0, CONSOLE_HEIGHT - 1);
 }

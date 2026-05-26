@@ -7,16 +7,25 @@
 #include <algorithm>
 
 void C_ImageManager::Init() {
-    // 예시: 히로인 이미지 로드 (실제 파일이 UI/IMG 폴더에 있어야 함)
-    // 뷰포트 크기에 맞춰 타겟 해상도 설정 (하프 블록 사용 시 세로 픽셀은 2배)
-    int targetW = UI_LAYOUT::VIEWPORT_W;
-    int targetH = UI_LAYOUT::VIEWPORT_H * 2; 
+    // 뷰포트 최대 가용 크기
+    int maxW = UI_LAYOUT::VIEWPORT_W - 2;
+    int maxH = (UI_LAYOUT::VIEWPORT_H - 2) * 2; 
 
-    // 실제 경로 예시 (사용자가 PNG를 저장할 위치)
-    m_imageCache["SeA"] = ConvertToAnsi("UI/IMG/SeA.png", targetW, targetH);
-    m_imageCache["DoDoHae"] = ConvertToAnsi("UI/IMG/DoDoHae.png", targetW, targetH);
-    m_imageCache["YuRi"] = ConvertToAnsi("UI/IMG/YuRi.png", targetW, targetH);
-    m_imageCache["Teto"] = ConvertToAnsi("UI/IMG/Teto.png", targetW, targetH);
+    auto LoadImage = [&](const std::string& name, const std::string& filename) {
+        std::string path1 = "UI/IMG/" + filename;
+        std::string path2 = "P_Harem/UI/IMG/" + filename;
+        
+        std::string result = ConvertToAnsi(path1, maxW, maxH);
+        if (result.find("Failed") != std::string::npos) {
+            result = ConvertToAnsi(path2, maxW, maxH);
+        }
+        m_imageCache[name] = result;
+    };
+
+    LoadImage("SeA", "SeA.jpg");
+    LoadImage("DoDoHae", "DoDoHae.png");
+    LoadImage("YuRi", "YuRi.png");
+    LoadImage("Teto", "Teto.png");
 }
 
 const std::string& C_ImageManager::GetCachedImage(const std::string& name) {
@@ -26,21 +35,44 @@ const std::string& C_ImageManager::GetCachedImage(const std::string& name) {
     return m_emptyString;
 }
 
-std::string C_ImageManager::ConvertToAnsi(const std::string& filePath, int targetW, int targetH) {
+std::string C_ImageManager::ConvertToAnsi(const std::string& filePath, int maxW, int maxH) {
     int width, height, channels;
     unsigned char* data = stbi_load(filePath.c_str(), &width, &height, &channels, 3);
     
     if (!data) return "Image Load Failed: " + filePath;
 
+    // --- 비율 유지 리사이징 계산 ---
+    float srcRatio = (float)width / height;
+    float boxRatio = (float)maxW / maxH;
+
+    int targetW, targetH;
+    if (srcRatio > boxRatio) {
+        // 가로가 상대적으로 더 긴 경우 (가로에 맞춤)
+        targetW = maxW;
+        targetH = (int)(maxW / srcRatio);
+    } else {
+        // 세로가 상대적으로 더 긴 경우 (세로에 맞춤)
+        targetH = maxH;
+        targetW = (int)(maxH * srcRatio);
+    }
+    // 하프 블록을 위해 세로 픽셀 수는 무조건 짝수여야 함
+    if (targetH % 2 != 0) targetH--;
+    if (targetH < 2) targetH = 2;
+
     std::stringstream ss;
     
-    // 이전 색상을 기억하여 RLE 압축 (초기값은 불가능한 값으로 설정)
+    // 중앙 정렬을 위한 오프셋 정보 삽입 (DrawImage에서 사용하도록 문자열 맨 앞에 특수 태그 삽입 가능하나, 
+    // 여기서는 단순하게 각 라인 앞에 공백을 넣는 방식으로 최적화)
+    int xPadding = (maxW - targetW) / 2;
+
     int lastFR = -1, lastFG = -1, lastFB = -1;
     int lastBR = -1, lastBG = -1, lastBB = -1;
 
     for (int y = 0; y < targetH; y += 2) {
+        // 가로 중앙 정렬을 위한 공백 추가
+        if (xPadding > 0) ss << std::string(xPadding, ' ');
+
         for (int x = 0; x < targetW; x++) {
-            // Nearest Neighbor Resampling
             int srcX = (x * width) / targetW;
             int srcY_top = (y * height) / targetH;
             int srcY_bot = ((y + 1) * height) / targetH;
@@ -51,7 +83,6 @@ std::string C_ImageManager::ConvertToAnsi(const std::string& filePath, int targe
             int fr = data[topIdx], fg = data[topIdx + 1], fb = data[topIdx + 2];
             int br = data[botIdx], bg = data[botIdx + 1], bb = data[botIdx + 2];
 
-            // 색상이 바뀔 때만 ANSI 코드 추가 (최적화)
             bool fChanged = (fr != lastFR || fg != lastFG || fb != lastFB);
             bool bChanged = (br != lastBR || bg != lastBG || bb != lastBB);
 
@@ -63,11 +94,10 @@ std::string C_ImageManager::ConvertToAnsi(const std::string& filePath, int targe
                 ss << "\x1b[48;2;" << br << ";" << bg << ";" << bb << "m";
                 lastBR = br; lastBG = bg; lastBB = bb;
             }
-
-            ss << "▀"; // 하프 블록
+            ss << "▀"; 
         }
-        ss << "\x1b[0m\n"; // 줄바꿈 시 색상 초기화 (터미널 버그 방지)
-        lastFR = lastFG = lastFB = lastBR = lastBG = lastBB = -1; // 라인마다 초기화
+        ss << "\x1b[0m\n"; 
+        lastFR = lastFG = lastFB = lastBR = lastBG = lastBB = -1;
     }
 
     stbi_image_free(data);
