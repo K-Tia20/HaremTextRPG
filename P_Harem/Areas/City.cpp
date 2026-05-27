@@ -31,10 +31,12 @@ void C_City::SelectMenu()
     auto ui = World->GetUI();
     if (!ui) return;
 
-	ui->PrintLog("--- 시내 광장 ---");
-    ui->PrintLog("1. 헌팅 시도 (전투)");
-    ui->PrintLog("2. 여자친구 목록 보기");
-    ui->PrintLog("3. 다른 지역으로 이동");
+	ui->PrintLog("\x1b[95m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\x1b[0m");
+	ui->PrintLog("\x1b[97m      🏙️  햇살 가득한 시내 광장        \x1b[0m");
+	ui->PrintLog("\x1b[95m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\x1b[0m");
+    ui->PrintLog("1. \x1b[91m🔥 핫플레이스 탐방 (헌팅 시도)\x1b[0m");
+    ui->PrintLog("2. \x1b[92m📱 카카오톡 열기 (여친 목록)\x1b[0m");
+    ui->PrintLog("3. \x1b[90m🚶 다른 지역으로 이동하기\x1b[0m");
     
 	int choice = Player->InputInt();
     ui->ClearLog(); 
@@ -45,7 +47,10 @@ void C_City::SelectMenu()
 	{
 		int randomIndex = rand() % 100;
 		if (randomIndex < 70) Encounter();
-		else ui->PrintLog("오늘은 허탕 쳤습니다. 조용히 집으로 돌아갑니다.");
+		else {
+            ui->PrintLog("\x1b[90m시스템: 한참을 서성였지만 허탕만 쳤습니다...\x1b[0m");
+            UIManager::WaitKey(ui);
+        }
 	}
 		break;
 	case 2:
@@ -65,9 +70,10 @@ void C_City::MoveArea()
     auto ui = World->GetUI();
     if (!ui) return;
 
-	ui->PrintLog("--- 지역 이동 ---");
-    ui->PrintLog("1. 상점 (요거프레쏘)");
-    ui->PrintLog("2. 알바하러 가기");
+	ui->PrintLog("\x1b[90m--- 어디로 갈까요? ---\x1b[0m");
+    ui->PrintLog("1. \x1b[96m☕ 요거프레쏘 카페\x1b[0m");
+    ui->PrintLog("2. \x1b[93m📋 오늘의 긴급 알바\x1b[0m");
+    ui->PrintLog("0. 취소");
 
 	int choice = Player->InputInt();
     ui->ClearLog(); 
@@ -83,7 +89,7 @@ void C_City::MoveArea()
 		World->GotoAlba();
 		break;
 	default:
-		ui->PrintLog("시스템: 다시 골라주세요...");
+		CS = CityState::SelectMenu;
 		break;
 	}
 }
@@ -104,25 +110,37 @@ void C_City::Encounter()
 
 	if (Girls.empty())
 	{
-		ui->PrintLog("시스템: 더 이상 만날 사람이 없습니다.");
+		ui->PrintLog("\x1b[90m시스템: 거리에는 더 이상 마주칠 사람이 없습니다...\x1b[0m");
+        UIManager::WaitKey(ui);
 		return;
 	}
 
 	int randomIndex = rand() % static_cast<int>(Girls.size());
 	BattleGirl = Girls[randomIndex];
 
-    ui->PrintLog("운명적인 만남! [" + BattleGirl->GetName() + "]을(를) 만났습니다.");
+    // [Visual Upgrade] 그녀의 스타일색에 맞춘 화려한 등장
+    std::string styleColor = "\x1b[37m";
+    if (BattleGirl->GetStile() == C_Stile::HotGirl) styleColor = "\x1b[31m";
+    else if (BattleGirl->GetStile() == C_Stile::IceGirl) styleColor = "\x1b[36m";
+    else if (BattleGirl->GetStile() == C_Stile::GrassGirl) styleColor = "\x1b[32m";
+
+    ui->PrintLog("\x1b[95m[ ! ] 운명적인 만남!\x1b[0m");
+    ui->PrintLog(styleColor + "★ 저 멀리서 [" + BattleGirl->GetName() + "]이(가) 나타났습니다! ★\x1b[0m");
 	
 	auto FightGirl = Player->SetFightGirl();
     ui->ClearLog(); 
 
 	if (FightGirl == nullptr)
 	{
-		ui->PrintLog("시스템: 전투를 취소했습니다.");
+		ui->PrintLog("시스템: 오늘은 이만 물러나기로 했습니다.");
+        UIManager::WaitKey(ui);
 		return;
 	}
 
-    ui->PrintLog("=== 배틀 시작: [" + FightGirl->GetName() + "] VS [" + BattleGirl->GetName() + "] ===");
+    ui->PrintLog("\x1b[93m⚔️ 매력 배틀 START! ⚔️\x1b[0m");
+    ui->PrintLog("[\x1b[92m" + FightGirl->GetName() + "\x1b[0m] VS [\x1b[91m" + BattleGirl->GetName() + "\x1b[0m]");
+    ui->PrintLog("\x1b[90m------------------------------------\x1b[0m");
+
 	Battle->Battle(FightGirl, BattleGirl);
 
     UIManager::WaitKey(ui);
@@ -139,14 +157,18 @@ void C_City::Encounter()
 
 void C_City::Gatcha()
 {
+    auto ui = World->GetUI();
 	int randomIndex = rand() % 100;
-	if (randomIndex < 30)
+	if (randomIndex < 40) // 확률 소폭 상향
 	{
 		BattleGirl->SetMaxHp(200);
 		BattleGirl->SetAttack(30);
 		Player->AddGirlFrends(BattleGirl);
 		Girls.erase(remove(Girls.begin(), Girls.end(), BattleGirl), Girls.end());
-	}
+        ui->PrintLog("\x1b[93m✨ 대성공! [" + BattleGirl->GetName() + "]의 연락처를 얻었습니다! ✨\x1b[0m");
+	} else {
+        ui->PrintLog("\x1b[90m[" + BattleGirl->GetName() + "]은(는) 부끄러워하며 도망갔습니다...\x1b[0m");
+    }
 }
 
 void C_City::ViewYeuchin()
@@ -154,12 +176,16 @@ void C_City::ViewYeuchin()
     auto ui = World->GetUI();
     if (!ui) return;
 
-    ui->PrintLog("--- 내 여자친구들 ---");
+    ui->PrintLog("\x1b[92m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\x1b[0m");
+    ui->PrintLog("\x1b[97m      📱 등록된 여자친구 리스트       \x1b[0m");
+    ui->PrintLog("\x1b[92m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\x1b[0m");
 	auto friends = Player->GetGirlFrends();
-    if (friends.empty()) ui->PrintLog("(아직 아무도 없습니다...)");
+    if (friends.empty()) ui->PrintLog("\x1b[90m(아직 텅 비어 있습니다...)\x1b[0m");
     else {
         for (const auto& f : friends) {
-            ui->PrintLog("- " + f->GetName() + " (HP: " + to_string(f->GetCurrentHp()) + ")");
+            ui->PrintLog("💖 \x1b[97m" + f->GetName() + "\x1b[0m (HP: " + to_string(f->GetCurrentHp()) + ")");
         }
     }
+    ui->PrintLog("\x1b[90m------------------------------------\x1b[0m");
+    UIManager::WaitKey(ui);
 }
