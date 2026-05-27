@@ -4,5 +4,6 @@
 
 class And : public C_Creature
 {
+public:
 	And();
 };

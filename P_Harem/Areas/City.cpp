@@ -73,12 +73,18 @@ void C_City::MoveArea()
 	switch (choice)
 	{
 	case 1:
+	{
 		// 상점으로 이동
+		CS = CityState::SelectMenu;
 		World->GotoShop();
 		break;
+	}
 	case 2:
-		// 아르바이트 구현
+	{
+		CS = CityState::SelectMenu;
+		World->GotoAlba();
 		break;
+	}
 	default:
 		cout << "다시 골라주세요..." << endl;
 		break;

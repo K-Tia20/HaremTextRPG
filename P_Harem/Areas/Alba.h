@@ -2,6 +2,13 @@
 
 #include "Area.h"
 
+enum class AlbaState
+{
+	SelectMenu,
+	MoveArea,
+	Alba
+};
+
 class C_Player;
 
 class C_Alba : public C_Area
@@ -13,7 +20,7 @@ public:
 	virtual void MoveArea() override;
 	virtual void Update() override;
 
-
 private:
 	std::shared_ptr<C_Player> Player;
+	AlbaState AS = AlbaState::SelectMenu;
 };
