@@ -13,6 +13,7 @@ void C_Inventory::AddItem(std::shared_ptr<C_Items> item)
 		if (Item->GetItem().Name == item->GetItem().Name)
 		{
 			Item->Add();
+			return;
 		}
 	}
 

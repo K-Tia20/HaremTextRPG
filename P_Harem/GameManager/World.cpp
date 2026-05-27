@@ -144,7 +144,7 @@ void C_World::SetGirlFrends()
 		break;
 	}
 
-	if (Player->GetGirlFrends().empty())
+	if (!Player->GetGirlFrends().empty())
 	{
 		WS = WorldState::StartGame;
 	}
@@ -152,6 +152,7 @@ void C_World::SetGirlFrends()
 
 void C_World::SetTetoGirl()
 {
+	cout << "뜨겁습니다." << endl;
 	// 테토녀의 정보 로그를 적어주세요
 	// 입력 로그를 적어주세요
 	switch (Player->Input<int>())
@@ -183,6 +184,7 @@ void C_World::SetTetoGirl()
 
 void C_World::SetCoolPretyGirl()
 {
+	cout << "차갑습니다." << endl;
 	// 쿨미녀의 정보 로그를 적어주세요
 	// 입력 로그를 적어주세요
 	switch (Player->Input<int>())
@@ -212,6 +214,7 @@ void C_World::SetCoolPretyGirl()
 
 void C_World::SetChosicGirl()
 {
+	cout << "풀내납니다." << endl;
 	// 초식녀의 정보 로그를 적어주세요
 	// 입력 로그를 적어주세요
 	switch (Player->Input<int>())
