@@ -2,6 +2,8 @@
 
 #include "Area.h"
 
+class C_Player;
+
 class C_Alba : public C_Area
 {
 public:
@@ -10,7 +12,7 @@ public:
 	virtual void SelectMenu() override;
 	virtual void MoveArea() override;
 	virtual void Update() override;
-	virtual void Encounter() override;
+
 
 private:
 	std::shared_ptr<C_Player> Player;
