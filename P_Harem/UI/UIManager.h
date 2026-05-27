@@ -49,5 +49,8 @@ public:
     void CenteredTypeLog(const std::string& text, int y, int delayMs = 100);
     void PlayBlueTransition();
 
+    // 유틸리티
+    static void WaitKey(UIManager* ui); 
+
     std::string GetCurrentPrompt() const { return m_currentPrompt; }
 };

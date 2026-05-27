@@ -1,86 +1,54 @@
-# Prerequisites
+# [1] Prerequisites (기초)
 *.d
 
-# Compiled Object files
+# [2] Compiled Object files (컴파일 결과물)
 *.slo
 *.lo
 *.o
 *.obj
 
-# Precompiled Headers
-*.gch
-*.pch
-
-# Linker files
-*.ilk
-
-# Debugger Files
-*.pdb
-
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
-*.so.*
-
-
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
-
-# Executables
-*.exe
-*.out
-*.app
-
-# Build directories
-build/
-Build/
-build-*/
-
-# CMake generated files
-CMakeFiles/
-CMakeCache.txt
-cmake_install.cmake
-Makefile
-install_manifest.txt
-compile_commands.json
-
-# Temporary files
-*.tmp
-*.log
-*.bak
-*.swp
-
-# vcpkg
-vcpkg_installed/
-
-# debug information files
-*.dwo
-
-# test output & cache
-Testing/
-.cache/
-
-
-# 1. Visual Studio 기본 임시/설정 파일 무시
+# [3] Visual Studio Build Artifacts (비주얼 스튜디오 빌드 찌꺼기 - 핵심!)
 .vs/
+x64/
+x86/
+Debug/
+Release/
+*.tlog
+*.lastbuildstate
+*.pdb
+*.ilk
+*.idb
+*.ipch
+*.db
+*.vsidx
 *.suo
 *.user
 *.userosscache
 *.sln.docstates
-*.obj
-*.xml
+*.sdf
+*.opensdf
 
-# 2. 빌드 데이터베이스 및 인덱스 파일 무시
-*.db
-*.ipch
-*.vsidx
+# [4] Executables & Libraries (실행 파일 및 라이브러리)
+*.exe
+*.out
+*.app
+*.lib
+*.a
+*.la
+*.lai
+*.dll
+*.so
+*.dylib
 
+# [5] Temporary files (기타 임시 파일 - 안전장치)
+*.tmp
+*.log
+*.bak
+*.swp
+*~
+.DS_Store
 
+# [6] vcpkg & testing (도구 관련)
+vcpkg_installed/
+Testing/
+.cache/
