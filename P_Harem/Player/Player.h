@@ -58,6 +58,7 @@ public:
 	void SubMoney(int subMoney); // 돈빼앗기기
 	void AddItem(std::shared_ptr<C_Items> item); // 아이템먹기
 	int UsingItem(); // 아이템빼앗기기 (사용이라는 뜻)
+	int GetHighlevel(); // 가장 높은 여친의 레벨받아오기
 
 private:
 	std::string Name;
