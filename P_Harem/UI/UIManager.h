@@ -15,6 +15,8 @@ private:
     void DrawSmartphoneFrame(int startX, int startY, int width, int height);
     void gotoxy(int x, int y);
 
+    std::string m_currentPrompt = ">> ";
+
 public:
     void Init(); 
     void RenderMainUI(); 
@@ -22,25 +24,30 @@ public:
     // Update APIs
     void PrintLog(const std::string& text, bool isOverlap = false); 
     void TypeLog(const std::string& text, int delayMs = 30); 
- // 타이핑 효과를 주는 로그 출력
     void UpdateMoney(int money);
     void UpdateDate(const std::string& date);
     void UpdateUserInfo(const std::string& name);
     
     struct HeroineDisplayData {
         std::string name;
+        int level;
         int hp;
         int maxHp;
-        std::string info;
+        int attack;
+        int affinity;
+        std::string style;
     };
 
     void UpdateHeroineList(const std::vector<HeroineDisplayData>& list);
     void ClearMainViewport();
-    void ClearLog(); // 로그창의 모든 기록을 지우고 깨끗하게 만듭니다.
+    void ClearLog(); 
     void DrawImage(const std::string& imageAnsi);
+    void DrawInputBox(const std::string& prompt = ""); 
+    void SetCursorToInputArea(const std::string& prompt = ""); 
 
-    /**
-     * @brief 로그창 내부의 입력 전용 위치로 커서를 이동시키고 안내 문구를 띄웁니다.
-     */
-    void PrepareInput(const std::string& prompt);
+    // Cinematic Animations
+    void CenteredTypeLog(const std::string& text, int y, int delayMs = 100);
+    void PlayBlueTransition();
+
+    std::string GetCurrentPrompt() const { return m_currentPrompt; }
 };

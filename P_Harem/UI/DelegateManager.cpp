@@ -1,23 +1,34 @@
 #include "DelegateManager.h"
 #include "UIManager.h"
 #include "../Battle/BattleSystem.h"
+#include "../GameManager/World.h"
+#include <string>
 
 /**
- * [BindAll] 함수 - 전화국 교환원
- * 서로 존재를 모르는 로직(전투)과 화면(UI) 사이의 전선을 연결해 주는 아주 중요한 함수란다.
- * 이렇게 선을 연결해두면, 나중에 전투에서 승리했을 때 알아서 UI에 글자가 뜬단다.
+ * [BindAll] - 배틀 시스템과 UI를 연결하는 심장부
  */
 void DelegateManager::BindAll(UIManager* ui, C_BattleSystem* battleSys) {
-    if (!ui || !battleSys) return; // 연결할 대상이 없으면 돌아갑니다.
+    if (!ui || !battleSys) return;
 
-    // [전투 신호 연결 예시]
-    // 10년 뒤의 네가 팀원들과 협업할 때 이런 방식을 쓰면 아주 칭찬받을 거야.
-    /*
+    // 1. 공격 신호 연결
     battleSys->OnAttack = [ui](std::string name) {
-        // 누군가 공격하면 UI 로그창에 소식을 알립니다.
-        ui->PrintLog(name + "의 치명적인 공격!");
+        ui->PrintLog("▶ " + name + "의 매력 발산! 분위기를 압도합니다.");
     };
-    */
-    
-    // 사용자님이 이 델리게이트를 통해 팀원들의 로직을 UI에 하나씩 꽂아주게 될 거란다.
+
+    // 2. 피격 신호 연결 - [중요] 실시간 UI 동기화 추가
+    battleSys->OnHit = [ui](std::string name, int damage, int multiplier) {
+        std::string msg = "▶ " + name + "이(가) 큰 충격을 받았습니다! (체력 -" + std::to_string(damage) + ")";
+        if (multiplier == 2) msg = "▶ [치명적 매력!] " + msg;
+        else if (multiplier == 0) msg = "▶ [철벽 방어!] " + msg;
+        ui->PrintLog(msg);
+
+        // [실시간 반영] 데미지를 입는 즉시 월드의 SyncUI를 호출하여 게이지를 깎습니다.
+        C_World::GetInstance().SyncUI();
+    };
+
+    // 3. 패배/승리 신호 연결
+    battleSys->OnDefeat = [ui](std::string name) {
+        ui->PrintLog("▶ " + name + "이(가) 더 이상 버티지 못하고 물러납니다.");
+        C_World::GetInstance().SyncUI(); // 최종 결과 반영
+    };
 }
