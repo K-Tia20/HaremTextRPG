@@ -1,4 +1,4 @@
-
+﻿
 
 #include "Creature.h"
 
@@ -15,6 +15,13 @@ void C_Creature::TakeDamage(int Damage)
 		CurrentHp = 0;
 }
 
+
+void C_Creature::AddHp(int Add)
+{
+	CurrentHp += Add;
+	if (CurrentHp > MaxHp)
+		CurrentHp = MaxHp;
+}
 
 void C_Creature::SetEnemyStat(int level)
 {
