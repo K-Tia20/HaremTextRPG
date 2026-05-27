@@ -62,8 +62,10 @@ void C_BattleSystem::Attack(std::shared_ptr<C_Creature> Attacker, std::shared_pt
             if (Damage < 0) Damage = 0;
         }
     }
+	if (OnUseItem) OnUseItem(Attacker->GetName(), 1, UseItem->GetItem().Value);
 
 	if (OnAttack) OnAttack(Attacker->GetName());
+
 	if (OnHit) OnHit(Defenser->GetName(), Damage, (int)StileMultiplier(Attacker, Defenser));
 	
 	Defenser->TakeDamage(Damage);
@@ -83,6 +85,8 @@ void C_BattleSystem::Battle(std::shared_ptr<C_Creature> Player, std::shared_ptr<
 
         if (UseItem && UseItem->GetItem().Type == ItemType::Heal) {
             Player->AddHp(UseItem->GetItem().Value);
+
+			if (OnUseItem) OnUseItem(Player->GetName(), 3, UseItem->GetItem().Value);
         }
 
 		Attack(Player, Enemy); 
