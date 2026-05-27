@@ -16,7 +16,7 @@ C_City::C_City(C_World* world)
 
 	Player = World->GetPlayer();
 
-	Battle = make_shared<C_BattleSystem>();
+	Battle = make_shared<C_BattleSystem>(world);
 	// TODO : Creature적들 전부 생성되면 작업
 
 	Girls.push_back(std::make_shared<And>());
