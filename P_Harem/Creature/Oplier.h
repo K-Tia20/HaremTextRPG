@@ -4,6 +4,7 @@
 
 class Oplier : public C_Creature
 {
+public:
 	Oplier();
 };
 
