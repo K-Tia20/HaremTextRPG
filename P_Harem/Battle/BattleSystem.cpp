@@ -1,8 +1,16 @@
 ﻿// BattleSystem.cpp
 
 #include "BattleSystem.h"
+#include "../GameManager/World.h"
+#include "../Player/Player.h"
+#include "../Objects/Items/Item.h"
 
 C_LevelSystem LevelSystem; // 레벨 시스템 인스턴스 생성
+
+C_BattleSystem::C_BattleSystem(C_World* world)
+{
+	W_Player = world->GetPlayer();
+}
 
 int C_BattleSystem::CalculateDamage(std::shared_ptr<C_Creature> Attacker, std::shared_ptr<C_Creature> Defenser) const
 {
@@ -46,9 +54,23 @@ float C_BattleSystem::StileMultiplier(std::shared_ptr<C_Creature> Attacker, std:
 	}
 }
 
-void C_BattleSystem::Attack(std::shared_ptr<C_Creature> Attacker, std::shared_ptr<C_Creature> Defenser) const
+void C_BattleSystem::Attack(std::shared_ptr<C_Creature> Attacker, std::shared_ptr<C_Creature> Defenser)
 {
-	int Damage = CalculateDamage(Attacker, Defenser);
+	int Damage = 0;
+
+	if (UseItem->GetItem().Type == ItemType::Power && PlayerTurn)
+	{
+		Damage = CalculateDamage(Attacker, Defenser) + UseItem->GetItem().Value;
+	}
+	else if (UseItem->GetItem().Type == ItemType::Defence && PlayerTurn)
+	{
+		Damage = CalculateDamage(Attacker, Defenser) - UseItem->GetItem().Value;
+	}
+	else
+	{
+		Damage = CalculateDamage(Attacker, Defenser);
+	}
+
 	//공격력에 스타일 상성을 곱하고 소수점 버림;
 	if (OnAttack)
 	{
@@ -61,19 +83,27 @@ void C_BattleSystem::Attack(std::shared_ptr<C_Creature> Attacker, std::shared_pt
 		// Multiplier(상성)은 유리하면2 불리하면0 중립이면1;
 	}
 	Defenser->TakeDamage(Damage);// 입은 데미지만큼 체력 감소;
+
+	UseItem = nullptr;
 }
 
 
-void C_BattleSystem::Battle(std::shared_ptr<C_Creature> Player, std::shared_ptr<C_Creature> Enemy) const
+void C_BattleSystem::Battle(std::shared_ptr<C_Creature> Player, std::shared_ptr<C_Creature> Enemy)
 {
 	while (!Player->IsDefeated() && !Enemy->IsDefeated())
 	{
-
-		if (rand() % 100 < 30)
+		if (rand() % 100 < 40)
 		{
-			
+			UseItem = W_Player->UsingItem();
 		}
+
+		if (UseItem->GetItem().Type == ItemType::Heal)
+		{
+			Player->AddHp(UseItem->GetItem().Value);
+		}
+
 		Attack(Player, Enemy); // 플레이어가 먼저 공격;
+		PlayerTurn = !PlayerTurn;
 		Sleep(1000); // 1초 대기
 		if (Enemy->IsDefeated())
 		{
@@ -94,5 +124,6 @@ void C_BattleSystem::Battle(std::shared_ptr<C_Creature> Player, std::shared_ptr<
 			// 패배 처리 함수 호출 (구현 필요);
 			break;
 		}
+		PlayerTurn = !PlayerTurn;
 	}
 }
