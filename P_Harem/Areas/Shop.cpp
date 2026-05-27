@@ -10,10 +10,10 @@ C_Shop::C_Shop(C_World* world)
 
 	Player = World->GetPlayer();
 
-	Items.push_back(std::make_shared<C_Items>("된장찌개", 2, 50));
-	Items.push_back(std::make_shared<C_Items>("삼겹살 1.5인분", 5, 100));
-	Items.push_back(std::make_shared<C_Items>("오늘 저녁은 치킨이닭!", 10, 10));
-	Items.push_back(std::make_shared<C_Items>("강철의 영약", 2, 20));
+	Items.push_back(std::make_shared<C_Items>("된장찌개", 2, 50, ItemType::Heal));
+	Items.push_back(std::make_shared<C_Items>("삼겹살 1.5인분", 5, 100, ItemType::Heal));
+	Items.push_back(std::make_shared<C_Items>("오늘 저녁은 치킨이닭!", 10, 10, ItemType::Power));
+	Items.push_back(std::make_shared<C_Items>("강철의 영약", 2, 20, ItemType::Defence));
 }
 
 void C_Shop::SelectMenu()
@@ -53,8 +53,6 @@ void C_Shop::Update()
 
 void C_Shop::Purchase()
 {
-	std::cout << "상점입니다." << std::endl;
-
 	int i = 1;
 	for (std::shared_ptr<C_Items> Item : Items)
 	{

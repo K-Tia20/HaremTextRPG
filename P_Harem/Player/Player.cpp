@@ -71,3 +71,19 @@ int C_Player::UsingItem()
 
 	return Inventory->GetItemValue(randomIndex);
 }
+
+int C_Player::GetHighlevel()
+{
+	std::shared_ptr<C_Creature> HighlevelGirl;
+
+	for (auto Girl : GirlFrends)
+	{
+		if (HighlevelGirl == nullptr)
+			HighlevelGirl = Girl;
+
+		if (HighlevelGirl->GetLevel() < Girl->GetLevel())
+			HighlevelGirl = Girl;
+	}
+
+	return HighlevelGirl->GetLevel();
+}
