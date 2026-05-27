@@ -13,7 +13,7 @@ public:
 
 	std::shared_ptr<C_Items> GetItem(int index) { return ItemSlot[index]; }
 
-	int GetSize() { return ItemSlot.size(); }
+	int GetSize() { return static_cast<int>(ItemSlot.size()); }
 	// 아이템얻기
 	void AddItem(std::shared_ptr<C_Items> item);
 	// 아이템빼기

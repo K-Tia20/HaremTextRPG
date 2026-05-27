@@ -12,16 +12,17 @@ C_Shop::C_Shop(C_World* world)
 	World = world;
 	Player = World->GetPlayer();
 
-    // C_Items 생성자는 (이름, 가격, 효능치) 3개의 인자를 받습니다.
-	Items.push_back(make_shared<C_Items>("된장찌개", 2, 50));
-	Items.push_back(make_shared<C_Items>("삼겹살 1.5인분", 5, 100));
-	Items.push_back(make_shared<C_Items>("치킨이닭", 10, 10));
+    // [팀원 코드 존중] C_Items 생성자는 (이름, 가격, 효능치, 타입) 4개의 인자를 받습니다.
+	Items.push_back(make_shared<C_Items>("된장찌개", 20000, 50, ItemType::Heal));
+	Items.push_back(make_shared<C_Items>("삼겹살 1.5인분", 50000, 100, ItemType::Heal));
+	Items.push_back(make_shared<C_Items>("치킨이닭", 100000, 10, ItemType::Power));
 }
 
 void C_Shop::SelectMenu()
 {
     auto ui = World->GetUI();
-    ui->PrintLog("--- 보따리 상점 ---");
+    if (!ui) return;
+    ui->PrintLog("--- 요거프레쏘 (상점) ---");
     ui->PrintLog("1. 아이템 구매하기");
     ui->PrintLog("2. 나가기 (도시로)");
 
@@ -52,12 +53,13 @@ void C_Shop::Update()
 void C_Shop::Purchase()
 {
     auto ui = World->GetUI();
+    if (!ui) return;
 	ui->PrintLog("--- 아이템 목록 ---");
 
 	int i = 1;
 	for (std::shared_ptr<C_Items> Item : Items)
 	{
-        ui->PrintLog(to_string(i) + ". " + Item->GetItem().Name + " (가격: " + to_string(Item->GetItem().Price) + "G)");
+        ui->PrintLog(to_string(i) + ". " + Item->GetItem().Name + " (가격: " + to_string(Item->GetItem().Price) + " 원)");
 		i++;
 	}
     ui->PrintLog("0. 뒤로 가기");
