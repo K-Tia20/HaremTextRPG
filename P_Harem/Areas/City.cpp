@@ -78,6 +78,7 @@ void C_City::MoveArea()
 		break;
 	case 2:
 		// 아르바이트 구현
+		World->GotoAlba();
 		break;
 	default:
 		cout << "다시 골라주세요..." << endl;
