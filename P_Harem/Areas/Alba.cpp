@@ -22,7 +22,7 @@ void C_Alba::SelectMenu()
 	cout << "2. 당근마켓 빌런 잡기" << endl;
 	cout << "3. 결혼식 가짜 하객 대행" << endl;
 	cout << "4. 배민커넥트 / 쿠팡이츠 도보 배달" << endl;
-	cout << "5. 알바 안 할래(뒤로가기)" << endl;
+	cout << "5 ~. 알바 안 할래(뒤로가기)" << endl;
 	cout << endl;
 	cout << "--------------------------------------------------" << endl;
 
@@ -49,28 +49,29 @@ void C_Alba::SelectMenu()
 		cout << "배민커넥트 / 쿠팡이츠 도보 배달을 완료했습니다!" << endl;
 		Player->AddMoney(10);
 		break;
-
-	case 5:
-		MoveArea();
-		return;
-
 	default:
-		cout << "다시 입력해주세요." << endl;
-		return;
+		AS = AlbaState::MoveArea;
+		break;
 	}
-
-	cout << "일당 10 만원을 획득하였다!" << endl;
-	cout << "잔고 : " << Player->GetMonny() << "만원" << endl;
 }
 
 // 지역 이동
 void C_Alba::MoveArea()
 {
+	AS = AlbaState::SelectMenu;
 	World->GotoCity();
 }
 
 // 업데이트
 void C_Alba::Update()
 {
-	SelectMenu();
+	switch (AS)
+	{
+	case AlbaState::SelectMenu:
+		SelectMenu();
+		break;
+	case AlbaState::MoveArea:
+		MoveArea();
+		break;
+	}
 }
