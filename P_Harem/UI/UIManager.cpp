@@ -7,14 +7,15 @@
 using namespace UI_LAYOUT;
 
 /**
- * [gotoxy] - 절대 방어 버전
- * 화면의 맨 마지막 줄(44)과 맨 오른쪽 칸(159)은 절대 밟지 않습니다.
+ * [gotoxy] - 절대 방어 버전 (Final)
+ * 화면의 맨 마지막 줄(44)은 스크롤의 뇌관입니다. 절대 밟지 않습니다.
  */
 void UIManager::gotoxy(int x, int y) {
     if (x < 0) x = 0; if (y < 0) y = 0;
-    // 160x45 콘솔에서 159와 44는 스크롤 유발 지점이므로 1칸씩 안쪽으로 제한합니다.
-    if (x >= CONSOLE_WIDTH - 1) x = CONSOLE_WIDTH - 2;
-    if (y >= CONSOLE_HEIGHT - 1) y = CONSOLE_HEIGHT - 2;
+    
+    // X는 끝단까지 허용하되, Y는 43번 줄(데드존 위)로 강제 고정합니다.
+    if (x > CONSOLE_WIDTH - 1) x = CONSOLE_WIDTH - 1;
+    if (y > CONSOLE_HEIGHT - 2) y = CONSOLE_HEIGHT - 2;
 
     COORD pos = { (SHORT)x, (SHORT)y };
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
@@ -43,9 +44,9 @@ void UIManager::DrawSolidBox(int startX, int startY, int width, int height, std:
     int endX = startX + width - 1;
     int endY = startY + height - 1;
 
-    // 테두리 좌표가 세이프 존을 넘지 않도록 강제 보정
-    if (endX >= CONSOLE_WIDTH - 1) endX = CONSOLE_WIDTH - 2;
-    if (endY >= CONSOLE_HEIGHT - 1) endY = CONSOLE_HEIGHT - 2;
+    // [수정] 테두리 좌표가 세이프 존을 넘지 않도록 강제 보정하던 코드 완화
+    if (endX > CONSOLE_WIDTH - 1) endX = CONSOLE_WIDTH - 1;
+    if (endY > CONSOLE_HEIGHT - 1) endY = CONSOLE_HEIGHT - 1;
 
     gotoxy(startX, startY); std::cout << "┌";
     gotoxy(endX, startY); std::cout << "┐";
@@ -387,6 +388,14 @@ void UIManager::DrawImage(const std::string& imageAnsi) {
         gotoxy(startX, currentY++);
         std::cout << line;
     }
-    gotoxy(CONSOLE_WIDTH - 2, 1);
+    gotoxy(CONSOLE_WIDTH - 2, 0);
     std::cout << std::flush;
+}
+
+void UIManager::WaitKey(UIManager* ui) {
+    if (!ui) return;
+    ui->PrintLog("\x1b[90m[ 엔터를 눌러 계속... ]\x1b[0m");
+    std::string dummy;
+    std::getline(std::cin, dummy);
+    ui->ClearLog();
 }

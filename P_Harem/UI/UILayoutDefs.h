@@ -10,15 +10,17 @@ namespace UI_LAYOUT {
     constexpr int CONSOLE_HEIGHT = 45;
 
     // [근본적 해결] 버퍼와 창 크기를 1:1로 일치시킵니다.
-    // 꼼수를 쓰지 않고 좌표 제어만으로 스크롤을 막겠습니다.
     constexpr int BUFFER_WIDTH = CONSOLE_WIDTH;
     constexpr int BUFFER_HEIGHT = CONSOLE_HEIGHT;
+
+    // [중요] 44번 행은 'Dead Zone'으로 설정하여 절대 쓰지 않습니다. (스크롤 방지 핵심)
+    constexpr int MAX_SAFE_Y = CONSOLE_HEIGHT - 2; // 43
 
     // LEFT PANEL (SMARTPHONE)
     constexpr int LEFT_PANEL_X = 0;
     constexpr int LEFT_PANEL_Y = 0;
     constexpr int LEFT_PANEL_W = 40;
-    constexpr int LEFT_PANEL_H = CONSOLE_HEIGHT;
+    constexpr int LEFT_PANEL_H = CONSOLE_HEIGHT - 1; 
 
     constexpr int DATE_X = LEFT_PANEL_X;
     constexpr int DATE_Y = 0;
@@ -33,12 +35,13 @@ namespace UI_LAYOUT {
     constexpr int PHONE_X = LEFT_PANEL_X;
     constexpr int PHONE_Y = DATE_H + USER_INFO_H;
     constexpr int PHONE_W = LEFT_PANEL_W;
-    constexpr int PHONE_H = LEFT_PANEL_H - PHONE_Y - 4;
+    // 하단 입력창 여백을 위해 높이 조절
+    constexpr int PHONE_H = 30; 
 
     constexpr int INPUT_BOX_X = LEFT_PANEL_X;
-    constexpr int INPUT_BOX_Y = PHONE_Y + PHONE_H;
+    constexpr int INPUT_BOX_Y = PHONE_Y + PHONE_H; 
     constexpr int INPUT_BOX_W = LEFT_PANEL_W;
-    constexpr int INPUT_BOX_H = 4;
+    constexpr int INPUT_BOX_H = 4; // 40~43 (MAX_SAFE_Y 43에 맞춰 종료)
 
     // RIGHT PANEL (MAIN CONTENT)
     constexpr int RIGHT_AREA_X = LEFT_PANEL_W;
@@ -51,7 +54,8 @@ namespace UI_LAYOUT {
     constexpr int LOG_X = RIGHT_AREA_X;
     constexpr int LOG_Y = VIEWPORT_H;
     constexpr int LOG_W = VIEWPORT_W;
-    constexpr int LOG_H = CONSOLE_HEIGHT - VIEWPORT_H;
+    // 로그창 역시 43번 줄에서 끝나도록 설정
+    constexpr int LOG_H = MAX_SAFE_Y - LOG_Y + 1; 
 }
 
 #define UI_BRUSH "█"
