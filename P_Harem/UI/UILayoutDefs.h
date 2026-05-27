@@ -5,8 +5,14 @@
  * @brief UI 요소들의 좌표 및 크기 상수를 정의합니다.
  */
 namespace UI_LAYOUT {
+    // [물리적 설계] 실제 콘솔 창 크기
     constexpr int CONSOLE_WIDTH = 160;
     constexpr int CONSOLE_HEIGHT = 45;
+
+    // [근본적 해결] 버퍼와 창 크기를 1:1로 일치시킵니다.
+    // 꼼수를 쓰지 않고 좌표 제어만으로 스크롤을 막겠습니다.
+    constexpr int BUFFER_WIDTH = CONSOLE_WIDTH;
+    constexpr int BUFFER_HEIGHT = CONSOLE_HEIGHT;
 
     // LEFT PANEL (SMARTPHONE)
     constexpr int LEFT_PANEL_X = 0;
@@ -27,7 +33,12 @@ namespace UI_LAYOUT {
     constexpr int PHONE_X = LEFT_PANEL_X;
     constexpr int PHONE_Y = DATE_H + USER_INFO_H;
     constexpr int PHONE_W = LEFT_PANEL_W;
-    constexpr int PHONE_H = LEFT_PANEL_H - PHONE_Y;
+    constexpr int PHONE_H = LEFT_PANEL_H - PHONE_Y - 4;
+
+    constexpr int INPUT_BOX_X = LEFT_PANEL_X;
+    constexpr int INPUT_BOX_Y = PHONE_Y + PHONE_H;
+    constexpr int INPUT_BOX_W = LEFT_PANEL_W;
+    constexpr int INPUT_BOX_H = 4;
 
     // RIGHT PANEL (MAIN CONTENT)
     constexpr int RIGHT_AREA_X = LEFT_PANEL_W;

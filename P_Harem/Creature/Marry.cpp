@@ -1,9 +1,7 @@
 #include <iostream>
 #include <string>
-
 #include "Marry.h"
 
-Marry::Marry() : C_Creature("¸Å¸® ÆÒµå·¡°Ç", C_Stile::IceGirl, 200, 30)
+Marry::Marry() : C_Creature("ë§ˆë¦¬ ì½”ë¸ë¦¬ì•„", C_Stile::IceGirl, 200, 30)
 {
-
 }
