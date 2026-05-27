@@ -9,16 +9,14 @@
 
 using namespace std;
 
-// 생성자에서 World를 받음
-C_City::C_City()
-{
-}
-
+// 생성자에서 월드를 받음
 C_City::C_City(C_World* world)
 {
 	C_Area::SetWorld(world);
 
 	Player = World->GetPlayer();
+
+	Battle = make_shared<C_BattleSystem>();
 	// TODO : Creature적들 전부 생성되면 작업
 
 	Girls.push_back(std::make_shared<And>());
@@ -33,7 +31,7 @@ C_City::C_City(C_World* world)
 
 void C_City::SelectMenu()
 {
-	// 로그가 필요합니다...
+	std::cout << "메뉴 고르기" << std::endl;
 	int choice = Player->Input<int>();
 
 	switch (choice)
@@ -55,6 +53,9 @@ void C_City::SelectMenu()
 	}
 		break;
 	case 2:
+		ViewYeuchin();
+		break;
+	case 3:
 		// 지역 이동
 		CS = CityState::MoveArea;
 		break;
@@ -68,6 +69,7 @@ void C_City::MoveArea()
 {
 	// 지역을 이동하는 곳 입니다. 로그가 필요합니다.
 
+	cout << "지역 이동" << endl;
 	int choice = Player->Input<int>();
 
 	switch (choice)
@@ -107,10 +109,25 @@ void C_City::Update()
 // 여자 인카운터
 void C_City::Encounter()
 {
-	int randomIndex = rand() % Girls.size();
+	if (Girls.empty())
+	{
+		cout << "더 이상 만날 사람이 없습니다." << endl;
+		return;
+	}
+
+	int randomIndex = rand() % static_cast<int>(Girls.size());
+
 	BattleGirl = Girls[randomIndex];
 
-	Battle->Battle(Player->SetFightGirl(), Girls[randomIndex]);
+	auto FightGirl = Player->SetFightGirl();
+
+	if (FightGirl == nullptr)
+	{
+		cout << "전투를 취소했습니다." << endl;
+		return;
+	}
+
+	Battle->Battle(FightGirl, BattleGirl);
 }
 
 void C_City::Gatcha()
@@ -123,7 +140,18 @@ void C_City::Gatcha()
 		BattleGirl->SetMaxHp(200);
 		BattleGirl->SetAttack(30);
 		Player->AddGirlFrends(BattleGirl);
+
 		// 지역에서 여자 빼내기
 		Girls.erase(std::remove(Girls.begin(), Girls.end(), BattleGirl), Girls.end());
 	}
+}
+
+void C_City::ViewYeuchin()
+{
+	std::vector<std::shared_ptr<C_Creature>> ViewYeuchin;
+
+	ViewYeuchin = World->GetPlayer()->GetGirlFrends();
+
+	// 델리게이트로 벡터보내기
+	// 
 }

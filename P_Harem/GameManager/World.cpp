@@ -144,7 +144,7 @@ void C_World::SetGirlFrends()
 		break;
 	}
 
-	if (Player->GetGirlFrends().empty())
+	if (!Player->GetGirlFrends().empty())
 	{
 		WS = WorldState::StartGame;
 	}
@@ -152,16 +152,25 @@ void C_World::SetGirlFrends()
 
 void C_World::SetTetoGirl()
 {
+	cout << "뜨겁습니다." << endl;
 	// 테토녀의 정보 로그를 적어주세요
 	// 입력 로그를 적어주세요
 	switch (Player->Input<int>())
 	{
 	case 1:
 	{
-		cout << "당신의 뜨거운 파트너입니다." << endl;	
+		cout << "당신의 뜨거운 파트너입니다." << endl;
 
+		cout << "이름을 정해주세요." << endl;
+	
 		// 테토걸클래스를 make_shared의 생성클래스로 바꿔주세요
-		shared_ptr<C_Creature> TetoGirl = make_shared<C_Creature>();
+		shared_ptr<C_Creature> TetoGirl =
+			make_shared<C_Creature>(
+				SetGirlFrendName(),
+				C_Stile::HotGirl,
+				200,
+				30);
+
 		Player->AddGirlFrends(TetoGirl);
 		break;
 	}
@@ -175,6 +184,7 @@ void C_World::SetTetoGirl()
 
 void C_World::SetCoolPretyGirl()
 {
+	cout << "차갑습니다." << endl;
 	// 쿨미녀의 정보 로그를 적어주세요
 	// 입력 로그를 적어주세요
 	switch (Player->Input<int>())
@@ -183,8 +193,14 @@ void C_World::SetCoolPretyGirl()
 	{
 		cout << "당신의 차가운 파트너입니다." << endl;
 
+		cout << "이름을 정해주세요." << endl;
 		// 쿨미녀클래스를 make_shared의 생성클래스로 바꿔주세요
-		shared_ptr<C_Creature> CoolPretyGirl = make_shared<C_Creature>();
+		shared_ptr<C_Creature> CoolPretyGirl =
+			make_shared<C_Creature>(
+				SetGirlFrendName(),
+				C_Stile::HotGirl,
+				200,
+				30);
 		Player->AddGirlFrends(CoolPretyGirl);
 		break;
 	}
@@ -198,6 +214,7 @@ void C_World::SetCoolPretyGirl()
 
 void C_World::SetChosicGirl()
 {
+	cout << "풀내납니다." << endl;
 	// 초식녀의 정보 로그를 적어주세요
 	// 입력 로그를 적어주세요
 	switch (Player->Input<int>())
@@ -206,8 +223,14 @@ void C_World::SetChosicGirl()
 	{
 		cout << "당신의 풀내나는 파트너입니다." << endl;
 
+		cout << "이름을 정해주세요." << endl;
 		// 초식녀클래스를 make_shared의 생성클래스로 바꿔주세요
-		shared_ptr<C_Creature> ChosicGirl = make_shared</*ChosicGirl*/C_Creature>();
+		shared_ptr<C_Creature> ChosicGirl =
+			make_shared<C_Creature>(
+				SetGirlFrendName(),
+				C_Stile::HotGirl,
+				200,
+				30);
 		Player->AddGirlFrends(ChosicGirl);
 		break;
 	}
@@ -217,6 +240,11 @@ void C_World::SetChosicGirl()
 		break;
 	}
 	}
+}
+
+string C_World::SetGirlFrendName()
+{
+	return Player->Input<string>();
 }
 
 bool C_World::CheckInit()

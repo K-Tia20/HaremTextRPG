@@ -21,6 +21,8 @@ public:
 
 	virtual void SelectMenu() override;
 	virtual void Update() override;
+	virtual void Encounter() {};
+	virtual void MoveArea() {};
 
 	void Purchase();
 	void Exit();
