@@ -53,6 +53,7 @@ void C_Shop::Update()
 
 void C_Shop::Purchase()
 {
+	std::cout << "상점입니다." << std::endl;
 	int i = 1;
 	for (std::shared_ptr<C_Items> Item : Items)
 	{
@@ -63,23 +64,23 @@ void C_Shop::Purchase()
 
 	int choice = Player->Input<int>() - 1;
 
-	if (choice <= 0) return;
+	if (choice < 0) return;
 
-	std::cout << Items[choice - 1]->GetItem().Name << std::endl;
+	std::cout << Items[choice]->GetItem().Name << std::endl;
 
 	switch (Player->Input<int>())
 	{
 	case 1:
 	{
-		if (Player->GetMonny() < Items[choice - 1]->GetItem().Price)
+		if (Player->GetMonny() < Items[choice]->GetItem().Price)
 		{
 			std::cout << "나는 거지다...살 수 없다." << std::endl;
 			break;
 		}
 		std::cout << "구매완료." << std::endl;
-		Player->SubMoney(Items[choice - 1]->GetItem().Price);
+		Player->SubMoney(Items[choice]->GetItem().Price);
 
-		Player->AddItem(Items[choice - 1]);
+		Player->AddItem(Items[choice]);
 	}
 		break;
 	default:
@@ -92,5 +93,6 @@ void C_Shop::Purchase()
 
 void C_Shop::Exit()
 {
+	SS = ShopState::SelectMenu;
 	World->GotoCity();
 }

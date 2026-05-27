@@ -33,6 +33,7 @@ public:
 private:
 	// 이 지역의 여성들
 	std::vector<std::shared_ptr<C_Creature>> Girls;
+	// 적 정보 얻어오기
 	std::shared_ptr<C_Creature> BattleGirl;
 	// 배틀하기 위한 클래스 생성
 	std::shared_ptr<C_BattleSystem> Battle;
