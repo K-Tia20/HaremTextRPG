@@ -2,6 +2,13 @@
 
 #include <string>
 
+enum class ItemType
+{
+	Heal,
+	Power,
+	Defence
+};
+
 // 아이템 정보
 struct ItemDatas
 {
@@ -9,6 +16,7 @@ struct ItemDatas
 	int Price;
 	int Quantity = 1;
 	int Value;
+	ItemType Type;
 };
 
 class C_Creature;
@@ -16,13 +24,13 @@ class C_Creature;
 class C_Items
 {
 public:
-	C_Items(std::string name, int price, int value);
+	C_Items(std::string name, int price, int value, ItemType type);
 
 	// 겟터
 	const ItemDatas& GetItem() const { return Item; }
 
 	// 셋터
-	void SetItem(std::string name, int price, int Value);
+	void SetItem(std::string name, int price, int value, ItemType type);
 	void Add();
 	void Sub();
 

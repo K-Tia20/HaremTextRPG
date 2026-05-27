@@ -11,7 +11,7 @@ class C_Inventory
 public:
 	C_Inventory();
 
-	int GetItemValue(int index) { return ItemSlot[index]->GetItem().Value; }
+	std::shared_ptr<C_Items> GetItem(int index) { return ItemSlot[index]; }
 
 	int GetSize() { return ItemSlot.size(); }
 	// 아이템얻기
