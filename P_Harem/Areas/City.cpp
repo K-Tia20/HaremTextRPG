@@ -29,13 +29,15 @@ C_City::C_City(C_World* world)
 void C_City::SelectMenu()
 {
     auto ui = World->GetUI();
+    if (!ui) return;
+
 	ui->PrintLog("--- 시내 광장 ---");
     ui->PrintLog("1. 헌팅 시도 (전투)");
     ui->PrintLog("2. 여자친구 목록 보기");
     ui->PrintLog("3. 다른 지역으로 이동");
     
 	int choice = Player->InputInt();
-    ui->ClearLog(); // 선택 후 로그 청소
+    ui->ClearLog(); 
 
 	switch (choice)
 	{
@@ -61,12 +63,14 @@ void C_City::SelectMenu()
 void C_City::MoveArea()
 {
     auto ui = World->GetUI();
+    if (!ui) return;
+
 	ui->PrintLog("--- 지역 이동 ---");
     ui->PrintLog("1. 상점 (요거프레쏘)");
     ui->PrintLog("2. 알바하러 가기");
 
 	int choice = Player->InputInt();
-    ui->ClearLog(); // 선택 후 로그 청소
+    ui->ClearLog(); 
 
 	switch (choice)
 	{
@@ -96,6 +100,8 @@ void C_City::Update()
 void C_City::Encounter()
 {
     auto ui = World->GetUI();
+    if (!ui) return;
+
 	if (Girls.empty())
 	{
 		ui->PrintLog("시스템: 더 이상 만날 사람이 없습니다.");
@@ -108,7 +114,7 @@ void C_City::Encounter()
     ui->PrintLog("운명적인 만남! [" + BattleGirl->GetName() + "]을(를) 만났습니다.");
 	
 	auto FightGirl = Player->SetFightGirl();
-    ui->ClearLog(); // 출격 선택 후 로그 청소
+    ui->ClearLog(); 
 
 	if (FightGirl == nullptr)
 	{
@@ -119,8 +125,16 @@ void C_City::Encounter()
     ui->PrintLog("=== 배틀 시작: [" + FightGirl->GetName() + "] VS [" + BattleGirl->GetName() + "] ===");
 	Battle->Battle(FightGirl, BattleGirl);
 
-    extern void WaitKey(class UIManager* ui);
-    WaitKey(ui);
+    UIManager::WaitKey(ui);
+
+	// 여친 획득
+	if (BattleGirl->IsDefeated()) Gatcha();
+
+	// 여친 방생
+	if (FightGirl->IsDefeated())
+	{
+		Player->RemoveGirlFriend(FightGirl);
+	}
 }
 
 void C_City::Gatcha()
@@ -138,6 +152,8 @@ void C_City::Gatcha()
 void C_City::ViewYeuchin()
 {
     auto ui = World->GetUI();
+    if (!ui) return;
+
     ui->PrintLog("--- 내 여자친구들 ---");
 	auto friends = Player->GetGirlFrends();
     if (friends.empty()) ui->PrintLog("(아직 아무도 없습니다...)");
