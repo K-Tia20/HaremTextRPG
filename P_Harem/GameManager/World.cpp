@@ -97,7 +97,7 @@ void C_World::Update()
 	case WorldState::InProgress: 
     {
         m_ui->ClearMainViewport();
-        m_ui->DrawImage(C_ImageManager::GetInstance().GetLayeredImage("BG_Room", {}));
+        m_ui->DrawImage(C_ImageManager::GetInstance().GetLayeredImage(m_hubBG, {}));
         m_ui->PrintLog(script.Get("MAIN_MENU"));
         
         int choice = Player->InputInt();
@@ -110,7 +110,7 @@ void C_World::Update()
             case 3: Areas[WorldArea::Alba]->Enter(); GotoAlba(); goToArea = true; break;
             case 4: C_LogSystem::GetInstance().ShowContactList(); break;
             case 5: C_LogSystem::GetInstance().ShowInventory(); break;
-            case 6: WS = WorldState::QuitGame; break;
+            case 0: WS = WorldState::QuitGame; break;
             default: m_ui->PrintLog("시스템: 잘못된 선택입니다."); UIManager::WaitKey(m_ui.get()); break;
         }
 
@@ -197,7 +197,6 @@ void C_World::SetName()
     auto& script = C_ScriptManager::GetInstance();
     m_ui->ClearMainViewport();
     m_ui->DrawImage(C_ImageManager::GetInstance().GetLayeredImage("BG_Title", {})); 
-    // [사용자 요청] 이름 등록 전 SCENE_OPENING_2 출력 제거
 
     m_ui->ClearLog();
 	m_ui->PrintLog(script.Get("INPUT_PLAYER_NAME"));
@@ -215,9 +214,10 @@ void C_World::SetGirlFrends()
     auto& img = C_ImageManager::GetInstance();
 
     m_ui->ClearMainViewport();
-    m_ui->DrawImage(img.GetLayeredImage("BG_City2", {})); 
+    // [Visual Upgrade] 속성을 모르는 상태이므로 CH_Null 실루엣 출력
+    m_ui->DrawImage(img.GetLayeredImage("BG_City2", {{"CH_Null", 50, 0, false}})); 
 
-	m_ui->PrintLog(script.Get("SCENE_OPENING_2")); // "길을 걷던 당신 앞에..." 멘트
+	m_ui->PrintLog(script.Get("SCENE_OPENING_2")); 
     UIManager::WaitKey(m_ui.get());
 
 	m_ui->PrintLog(script.Get("INPUT_HEROINE_NAME"));

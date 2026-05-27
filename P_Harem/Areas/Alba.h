@@ -6,7 +6,8 @@ enum class AlbaState
 {
 	SelectMenu,
 	MoveArea,
-	Alba
+	Alba,
+    Exit
 };
 
 class C_Player;

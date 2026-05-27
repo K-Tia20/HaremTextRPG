@@ -10,7 +10,8 @@ class C_Player;
 enum class CityState
 {
 	SelectMenu,
-	MoveArea
+	MoveArea,
+    Exit
 };
 
 class C_City : public C_Area

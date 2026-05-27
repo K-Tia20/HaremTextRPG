@@ -44,7 +44,14 @@ void C_Alba::SelectMenu()
 	case 2: jobName = "벌레잡기 알바"; bgName = "BG_Danggun"; break;
 	case 3: jobName = "하객대행 알바"; bgName = "BG_Wedding"; break;
 	case 4: jobName = "배달 알바"; bgName = "BG_Bemin"; break;
-	default: AS = AlbaState::MoveArea; return;
+	case 0: 
+        World->SetHubBG("BG_City"); 
+        AS = AlbaState::Exit; 
+        return;
+	default: 
+        ui->PrintLog("시스템: 잘못된 선택입니다.");
+        UIManager::WaitKey(ui);
+        return;
 	}
 
     // [Visual Upgrade] 알바 전용 배경 출력
@@ -68,14 +75,12 @@ void C_Alba::SelectMenu()
     Player->AddMoney(pay);
     
     UIManager::WaitKey(ui);
+    
+    World->SetHubBG("BG_Room"); 
+    AS = AlbaState::Exit;
 }
 
-void C_Alba::MoveArea()
-{
-	AS = AlbaState::SelectMenu;
-    World->SetHubBG("BG_City");
-	World->GotoCity();
-}
+void C_Alba::MoveArea() {}
 
 void C_Alba::Update()
 {
@@ -87,8 +92,7 @@ void C_Alba::Update()
 		case AlbaState::SelectMenu:
 			SelectMenu();
 			break;
-		case AlbaState::MoveArea:
-			MoveArea();
+		case AlbaState::Exit:
             isLooping = false;
 			break;
 		}

@@ -24,7 +24,7 @@ void C_ImageManager::Init() {
         // [수정] 리소스 누락 시 로그가 화면을 찢지 않도록 로직 상으로만 경고
     };
 
-    // [배경 로드] - 사용자님이 추가하신 모든 실제 파일명 등록
+    // [배경 로드]
     LoadWithFallback("BG_Title", "BG_Title.png");
     LoadWithFallback("BG_TeamName", "BG_TeamName.png");
     LoadWithFallback("BG_City", "BG_City.png");

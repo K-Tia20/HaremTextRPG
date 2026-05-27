@@ -49,7 +49,7 @@ void C_Shop::SelectMenu()
 	case 1: 
         SS = ShopState::Purchase; 
         break;
-	case 2:
+	case 0:
         SS = ShopState::Exit; 
         break;
 	default: 
@@ -122,10 +122,13 @@ void C_Shop::Purchase()
             ui->PrintLog(script.Get("SHOP_LACK_MONEY"));
 			break;
 		}
-        ui->PrintLog(script.Get("SHOP_BUY_SUCCESS"));
+        ui->PrintLog(script.GetFormatStr("SHOP_BUY_SUCCESS", {Items[choice]->GetItem().Name}));
         // [SOUND] 여기에 구매 성공 효과음을 추가하세요 (예: CSoundManager::GetInstance().PlaySFX("Buy.wav");)
 		Player->SubMoney(Items[choice]->GetItem().Price);
 		Player->AddItem(Items[choice]);
+        
+        // [Visual Upgrade] 즉각적인 소지금 갱신 연출
+        World->SyncUI();
 		break;
 	}
 	default:

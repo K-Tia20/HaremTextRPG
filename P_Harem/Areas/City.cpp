@@ -58,51 +58,27 @@ void C_City::SelectMenu()
             ui->PrintLog("\x1b[90m시스템: 한참을 서성였지만 허탕만 쳤습니다...\x1b[0m");
             UIManager::WaitKey(ui);
         }
+        
+        // 헌팅 시도 후 무조건 집으로 귀가
+        World->SetHubBG("BG_Room");
+        CS = CityState::Exit;
 	}
 		break;
 	case 2:
 		ViewYeuchin();
 		break;
-	case 3:
-		CS = CityState::MoveArea;
+	case 0:
+        World->SetHubBG("BG_City");
+		CS = CityState::Exit;
 		break;
 	default:
 		ui->PrintLog("시스템: 잘못된 입력입니다.");
+        UIManager::WaitKey(ui);
 		break;
 	}
 }
 
-void C_City::MoveArea()
-{
-    auto ui = World->GetUI();
-    auto& script = C_ScriptManager::GetInstance();
-    if (!ui) return;
-
-	ui->PrintLog(script.Get("CITY_MOVE_HEADER"));
-	ui->PrintLog(script.Get("CITY_MOVE_1"));
-	ui->PrintLog(script.Get("CITY_MOVE_2"));
-	ui->PrintLog(script.Get("CITY_MOVE_EXIT"));
-
-	int choice = Player->InputInt();
-    ui->ClearLog(); 
-
-	switch (choice)
-	{
-	case 1:
-		CS = CityState::MoveArea;
-        World->SetHubBG("BG_City");
-		World->GotoShop();
-		break;
-	case 2:
-		CS = CityState::MoveArea;
-        World->SetHubBG("BG_City");
-		World->GotoAlba();
-		break;
-	default:
-		CS = CityState::SelectMenu;
-		break;
-	}
-}
+void C_City::MoveArea() {}
 
 void C_City::Update()
 {
@@ -114,12 +90,8 @@ void C_City::Update()
 		case CityState::SelectMenu: 
             SelectMenu(); 
             break;
-		case CityState::MoveArea: 
-            MoveArea(); 
-            if (CS == CityState::MoveArea) {
-                CS = CityState::SelectMenu;
-                isLooping = false;
-            }
+		case CityState::Exit: 
+            isLooping = false;
             break;
 		}
 	}
