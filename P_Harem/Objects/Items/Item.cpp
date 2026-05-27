@@ -8,9 +8,9 @@ C_Items::C_Items(std::string name,int price, int value)
 	SetItem(name, price, value);
 }
 
-void C_Items::SetItem(std::string name, int price, int Value)
+void C_Items::SetItem(std::string name, int price, int vlaue)
 {
-	Item = { name, price, 1, Value };
+	Item = { name, price, 1, vlaue };
 }
 
 
