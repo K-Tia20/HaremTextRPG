@@ -20,7 +20,9 @@ public:
     void RenderMainUI(); 
 
     // Update APIs
-    void PrintLog(const std::string& text); 
+    void PrintLog(const std::string& text, bool isOverlap = false); 
+    void TypeLog(const std::string& text, int delayMs = 30); 
+ // 타이핑 효과를 주는 로그 출력
     void UpdateMoney(int money);
     void UpdateDate(const std::string& date);
     void UpdateUserInfo(const std::string& name);
@@ -34,5 +36,11 @@ public:
 
     void UpdateHeroineList(const std::vector<HeroineDisplayData>& list);
     void ClearMainViewport();
+    void ClearLog(); // 로그창의 모든 기록을 지우고 깨끗하게 만듭니다.
     void DrawImage(const std::string& imageAnsi);
+
+    /**
+     * @brief 로그창 내부의 입력 전용 위치로 커서를 이동시키고 안내 문구를 띄웁니다.
+     */
+    void PrepareInput(const std::string& prompt);
 };
