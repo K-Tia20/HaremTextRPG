@@ -1,0 +1,9 @@
+#include <iostream>
+#include <string>
+
+#include "Elizabeth.h"
+
+Elizabeth::Elizabeth() : C_Creature("¿¤¸®ÀÚº£½º ÆÒµå·¡°Ç", C_Stile::GrassGirl, 200, 30)
+{
+
+}
