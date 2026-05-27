@@ -121,6 +121,15 @@ void C_City::Encounter()
 
     extern void WaitKey(class UIManager* ui);
     WaitKey(ui);
+
+	// 여친 획득
+	if (BattleGirl->IsDefeated()) Gatcha();
+
+	// 여친 방생
+	if (FightGirl->IsDefeated())
+	{
+		Player->RemoveGirlFriend(FightGirl);
+	}
 }
 
 void C_City::Gatcha()
