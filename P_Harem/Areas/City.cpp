@@ -128,6 +128,15 @@ void C_City::Encounter()
 	}
 
 	Battle->Battle(FightGirl, BattleGirl);
+
+	// 여친 획득
+	if(BattleGirl->IsDefeated()) Gatcha();
+
+	// 여친 방생
+	if (FightGirl->IsDefeated())
+	{
+		Player->RemoveGirlFriend(FightGirl);
+	}
 }
 
 void C_City::Gatcha()
