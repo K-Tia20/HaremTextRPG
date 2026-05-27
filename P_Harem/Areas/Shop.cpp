@@ -54,19 +54,40 @@ void C_Shop::Update()
 void C_Shop::Purchase()
 {
 	std::cout << "상점입니다." << std::endl;
+
 	int i = 1;
 	for (std::shared_ptr<C_Items> Item : Items)
 	{
-		std::cout << i << ". " << Item  << "\t" << Item->GetItem().Price << std::endl;
+		std::cout << i << ". "
+			<< Item->GetItem().Name
+			<< "\t가격: " << Item->GetItem().Price
+			<< std::endl;
 
 		i++;
 	}
 
-	int choice = Player->Input<int>() - 1;
+	std::cout << "0. 나가기" << std::endl;
 
-	if (choice < 0) return;
+	int choice = Player->Input<int>();
 
-	std::cout << Items[choice]->GetItem().Name << std::endl;
+	if (choice == 0)
+	{
+		SS = ShopState::SelectMenu;
+		return;
+	}
+
+	choice -= 1;
+
+	if (choice < 0 || choice >= static_cast<int>(Items.size()))
+	{
+		std::cout << "잘못된 입력입니다." << std::endl;
+		SS = ShopState::SelectMenu;
+		return;
+	}
+
+	std::cout << Items[choice]->GetItem().Name << "을(를) 구매하시겠습니까?" << std::endl;
+	std::cout << "1. 예" << std::endl;
+	std::cout << "2. 아니요" << std::endl;
 
 	switch (Player->Input<int>())
 	{
@@ -77,16 +98,14 @@ void C_Shop::Purchase()
 			std::cout << "나는 거지다...살 수 없다." << std::endl;
 			break;
 		}
+
 		std::cout << "구매완료." << std::endl;
 		Player->SubMoney(Items[choice]->GetItem().Price);
-
 		Player->AddItem(Items[choice]);
-	}
 		break;
-	default:
-	{
-		std::cout << "안 삽니다." << std::endl;
 	}
+	default:
+		std::cout << "안 삽니다." << std::endl;
 		break;
 	}
 }

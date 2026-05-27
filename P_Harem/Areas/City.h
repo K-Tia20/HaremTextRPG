@@ -17,7 +17,6 @@ class C_City : public C_Area
 {
 public:
 	C_City(C_World* world);
-	C_City();
 
 	// 메뉴고르기
 	virtual void SelectMenu() override;
@@ -29,6 +28,8 @@ public:
 	virtual void Encounter() override;
 	// 여친 획득!
 	void Gatcha();
+	// 여친 확인
+	void ViewYeuchin();
 
 private:
 	// 이 지역의 여성들

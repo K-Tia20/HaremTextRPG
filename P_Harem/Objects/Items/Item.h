@@ -19,7 +19,7 @@ public:
 	C_Items(std::string name, int price, int value);
 
 	// 겟터
-	ItemDatas GetItem() const { return Item; }
+	const ItemDatas& GetItem() const { return Item; }
 
 	// 셋터
 	void SetItem(std::string name, int price, int Value);
