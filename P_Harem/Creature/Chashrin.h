@@ -4,5 +4,6 @@
 
 class Chashrin : public C_Creature
 {
+public:
 	Chashrin();
 };
