@@ -158,10 +158,18 @@ void C_World::SetTetoGirl()
 	{
 	case 1:
 	{
-		cout << "당신의 뜨거운 파트너입니다." << endl;	
+		cout << "당신의 뜨거운 파트너입니다." << endl;
 
+		cout << "이름을 정해주세요." << endl;
+	
 		// 테토걸클래스를 make_shared의 생성클래스로 바꿔주세요
-		shared_ptr<C_Creature> TetoGirl = make_shared<C_Creature>();
+		shared_ptr<C_Creature> TetoGirl =
+			make_shared<C_Creature>(
+				SetGirlFrendName(),
+				C_Stile::HotGirl,
+				200,
+				30);
+
 		Player->AddGirlFrends(TetoGirl);
 		break;
 	}
@@ -183,8 +191,14 @@ void C_World::SetCoolPretyGirl()
 	{
 		cout << "당신의 차가운 파트너입니다." << endl;
 
+		cout << "이름을 정해주세요." << endl;
 		// 쿨미녀클래스를 make_shared의 생성클래스로 바꿔주세요
-		shared_ptr<C_Creature> CoolPretyGirl = make_shared<C_Creature>();
+		shared_ptr<C_Creature> CoolPretyGirl =
+			make_shared<C_Creature>(
+				SetGirlFrendName(),
+				C_Stile::HotGirl,
+				200,
+				30);
 		Player->AddGirlFrends(CoolPretyGirl);
 		break;
 	}
@@ -206,8 +220,14 @@ void C_World::SetChosicGirl()
 	{
 		cout << "당신의 풀내나는 파트너입니다." << endl;
 
+		cout << "이름을 정해주세요." << endl;
 		// 초식녀클래스를 make_shared의 생성클래스로 바꿔주세요
-		shared_ptr<C_Creature> ChosicGirl = make_shared</*ChosicGirl*/C_Creature>();
+		shared_ptr<C_Creature> ChosicGirl =
+			make_shared<C_Creature>(
+				SetGirlFrendName(),
+				C_Stile::HotGirl,
+				200,
+				30);
 		Player->AddGirlFrends(ChosicGirl);
 		break;
 	}
@@ -217,6 +237,11 @@ void C_World::SetChosicGirl()
 		break;
 	}
 	}
+}
+
+string C_World::SetGirlFrendName()
+{
+	return Player->Input<string>();
 }
 
 bool C_World::CheckInit()
