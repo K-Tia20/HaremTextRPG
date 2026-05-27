@@ -62,12 +62,27 @@ void C_Player::AddItem(std::shared_ptr<C_Items> item)
 }
 
 // 아이템 사용
-int C_Player::UsingItem()
+std::shared_ptr<C_Items> C_Player::UsingItem()
 {
 	int randomIndex = rand() % Inventory->GetSize();
-	int Value = Inventory->GetItemValue(randomIndex);
-
+	
 	Inventory->SubItem(randomIndex);
 
-	return Inventory->GetItemValue(randomIndex);
+	return Inventory->GetItem(randomIndex);
+}
+
+int C_Player::GetHighlevel()
+{
+	std::shared_ptr<C_Creature> HighlevelGirl;
+
+	for (auto Girl : GirlFrends)
+	{
+		if (HighlevelGirl == nullptr)
+			HighlevelGirl = Girl;
+
+		if (HighlevelGirl->GetLevel() < Girl->GetLevel())
+			HighlevelGirl = Girl;
+	}
+
+	return HighlevelGirl->GetLevel();
 }
