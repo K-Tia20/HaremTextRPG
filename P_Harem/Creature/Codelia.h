@@ -4,6 +4,7 @@
 
 class Codelia : public C_Creature
 {
+public:
 	Codelia();
 };
 

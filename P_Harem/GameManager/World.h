@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "../Framework/Framework.h"
 
 class C_Player;
 class C_Area;
@@ -58,6 +59,9 @@ public: // 게임 진행 로직들
 
 	// 초식녀로 설정
 	void SetChosicGirl();
+
+	// 여친이름 정하는 함수
+	std::string SetGirlFrendName();
 	/* -------------------------------------- */
 
 	// 플레이어 및 히로인 설정 확인 후 
