@@ -48,7 +48,7 @@ float C_BattleSystem::StileMultiplier(std::shared_ptr<C_Creature> Attacker, std:
 
 void C_BattleSystem::Attack(std::shared_ptr<C_Creature> Attacker, std::shared_ptr<C_Creature> Defenser) const
 {
-	int Damage = Attacker->GetAttack() * StileMultiplier(Attacker, Defenser);
+	int Damage = CalculateDamage(Attacker, Defenser);
 	//공격력에 스타일 상성을 곱하고 소수점 버림;
 	if (OnAttack)
 	{
@@ -68,6 +68,11 @@ void C_BattleSystem::Battle(std::shared_ptr<C_Creature> Player, std::shared_ptr<
 {
 	while (!Player->IsDefeated() && !Enemy->IsDefeated())
 	{
+
+		if (rand() % 100 < 30)
+		{
+			
+		}
 		Attack(Player, Enemy); // 플레이어가 먼저 공격;
 		Sleep(1000); // 1초 대기
 		if (Enemy->IsDefeated())

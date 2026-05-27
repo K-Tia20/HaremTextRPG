@@ -5,6 +5,7 @@
 #include "../Framework/Framework.h"
 #include "../Creature/Creature.h"
 #include "../Framework/Defs.h"
+#include "../Inventory/Inventory.h"
 
 
 using OnBattleTextNumNumDelegate = std::function<void(std::string, int, int)>;
