@@ -39,11 +39,9 @@ public:
 	void SetMaxHp(int SetMaxHp) { MaxHp = SetMaxHp; }
 	void SetCurrentHp(int SetCurrentHp) { CurrentHp = SetCurrentHp; }
 	void SetAttack(int SetAttack) { Attack = SetAttack; }
+
+	void AddHp(int Add);
 	//이름과 스타일은 Setter가 없으니 필요하면 추가할 것;
 
-
-
 	void SetEnemyStat(int level);
-
 };
-

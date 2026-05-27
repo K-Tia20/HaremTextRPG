@@ -86,3 +86,11 @@ int C_Player::GetHighlevel()
 
 	return HighlevelGirl->GetLevel();
 }
+
+void C_Player::RemoveGirlFriend(std::shared_ptr<C_Creature> girl)
+{
+	GirlFrends.erase(
+		std::remove(GirlFrends.begin(), GirlFrends.end(), girl),
+		GirlFrends.end()
+	);
+}
