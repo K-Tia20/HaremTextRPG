@@ -1,9 +1,9 @@
-#include <iostream>
+ï»¿#include <iostream>
 #include <string>
 
 #include "Codelia.h"
 
-Codelia::Codelia() : C_Creature("ÄÚµ¨¸®¾Æ ¿À½ºÆ¾",C_Stile::NormalGirl,200,30)
+Codelia::Codelia() : C_Creature("ï¿½Úµï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ¾",C_Stile::NormalGirl,200,30)
 {
 
 }

@@ -53,16 +53,17 @@ void C_BattleSystem::Attack(std::shared_ptr<C_Creature> Attacker, std::shared_pt
     if (!Attacker || !Defenser) return;
 	int Damage = CalculateDamage(Attacker, Defenser);
 
-    // [Stability Fix] UseItem NULL 체크 보강
+    // [Stability Fix & Team Intent Respect] 아이템 타입별 로직 내부에 델리게이트 배치
     if (UseItem) {
         if (UseItem->GetItem().Type == ItemType::Power && PlayerTurn) {
             Damage += UseItem->GetItem().Value;
+            if (OnUseItem) OnUseItem(Attacker->GetName(), 1, UseItem->GetItem().Value);
         } else if (UseItem->GetItem().Type == ItemType::Defence && PlayerTurn) {
             Damage -= UseItem->GetItem().Value;
             if (Damage < 0) Damage = 0;
+            if (OnUseItem) OnUseItem(Attacker->GetName(), 2, UseItem->GetItem().Value);
         }
     }
-	if (OnUseItem) OnUseItem(Attacker->GetName(), 1, UseItem->GetItem().Value);
 
 	if (OnAttack) OnAttack(Attacker->GetName());
 

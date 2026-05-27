@@ -24,6 +24,7 @@ public:
 	std::string GetName() { return Name; } 
 	std::vector<std::shared_ptr<C_Creature>> GetGirlFrends() { return GirlFrends; } 
 	int GetMonny() { return Money; } 
+    std::shared_ptr<C_Inventory> GetInventory() { return Inventory; }
 
 	/* 셋터 */
 	void SetName(std::string name); 

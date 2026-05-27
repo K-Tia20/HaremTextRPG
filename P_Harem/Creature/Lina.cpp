@@ -1,9 +1,9 @@
-#include <iostream>
+ï»¿#include <iostream>
 #include <string>
 
 #include "Lina.h"
 
-Lina::Lina() : C_Creature("¸®³ª ¸Æ·Î·¹ÀÎ", C_Stile::IceGirl, 200, 30)
+Lina::Lina() : C_Creature("ï¿½ï¿½ï¿½ï¿½ ï¿½Æ·Î·ï¿½ï¿½ï¿½", C_Stile::IceGirl, 200, 30)
 {
 
 }
