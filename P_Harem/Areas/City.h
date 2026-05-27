@@ -26,6 +26,9 @@ public:
 	virtual void Update() override;
 	// 배틀 진입
 	virtual void Encounter() override;
+    // 구역 진입 시 상태 초기화
+    virtual void Enter() override { CS = CityState::SelectMenu; }
+
 	// 여친 획득!
 	void Gatcha();
 	// 여친 확인

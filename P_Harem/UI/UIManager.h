@@ -38,10 +38,20 @@ public:
         std::string style;
     };
 
+    struct ItemDisplayData {
+        std::string name;
+        int quantity;
+        int value;
+        std::string typeStr;
+    };
+
     void UpdateHeroineList(const std::vector<HeroineDisplayData>& list);
+    void UpdateInventoryList(const std::vector<ItemDisplayData>& list);
+    void ShowLevelUpEvent(const std::string& name, int level);
     void ClearMainViewport();
     void ClearLog(); 
     void DrawImage(const std::string& imageAnsi);
+    void DrawImageAtCenter(const std::string& imageAnsi);
     void DrawInputBox(const std::string& prompt = ""); 
     void SetCursorToInputArea(const std::string& prompt = ""); 
 

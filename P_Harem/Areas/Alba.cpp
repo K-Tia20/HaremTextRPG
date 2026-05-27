@@ -1,6 +1,8 @@
 #include "../GameManager/World.h"
 #include "../Player/Player.h"
 #include "../UI/UIManager.h" 
+#include "../UI/ScriptManager.h"
+#include "../UI/ImageManager.h"
 #include "Alba.h"
 #include <windows.h>
 
@@ -15,47 +17,54 @@ C_Alba::C_Alba(C_World* world)
 void C_Alba::SelectMenu()
 {
     auto ui = World->GetUI();
+    auto& script = C_ScriptManager::GetInstance();
     if (!ui) return;
 
-    // [Visual Upgrade] 앱 느낌의 메뉴 구성
-	ui->PrintLog("\x1b[93m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\x1b[0m");
-	ui->PrintLog("\x1b[97m      📢 오늘의 긴급 알바 모집      \x1b[0m");
-	ui->PrintLog("\x1b[93m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\x1b[0m");
-	ui->PrintLog("1. \x1b[96m📦 쿠팡 물류 야간 상하차\x1b[0m");
-	ui->PrintLog("2. \x1b[92m🥕 당근마켓 매너온도 빌런 잡기\x1b[0m");
-	ui->PrintLog("3. \x1b[95m👰 결혼식 가짜 하객 프로 대행\x1b[0m");
-	ui->PrintLog("4. \x1b[93m🛵 배민커넥트 지옥의 도보 배달\x1b[0m");
-	ui->PrintLog("\x1b[90m------------------------------------\x1b[0m");
-	ui->PrintLog("5. 🏠 돌아가기");
+    // [Data-Driven] Scenario.txt에서 레이아웃 호출
+	ui->PrintLog(script.Get("UI_DIVIDER_YELLOW"));
+	ui->PrintLog(script.Get("ALBA_HEADER"));
+	ui->PrintLog(script.Get("UI_DIVIDER_YELLOW"));
+	ui->PrintLog(script.Get("ALBA_MENU_1"));
+	ui->PrintLog(script.Get("ALBA_MENU_2"));
+	ui->PrintLog(script.Get("ALBA_MENU_3"));
+	ui->PrintLog(script.Get("ALBA_MENU_4"));
+	ui->PrintLog(script.Get("UI_LINE_THIN"));
+	ui->PrintLog(script.Get("ALBA_BACK"));
 
 	int choice = Player->InputInt();
     ui->ClearLog(); 
 
     string jobName = "";
-    int pay = 100000; // 팀의 기본 보상 유지
+    string bgName = "";
+    int pay = 100000;
 
 	switch (choice)
 	{
-	case 1: jobName = "쿠팡 상하차"; break;
-	case 2: jobName = "빌런 검거"; break;
-	case 3: jobName = "하객 대행"; break;
-	case 4: jobName = "도보 배달"; break;
+	case 1: jobName = "상하차 알바"; bgName = "BG_Coupang"; break;
+	case 2: jobName = "벌레잡기 알바"; bgName = "BG_Danggun"; break;
+	case 3: jobName = "하객대행 알바"; bgName = "BG_Wedding"; break;
+	case 4: jobName = "배달 알바"; bgName = "BG_Bemin"; break;
 	default: AS = AlbaState::MoveArea; return;
 	}
 
-    // [Visual Upgrade] 알바 진행 애니메이션
-    ui->PrintLog("\x1b[97m[" + jobName + "] \x1b[0m작업을 시작합니다...");
+    // [Visual Upgrade] 알바 전용 배경 출력
+    ui->ClearMainViewport();
+    ui->DrawImage(C_ImageManager::GetInstance().GetLayeredImage(bgName, {}));
+
+    // [Data-Driven] 작업 진행 연출
+    ui->PrintLog(script.GetFormatStr("ALBA_START", {jobName}));
     for (int i = 1; i <= 5; ++i) {
         string gage = "[";
         for (int j = 0; j < 5; ++j) gage += (j < i) ? "\x1b[93m■\x1b[0m" : "\x1b[90m□\x1b[0m";
-        gage += "] \x1b[90m열심히 하는 중...\x1b[0m";
-        ui->PrintLog(gage, true); // Overlap 출력
+        gage += "] \x1b[90m작업 진행 중...\x1b[0m";
+        ui->PrintLog(gage, true); 
         Sleep(400);
     }
 
     ui->ClearLog();
-	ui->PrintLog("\x1b[92m✔ " + jobName + " 완료!\x1b[0m");
-	ui->PrintLog("\x1b[93m💰 일당 " + to_string(pay) + " 원이 입금되었습니다!\x1b[0m");
+	ui->PrintLog(script.GetFormatStr("ALBA_COMPLETE", {jobName}));
+	ui->PrintLog(script.GetFormatStr("ALBA_PAYMENT", {to_string(pay)}));
+    // [SOUND] 여기에 알바 정산 효과음을 추가하세요
     Player->AddMoney(pay);
     
     UIManager::WaitKey(ui);
@@ -64,18 +73,24 @@ void C_Alba::SelectMenu()
 void C_Alba::MoveArea()
 {
 	AS = AlbaState::SelectMenu;
+    World->SetHubBG("BG_City");
 	World->GotoCity();
 }
 
 void C_Alba::Update()
 {
-	switch (AS)
+    bool isLooping = true;
+	while (isLooping)
 	{
-	case AlbaState::SelectMenu:
-		SelectMenu();
-		break;
-	case AlbaState::MoveArea:
-		MoveArea();
-		break;
+		switch (AS)
+		{
+		case AlbaState::SelectMenu:
+			SelectMenu();
+			break;
+		case AlbaState::MoveArea:
+			MoveArea();
+            isLooping = false;
+			break;
+		}
 	}
 }

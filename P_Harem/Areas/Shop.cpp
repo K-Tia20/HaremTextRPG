@@ -2,6 +2,8 @@
 #include "../GameManager/World.h"
 #include "../Player/Player.h"
 #include "../UI/UIManager.h" 
+#include "../UI/ScriptManager.h"
+#include "../UI/ImageManager.h"
 #include "../Objects/Items/Item.h"
 #include "Shop.h"
 
@@ -12,7 +14,9 @@ C_Shop::C_Shop(C_World* world)
 	World = world;
 	Player = World->GetPlayer();
 
-    // [Visual Upgrade] 메뉴 구성 시 이모지 활용
+    // 아이템 객체 생성 시 이름은 내부 ID처럼 활용하고, 
+    // 실제 출력은 Scenario.txt에서 제어할 수도 있지만 
+    // 여기서는 팀원들의 생성 로직을 존중하여 이모지만 포함합니다.
 	Items.push_back(make_shared<C_Items>("🍱 보글보글 된장찌개", 20000, 50, ItemType::Heal));
 	Items.push_back(make_shared<C_Items>("🍖 육즙팡팡 삼겹살 1.5인분", 50000, 100, ItemType::Heal));
 	Items.push_back(make_shared<C_Items>("🍗 오늘밤은 치킨이닭", 100000, 10, ItemType::Power));
@@ -21,65 +25,83 @@ C_Shop::C_Shop(C_World* world)
 void C_Shop::SelectMenu()
 {
     auto ui = World->GetUI();
+    auto& script = C_ScriptManager::GetInstance();
     if (!ui) return;
 
-    ui->PrintLog("\x1b[96m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\x1b[0m");
-    ui->PrintLog("\x1b[97m      ☕ 요거프레쏘 힐링 카페       \x1b[0m");
-    ui->PrintLog("\x1b[96m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\x1b[0m");
-    ui->PrintLog("\x1b[90m현재 내 지갑: \x1b[93m" + to_string(Player->GetMonny()) + " 원\x1b[0m");
-    ui->PrintLog("\x1b[90m------------------------------------\x1b[0m");
-    ui->PrintLog("1. \x1b[97m🛒 아이템 쇼핑하기\x1b[0m");
-    ui->PrintLog("2. \x1b[90m🏠 밖으로 나가기 (도시)\x1b[0m");
+    // [Visual Upgrade] 상점 외경 출력
+    ui->ClearMainViewport();
+    ui->DrawImage(C_ImageManager::GetInstance().GetLayeredImage("BG_YogerPresso_O", {}));
+
+    // [Data-Driven] 상점 메인 레이아웃
+    ui->PrintLog(script.Get("UI_DIVIDER_BLUE"));
+    ui->PrintLog(script.Get("SHOP_HEADER"));
+    ui->PrintLog(script.Get("UI_DIVIDER_BLUE"));
+    ui->PrintLog(script.GetFormatStr("SHOP_WALLET", {to_string(Player->GetMonny())}));
+    ui->PrintLog(script.Get("UI_LINE_THIN"));
+    ui->PrintLog(script.Get("SHOP_MENU_1"));
+    ui->PrintLog(script.Get("SHOP_MENU_2"));
 
 	int choice = Player->InputInt();
     ui->ClearLog(); 
 
 	switch (choice)
 	{
-	case 1:
-		SS = ShopState::Purchase;
-		break;
-	default:
-		SS = ShopState::Exit;
-		break;
+	case 1: 
+        SS = ShopState::Purchase; 
+        break;
+	case 2:
+        SS = ShopState::Exit; 
+        break;
+	default: 
+        ui->PrintLog("시스템: 잘못된 선택입니다.");
+        UIManager::WaitKey(ui);
+        break;
 	}
 }
 
 void C_Shop::Update()
 {
-	switch (SS)
+    bool isLooping = true;
+	while (isLooping)
 	{
-	case ShopState::SelectMenu: SelectMenu(); break;
-	case ShopState::Purchase: Purchase(); break;
-	case ShopState::Exit: Exit(); break;
+		switch (SS)
+		{
+		case ShopState::SelectMenu: SelectMenu(); break;
+		case ShopState::Purchase: Purchase(); break;
+		case ShopState::Exit: Exit(); isLooping = false; break;
+		}
 	}
 }
 
 void C_Shop::Purchase()
 {
     auto ui = World->GetUI();
+    auto& script = C_ScriptManager::GetInstance();
     if (!ui) return;
 
-	ui->PrintLog("\x1b[96m--- 🛒 쇼핑 리스트 (잔고: " + to_string(Player->GetMonny()) + "원) ---\x1b[0m");
+    // [Visual Upgrade] 상점 내경(쇼핑 중) 출력
+    ui->ClearMainViewport();
+    ui->DrawImage(C_ImageManager::GetInstance().GetLayeredImage("BG_YogerPresso_I", {}));
+
+	ui->PrintLog(script.GetFormatStr("SHOP_LIST_TITLE", {to_string(Player->GetMonny())}));
 
 	int i = 1;
 	for (std::shared_ptr<C_Items> Item : Items)
 	{
-        ui->PrintLog(to_string(i) + ". " + Item->GetItem().Name);
-        ui->PrintLog("   \x1b[90m└ 가격: \x1b[93m" + to_string(Item->GetItem().Price) + " 원\x1b[0m");
+        ui->PrintLog(script.GetFormatStr("SHOP_ITEM_FORMAT", {
+            to_string(i), 
+            Item->GetItem().Name, 
+            to_string(Item->GetItem().Price)
+        }));
 		i++;
 	}
-    ui->PrintLog("\x1b[90m------------------------------------\x1b[0m");
+    ui->PrintLog(script.Get("UI_LINE_THIN"));
     ui->PrintLog("0. \x1b[90m뒤로 가기\x1b[0m");
 
 	int choice = Player->InputInt();
     ui->ClearLog(); 
 
-	if (choice == 0)
-	{
-		SS = ShopState::SelectMenu;
-		return;
-	}
+	if (choice == 0) { SS = ShopState::SelectMenu; return; }
 
 	choice -= 1;
 	if (choice < 0 || choice >= static_cast<int>(Items.size()))
@@ -89,9 +111,7 @@ void C_Shop::Purchase()
 		return;
 	}
 
-    ui->PrintLog("\x1b[97m[" + Items[choice]->GetItem().Name + "]\x1b[0m");
-    ui->PrintLog("이 메뉴로 주문하시겠습니까?");
-    ui->PrintLog("1. 👍 예  2. ✋ 아니요");
+    ui->PrintLog(script.GetFormatStr("SHOP_ASK_BUY", {Items[choice]->GetItem().Name}));
 
 	switch (Player->InputInt())
 	{
@@ -99,11 +119,11 @@ void C_Shop::Purchase()
 	{
 		if (Player->GetMonny() < Items[choice]->GetItem().Price)
 		{
-            ui->PrintLog("\x1b[31m시스템: 지갑이 텅 비었습니다... (잔액 부족)\x1b[0m");
+            ui->PrintLog(script.Get("SHOP_LACK_MONEY"));
 			break;
 		}
-        ui->PrintLog("\x1b[92m[ 결제 완료! ]\x1b[0m");
-        ui->PrintLog("\x1b[97m\"맛있게 드세요! 감사합니다!\"\x1b[0m");
+        ui->PrintLog(script.Get("SHOP_BUY_SUCCESS"));
+        // [SOUND] 여기에 구매 성공 효과음을 추가하세요 (예: CSoundManager::GetInstance().PlaySFX("Buy.wav");)
 		Player->SubMoney(Items[choice]->GetItem().Price);
 		Player->AddItem(Items[choice]);
 		break;
@@ -119,5 +139,6 @@ void C_Shop::Purchase()
 void C_Shop::Exit()
 {
 	SS = ShopState::SelectMenu;
+    World->SetHubBG("BG_City");
 	World->GotoCity();
 }

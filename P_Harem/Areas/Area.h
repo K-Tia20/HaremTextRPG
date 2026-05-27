@@ -12,6 +12,7 @@ public:
 	virtual void MoveArea() = 0;
 	virtual void Update() = 0;
 	virtual void Encounter() = 0;
+    virtual void Enter() {} // 구역 진입 시 초기화
 
 	// 월드 가져오는 용도 (월드의 상태를 변경하기 위함)
 	void SetWorld(C_World* world);

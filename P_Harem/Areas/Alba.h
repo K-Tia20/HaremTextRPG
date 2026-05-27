@@ -20,6 +20,7 @@ public:
 	virtual void Update() override;
 	virtual void MoveArea() override;
 	virtual void Encounter() {};
+    virtual void Enter() override { AS = AlbaState::SelectMenu; } // 진입 시 상태 리셋
 
 private:
 	std::shared_ptr<C_Player> Player;

@@ -23,6 +23,7 @@ public:
 	virtual void Update() override;
 	virtual void Encounter() {};
 	virtual void MoveArea() {};
+    virtual void Enter() override { SS = ShopState::SelectMenu; } // 진입 시 상태 리셋
 
 	void Purchase();
 	void Exit();

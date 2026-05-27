@@ -1,4 +1,4 @@
-#include "../Framework/Framework.h"
+#include "../GameManager/World.h"
 #include "../Player/Player.h"
 #include "../Areas/Area.h"
 #include "../Areas/City.h"
@@ -15,7 +15,6 @@
 
 using namespace std;
 
-// [공존형 설계] 전역 인스턴스를 관리하여 싱글톤과 shared_ptr 시스템을 연결합니다.
 static C_World* g_WorldInstance = nullptr;
 
 C_World& C_World::GetInstance() {
@@ -24,10 +23,10 @@ C_World& C_World::GetInstance() {
 
 C_World::C_World()
 {
-    g_WorldInstance = this; // 생성 시점에 전역 주소 등록
+    g_WorldInstance = this; 
 	Player = make_shared<C_Player>();
     m_ui = make_unique<UIManager>();
-    m_battle = make_unique<C_BattleSystem>(this); // 배선 연결
+    m_battle = make_unique<C_BattleSystem>(this);
 
 	Areas[WorldArea::City] = make_shared<C_City>(this);
 	Areas[WorldArea::Store] = make_shared<C_Shop>(this);
@@ -39,36 +38,44 @@ C_World::~C_World() {
 }
 
 /**
- * [Init] - 팀원들의 로직 가동 전, 화려한 무대를 준비합니다.
+ * [Init] - 시네마틱 오프닝 및 엔진 초기 가동 (최정예 연출 버전)
  */
 void C_World::Init() {
     C_ImageManager::GetInstance().Init();
     C_ScriptManager::GetInstance().Init();
     m_ui->Init();
     
-    // 시네마틱 오프닝 연출
-    m_ui->CenteredTypeLog("소년이여, 신화가 되라.", 22);
+    auto& script = C_ScriptManager::GetInstance();
+    auto& img = C_ImageManager::GetInstance();
+
+    // 1. [프롤로그] 운명적인 첫 문구
+    m_ui->CenteredTypeLog(script.Get("SCENE_OPENING_1"), 22);
     Sleep(2000);
+    m_ui->PlayBlueTransition(); // 화면 정화
+
+    // 2. [팀 로고] BG_TeamName.png 출력
+    // (뷰포트가 아닌 전체 화면 중앙 느낌을 위해 DrawImage를 일시 활용)
+    m_ui->DrawImage(img.GetLayeredImage("BG_TeamName", {})); 
+    Sleep(3000);
     m_ui->PlayBlueTransition();
 
+    // 3. [게임 타이틀] BG_Title.png 출력
+    m_ui->DrawImage(img.GetLayeredImage("BG_Title", {}));
+    Sleep(3000);
+
+    // 4. [UI 조립] 테두리가 보이면서 뷰포트에 타이틀 안착
     m_ui->RenderMainUI();
     m_ui->UpdateDate(GetCurrentDateString());
-
     m_ui->ClearMainViewport();
-    m_ui->DrawImage(C_ImageManager::GetInstance().GetLayeredImage("BG_Title", {}));
+    m_ui->DrawImage(img.GetLayeredImage("BG_Title", {}));
     
-    auto& script = C_ScriptManager::GetInstance();
     m_ui->PrintLog(script.Get("TITLE_MAIN"));
     UIManager::WaitKey(m_ui.get());
 
-    // 로직과 UI의 가교를 놓습니다. (팀의 로직을 UI에 연결)
     DelegateManager dm;
     dm.BindAll(m_ui.get(), m_battle.get());
 }
 
-/**
- * [Update] - 팀원들이 설계한 메인 게임 루프
- */
 void C_World::Update()
 {
     if (m_isFirstFrame) {
@@ -79,7 +86,7 @@ void C_World::Update()
 
     if (!IsRunning) return;
 
-    SyncUI(); // 팀의 데이터(돈, HP)를 UI에 실시간 반영
+    SyncUI();
 
     auto& script = C_ScriptManager::GetInstance();
 
@@ -89,18 +96,18 @@ void C_World::Update()
 	case WorldState::StartGame:  StartGame(); break;
 	case WorldState::InProgress: 
     {
-        // [거점 메뉴 연출] 항상 내 방 배경과 메뉴를 출력
         m_ui->ClearMainViewport();
         m_ui->DrawImage(C_ImageManager::GetInstance().GetLayeredImage("BG_Room", {}));
         m_ui->PrintLog(script.Get("MAIN_MENU"));
         
         int choice = Player->InputInt();
-        bool goToArea = false;
+        m_ui->ClearLog();
 
+        bool goToArea = false;
         switch (choice) {
-            case 1: GotoShop(); goToArea = true; break;
-            case 2: GotoCity(); goToArea = true; break; 
-            case 3: GotoAlba(); goToArea = true; break;
+            case 1: Areas[WorldArea::Store]->Enter(); GotoShop(); goToArea = true; break;
+            case 2: Areas[WorldArea::City]->Enter(); GotoCity(); goToArea = true; break; 
+            case 3: Areas[WorldArea::Alba]->Enter(); GotoAlba(); goToArea = true; break;
             case 4: C_LogSystem::GetInstance().ShowContactList(); break;
             case 5: C_LogSystem::GetInstance().ShowInventory(); break;
             case 6: WS = WorldState::QuitGame; break;
@@ -108,8 +115,8 @@ void C_World::Update()
         }
 
         if (goToArea && WS != WorldState::QuitGame) {
-            InProgress(); // 해당 구역 업데이트 루프 진입
-            CL = WorldArea::City; // 구역에서 나오면 거점으로 복귀
+            InProgress(); 
+            CL = WorldArea::City; 
         }
         break;
     }
@@ -127,10 +134,9 @@ void C_World::Run() {
 
 void C_World::NewGame()
 {
-    // 팀원들의 NewGame 설계 순서를 따르되 UI 연출 적용
 	if (Player->GetName().empty()) SetName();
-	if (!Player->GetName().empty() && Player->GetGirlFrends().empty()) SetGirlFrends();
-    if (!Player->GetName().empty() && !Player->GetGirlFrends().empty()) WS = WorldState::StartGame;
+	else if (Player->GetGirlFrends().empty()) SetGirlFrends();
+    else WS = WorldState::StartGame;
 }
 
 void C_World::StartGame()
@@ -152,25 +158,14 @@ void C_World::SyncUI() {
     if (!Player || !m_ui) return;
     
     bool needsUpdate = false;
-    if (m_lastName != Player->GetName()) {
-        m_lastName = Player->GetName();
-        m_ui->UpdateUserInfo(m_lastName);
-    }
-    if (m_lastMoney != Player->GetMonny()) {
-        m_lastMoney = Player->GetMonny();
-        m_ui->UpdateMoney(m_lastMoney);
-    }
+    if (m_lastName != Player->GetName()) { m_lastName = Player->GetName(); m_ui->UpdateUserInfo(m_lastName); }
+    if (m_lastMoney != Player->GetMonny()) { m_lastMoney = Player->GetMonny(); m_ui->UpdateMoney(m_lastMoney); }
     string currentDate = GetCurrentDateString();
-    if (m_lastDate != currentDate) {
-        m_lastDate = currentDate;
-        m_ui->UpdateDate(m_lastDate);
-    }
+    if (m_lastDate != currentDate) { m_lastDate = currentDate; m_ui->UpdateDate(m_lastDate); }
 
     const auto& friends = Player->GetGirlFrends();
-    if (m_lastHeroineCount != friends.size()) {
-        needsUpdate = true;
-        m_lastHeroineCount = friends.size();
-    } else {
+    if (m_lastHeroineCount != friends.size()) { needsUpdate = true; m_lastHeroineCount = friends.size(); }
+    else {
         static std::vector<int> lastHPs, lastLvs, lastAfs;
         if (lastHPs.size() != friends.size()) {
             lastHPs.resize(friends.size()); lastLvs.resize(friends.size()); lastAfs.resize(friends.size());
@@ -202,8 +197,7 @@ void C_World::SetName()
     auto& script = C_ScriptManager::GetInstance();
     m_ui->ClearMainViewport();
     m_ui->DrawImage(C_ImageManager::GetInstance().GetLayeredImage("BG_Title", {})); 
-    m_ui->PrintLog(script.Get("SCENE_OPENING_2"));
-    UIManager::WaitKey(m_ui.get());
+    // [사용자 요청] 이름 등록 전 SCENE_OPENING_2 출력 제거
 
     m_ui->ClearLog();
 	m_ui->PrintLog(script.Get("INPUT_PLAYER_NAME"));
@@ -218,8 +212,13 @@ void C_World::SetName()
 void C_World::SetGirlFrends()
 {
     auto& script = C_ScriptManager::GetInstance();
+    auto& img = C_ImageManager::GetInstance();
+
     m_ui->ClearMainViewport();
-    m_ui->DrawImage(C_ImageManager::GetInstance().GetLayeredImage("BG_City", {})); 
+    m_ui->DrawImage(img.GetLayeredImage("BG_City2", {})); 
+
+	m_ui->PrintLog(script.Get("SCENE_OPENING_2")); // "길을 걷던 당신 앞에..." 멘트
+    UIManager::WaitKey(m_ui.get());
 
 	m_ui->PrintLog(script.Get("INPUT_HEROINE_NAME"));
 	string girlName = SetGirlFrendName();
@@ -239,10 +238,15 @@ void C_World::SetGirlFrends()
 
 	if (!Player->GetGirlFrends().empty())
 	{
+        // [사용자 요청] 데이트 연출 추가
         m_ui->ClearMainViewport();
-        m_ui->DrawImage(C_ImageManager::GetInstance().GetLayeredImage("BG_Room", {})); 
-        m_ui->PrintLog("시스템: 그녀와의 인연을 뒤로하고 집으로 돌아왔습니다.");
+        m_ui->DrawImage(img.GetLayeredImage("BG_YogerPresso_I", {})); 
+        m_ui->PrintLog("시스템: 그녀와 요거플레쏘에서 즐거운 시간을 보낸 뒤, 전화번호를 교환했습니다.");
         UIManager::WaitKey(m_ui.get());
+        
+        // [사용자 요청] 엔터 누른 후 방으로 복귀
+        m_ui->ClearMainViewport();
+        m_ui->DrawImage(img.GetLayeredImage("BG_Room", {})); 
 	}
 }
 
@@ -251,7 +255,7 @@ void C_World::SetTetoGirl(string name) {
     auto girl = make_shared<C_Creature>(name, C_Stile::HotGirl, 200, 30);
     Player->AddGirlFrends(girl);
     m_ui->ClearMainViewport();
-    m_ui->DrawImage(C_ImageManager::GetInstance().GetLayeredImage("BG_City", {{"CH_Red", 50, 0}}));
+    m_ui->DrawImage(C_ImageManager::GetInstance().GetLayeredImage("BG_City2", {{"CH_Red", 50, 0}}));
     m_ui->TypeLog(script.GetFormatStr("INTRO_HEROINE_HOT", {name}));
     UIManager::WaitKey(m_ui.get());
 }
@@ -260,7 +264,7 @@ void C_World::SetCoolPretyGirl(string name) {
     auto girl = make_shared<C_Creature>(name, C_Stile::IceGirl, 200, 30);
     Player->AddGirlFrends(girl);
     m_ui->ClearMainViewport();
-    m_ui->DrawImage(C_ImageManager::GetInstance().GetLayeredImage("BG_City", {{"CH_Blue", 50, 0}}));
+    m_ui->DrawImage(C_ImageManager::GetInstance().GetLayeredImage("BG_City2", {{"CH_Blue", 50, 0}}));
     m_ui->TypeLog(script.GetFormatStr("INTRO_HEROINE_COOL", {name}));
     UIManager::WaitKey(m_ui.get());
 }
@@ -269,7 +273,7 @@ void C_World::SetChosicGirl(string name) {
     auto girl = make_shared<C_Creature>(name, C_Stile::GrassGirl, 200, 30);
     Player->AddGirlFrends(girl);
     m_ui->ClearMainViewport();
-    m_ui->DrawImage(C_ImageManager::GetInstance().GetLayeredImage("BG_City", {{"CH_Green", 50, 0}}));
+    m_ui->DrawImage(C_ImageManager::GetInstance().GetLayeredImage("BG_City2", {{"CH_Green", 50, 0}}));
     m_ui->TypeLog(script.GetFormatStr("INTRO_HEROINE_HERB", {name}));
     UIManager::WaitKey(m_ui.get());
 }
@@ -278,7 +282,7 @@ void C_World::SetNormalGirl(string name) {
     auto girl = make_shared<C_Creature>(name, C_Stile::NormalGirl, 200, 30);
     Player->AddGirlFrends(girl);
     m_ui->ClearMainViewport();
-    m_ui->DrawImage(C_ImageManager::GetInstance().GetLayeredImage("BG_City", {{"CH_Normal", 50, 0}}));
+    m_ui->DrawImage(C_ImageManager::GetInstance().GetLayeredImage("BG_City2", {{"CH_Normal", 50, 0}}));
     m_ui->TypeLog(script.GetFormatStr("INTRO_HEROINE_NORMAL", {name}));
     UIManager::WaitKey(m_ui.get());
 }

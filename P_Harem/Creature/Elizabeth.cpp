@@ -1,9 +1,9 @@
-#include <iostream>
+ï»¿#include <iostream>
 #include <string>
 
 #include "Elizabeth.h"
 
-Elizabeth::Elizabeth() : C_Creature("¿¤¸®ÀÚº£½º ÆÒµå·¡°Ç", C_Stile::GrassGirl, 200, 30)
+Elizabeth::Elizabeth() : C_Creature("ï¿½ï¿½ï¿½ï¿½ï¿½Úºï¿½ï¿½ï¿½ ï¿½Òµå·¡ï¿½ï¿½", C_Stile::GrassGirl, 200, 30)
 {
 
 }
