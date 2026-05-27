@@ -4,6 +4,7 @@
 
 class Zhad : public C_Creature
 {
+public:
 	Zhad();
 };
 
