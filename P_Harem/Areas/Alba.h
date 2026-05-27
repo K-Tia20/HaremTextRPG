@@ -17,8 +17,9 @@ public:
 	C_Alba(C_World* world);
 
 	virtual void SelectMenu() override;
-	virtual void MoveArea() override;
 	virtual void Update() override;
+	virtual void MoveArea() override;
+	virtual void Encounter() {};
 
 private:
 	std::shared_ptr<C_Player> Player;
