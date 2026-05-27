@@ -64,6 +64,7 @@ void C_City::SelectMenu()
 	}
 }
 
+
 void C_City::MoveArea()
 {
 	// 지역을 이동하는 곳 입니다. 로그가 필요합니다.
@@ -109,15 +110,8 @@ void C_City::Encounter()
 
 void C_City::Gatcha()
 {
-	int randomIndex = rand() % 100;
-
-	if (randomIndex < 30)
-	{
-		// 싸운여자 획득
-		BattleGirl->SetMaxHp(200);
-		BattleGirl->SetAttack(30);
-		Player->AddGirlFrends(BattleGirl);
-		// 지역에서 여자 빼내기
-		Girls.erase(std::remove(Girls.begin(), Girls.end(), BattleGirl), Girls.end());
-	}
+	// 싸운여자 획득
+	Player->AddGirlFrends(BattleGirl);
+	// 지역에서 여자 빼내기
+	Girls.erase(std::remove(Girls.begin(), Girls.end(), BattleGirl), Girls.end());
 }
