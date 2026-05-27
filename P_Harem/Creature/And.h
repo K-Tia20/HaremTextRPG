@@ -1,8 +1,9 @@
-#pragma once
+﻿#pragma once
 
 #include "../Creature/Creature.h"
 
 class And : public C_Creature
 {
+public:
 	And();
 };

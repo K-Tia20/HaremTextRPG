@@ -1,9 +1,8 @@
-#include <iostream>
+ï»¿#include <iostream>
 #include <string>
 
 #include "Oplier.h"
 
-Oplier::Oplier() : C_Creature("¿ÀÇÊ¸®¾î ¹öÅ·¾ö", C_Stile::GrassGirl, 200, 30)
+Oplier::Oplier() : C_Creature("ì˜¤í•„ë¦¬ì–´ ë²„í‚¹ì—„", C_Stile::GrassGirl, 200, 30)
 {
-
 }

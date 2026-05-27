@@ -1,50 +1,71 @@
 #pragma once
 
-#include <iostream>
+#include "Framework.h"
+#include "../Creature/Creature.h"
 
 using namespace std;
 
-class Creature
+using OnLevelTextNumDelegate = std::function<void(std::string, int)>;
+// 텍스트와 숫자를 전달하는 델리게이트;
+
+using OnLevelTextNumNumDelegate = std::function<void(std::string, int, int)>;
+// 텍스트와 숫자 2개를 전달하는 델리게이트;
+
+class C_LevelSystem
 {
 public:
-	int Level = 1; // 현재 플레이어 레벨
-	int CurrentExp = 0; // 현재 플레이어 경험치
-	int Hp = 200; // 현재 체력
-	int MaxHp = 200; // 최대 체력
-	int Attack = 30; // 공격력
+	OnLevelTextNumNumDelegate OnGainAffinity;
+	OnLevelTextNumDelegate OnLevelUp;
 
-	int RequiredExp[9] = { 100, 100, 150, 200, 250, 300, 400, 500, 600 };
-	// 다음 레벨로 가기 위해 필요한 경험치
+	int RequiredAffinity[9] = { 100, 100, 150, 150, 200, 250, 300, 300, 300 };
 
-	int GetRequiredExp() // 현재 레벨에서 다음 레벨로 가기 위한 필요 경험치 반환
+
+	int GetRequiredAffinity(std::shared_ptr<C_Creature> Creature) const
 	{
-		if (Level >= 10) // 최대 레벨이면
-			return 0; // 더 이상 필요한 경험치가 없으므로 0 반환
+		if (Creature->GetLevel() >= 10)
+			return 0;
+		return RequiredAffinity[Creature->GetLevel() - 1];
+	} 
+	// 대상의 레벨에 따른 다음 레벨로 가기 위한 필요 호감도를 반환하는 함수;
 
-		return RequiredExp[Level - 1]; // 현재 레벨에 맞는 필요 경험치 반환
-	}
-	void GainExp(int Exp) // 경험치 획득하는 함수
+	
+	void GainAffinity(std::shared_ptr<C_Creature> Creature, int Affinity) 
 	{
-		if (Level >= 10) // 이미 최대 레벨이면
-			return; // 경험치를 더 이상 받지 않고 함수 종료
-
-		CurrentExp += Exp; // 전달 받은 경험치를 현재 경험치에 더함
-		CheckLevelUp(); // 경험치를 더한 뒤 레벨업 가능한지 확인
-	}
-	void CheckLevelUp() // 레벨업 가능한지 검사하는 함수
-	{
-		// 최대 레벨이 아니고, 현재 경험치가 필요 경험치 이상이면 반복
-		while (Level < 10 && CurrentExp >= GetRequiredExp())
+		Creature->SetAffinity(Creature->GetAffinity() + Affinity);
+		CheckLevelUp(Creature);
+		if (OnGainAffinity)
 		{
-			CurrentExp -= GetRequiredExp(); // 레벨업에 필요한 경험치만큼 차감
-			LevelUp(); // 실제 레벨업 처리 실행
+			OnGainAffinity(Creature->GetName(), Creature->GetAffinity(), GetRequiredAffinity(Creature));
+			// 호감도(경험치)획득시 이름, 현재 호감도, 다음 레벨로 가기 위한 필요 호감도를 전달;
+		}
+	} 
+	// 대상의 호감도(경험치)를 증가시키는 함수. 계산 후 레벨업이 가능한지 체크;
+
+
+	void CheckLevelUp(std::shared_ptr<C_Creature> Creature)
+	{
+		if (Creature->GetLevel() < 10 && Creature->GetAffinity() >= GetRequiredAffinity(Creature))
+		{
+			LevelUp(Creature);
+			Creature->SetAffinity(Creature->GetAffinity() - GetRequiredAffinity(Creature));
 		}
 	}
-	void LevelUp() // 실제 레벱업 처리
+	// 대상이 레벨업 조건을 충족하는지 확인하는 함수. 레벨업 조건을 충족하면 레벨업을 수행하고, 남은 호감도를 계산하여 설정;
+
+
+	void LevelUp(std::shared_ptr<C_Creature> Creature)
 	{
-		MaxHp += Level * 20; // 레벨업 시 MaxHp가 레벨당 x 20 즉, 2레벨에 최대 체력 220(+20) / 3레벨에 최대 체력 260(+40)
-		Attack += Level * 5; // 레벨업 시 Attack가 레벨당 x 5 즉, 2레벨에 Attack 35(+5) / 3레벨에 45(+10)
-		Level++; // 위의 값을 반영한 뒤 레벨 업
-		Hp = MaxHp; // 레벨업 시 Hp가 MaxHp로
+		Creature->SetLevel(Creature->GetLevel() + 1);
+		Creature->SetMaxHp(Creature->GetMaxHp() + Creature->GetLevel() * 20);
+		Creature->SetAttack(Creature->GetAttack() + Creature->GetLevel() * 5);
+		Creature->SetCurrentHp(Creature->GetMaxHp());
+		if (OnLevelUp)
+		{
+			OnLevelUp(Creature->GetName(), Creature->GetLevel());
+			// 레벨업시 이름과 레벨을 전달;
+		}
 	}
+	// 레벨에 따른 스펙 증가를 적용시킨 후 이름과 레벨을 전달
+
+
 };

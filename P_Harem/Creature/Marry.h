@@ -4,5 +4,6 @@
 
 class Marry : public C_Creature
 {
+public:
 	Marry();
 };

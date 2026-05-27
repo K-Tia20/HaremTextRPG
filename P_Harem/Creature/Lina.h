@@ -4,6 +4,7 @@
 
 class Lina : public C_Creature
 {
+public:
 	Lina();
 };
 

@@ -3,6 +3,7 @@
 #include "../Player/Player.h"
 #include "../Areas/Area.h"
 #include "../Areas/City.h"
+#include "../Areas/Shop.h"
 #include "../Creature/Creature.h"
 #include "World.h"
 
@@ -12,34 +13,8 @@ C_World::C_World()
 {
 	// 플레이어 생성
 	Player = make_shared<C_Player>();
-	//Areas[WorldArea::City] = make_shared<C_City>(this);
-}
-
-void C_World::MainMenu()
-{
-	// TODO :
-	// 플레이어 입력을 받아서 게임을 진행할지 나갈지 선택
-
-	// 로그적어주세요
-	cout << "TEXT RPG" << endl;
-	cout << "선택 : ";
-
-	int choice = Player->Input<int>();
-	switch (choice)
-	{
-	case 1:
-	{
-		// 시작
-		// 로그 적어주세요
-		WS = WorldState::NewGame;
-		break;
-	}
-	default:
-		// 종료
-		// 게임을 종료하는 로그를 적어주세요.
-		WS = WorldState::QuitGame;
-		break;
-	}
+	Areas[WorldArea::City] = make_shared<C_City>(this);
+	Areas[WorldArea::Store] = make_shared<C_Shop>(this);
 }
 
 void C_World::NewGame()
@@ -61,24 +36,26 @@ void C_World::StartGame()
 	// TODO :
 	// 설정이 끝나면 이곳에서 시작지점으로 이동
 	// (ex : Area를 다른 곳으로 이동, 아니면 시작 튜토리얼 전투실행)
+	CL = WorldArea::City;
+	Areas[CL]->Encounter();
 
+	WS = WorldState::InProgress;
 }
 
-C_Area::C_Area()
+void C_World::InProgress()
 {
+	// TODO : 게임 진행중일 때 호출되는 함수입니다.
+	// 여기서 플레이어 위치에 따라 플레이어가 할 수 있는 행동들이 정해집니다.
+	Areas[CL]->Update();
 }
 
 void C_World::Update()
 {
 	switch (WS)
 	{
-	case WorldState::MainMenu:
-	{
-		MainMenu();
-		break;
-	}
 	case WorldState::NewGame:
 	{
+		// 게임이 시작되는 곳입니다.
 		NewGame();
 		break;
 	}
@@ -89,7 +66,8 @@ void C_World::Update()
 	}
 	case WorldState::InProgress:
 	{
-		// TODO : 현재 에리어에서 게임 진행
+		InProgress();
+		break;
 	}
 	case WorldState::QuitGame:
 	{
@@ -98,8 +76,8 @@ void C_World::Update()
 	}
 	default:
 	{
-		cout << "오류 발생...메인으로 돌아갑니다." << endl;
-		WS = WorldState::MainMenu();
+		cout << "오류 발생...어쩔 수 없이 게임을 꺼야겠습니다." << endl;
+		WS = WorldState::QuitGame;
 		break;
 	}
 	}
@@ -111,7 +89,7 @@ void C_World::SetName()
 	// TODO :
 	// Player클래스에 있는 Input함수를 사용해서 값을 받아서 이름설정
 	// 이름적는 로그가 필요합니다!!
-	cout << "히히" << endl;
+	cout << "당신의 이름을 적어주세요." << endl;
 
 	string newname = Player->Input<string>();
 
@@ -150,32 +128,49 @@ void C_World::SetGirlFrends()
 	switch (choice)
 	{
 	case 1:
+		// 뜨거운 여자 고르기
 		SetTetoGirl();
 		break;
 	case 2:
+		// 차가운 여가 고르기
 		SetCoolPretyGirl();
 		break;
 	case 3:
+		// 풀내나는 여자 고르기
 		SetChosicGirl();
 		break;
 	default:
 		cout << "잘못 된 입력입니다." << endl;
 		break;
 	}
+
+	if (!Player->GetGirlFrends().empty())
+	{
+		WS = WorldState::StartGame;
+	}
 }
 
 void C_World::SetTetoGirl()
 {
+	cout << "뜨겁습니다." << endl;
 	// 테토녀의 정보 로그를 적어주세요
 	// 입력 로그를 적어주세요
 	switch (Player->Input<int>())
 	{
 	case 1:
 	{
-		cout << "당신의 뜨거운 파트너입니다." << endl;	
+		cout << "당신의 뜨거운 파트너입니다." << endl;
 
+		cout << "이름을 정해주세요." << endl;
+	
 		// 테토걸클래스를 make_shared의 생성클래스로 바꿔주세요
-		shared_ptr<C_Creature> TetoGirl = make_shared<C_Creature>();
+		shared_ptr<C_Creature> TetoGirl =
+			make_shared<C_Creature>(
+				SetGirlFrendName(),
+				C_Stile::HotGirl,
+				200,
+				30);
+
 		Player->AddGirlFrends(TetoGirl);
 		break;
 	}
@@ -189,6 +184,7 @@ void C_World::SetTetoGirl()
 
 void C_World::SetCoolPretyGirl()
 {
+	cout << "차갑습니다." << endl;
 	// 쿨미녀의 정보 로그를 적어주세요
 	// 입력 로그를 적어주세요
 	switch (Player->Input<int>())
@@ -197,8 +193,14 @@ void C_World::SetCoolPretyGirl()
 	{
 		cout << "당신의 차가운 파트너입니다." << endl;
 
+		cout << "이름을 정해주세요." << endl;
 		// 쿨미녀클래스를 make_shared의 생성클래스로 바꿔주세요
-		shared_ptr<C_Creature> CoolPretyGirl = make_shared<C_Creature>();
+		shared_ptr<C_Creature> CoolPretyGirl =
+			make_shared<C_Creature>(
+				SetGirlFrendName(),
+				C_Stile::HotGirl,
+				200,
+				30);
 		Player->AddGirlFrends(CoolPretyGirl);
 		break;
 	}
@@ -212,6 +214,7 @@ void C_World::SetCoolPretyGirl()
 
 void C_World::SetChosicGirl()
 {
+	cout << "풀내납니다." << endl;
 	// 초식녀의 정보 로그를 적어주세요
 	// 입력 로그를 적어주세요
 	switch (Player->Input<int>())
@@ -220,8 +223,14 @@ void C_World::SetChosicGirl()
 	{
 		cout << "당신의 풀내나는 파트너입니다." << endl;
 
+		cout << "이름을 정해주세요." << endl;
 		// 초식녀클래스를 make_shared의 생성클래스로 바꿔주세요
-		shared_ptr<C_Creature> ChosicGirl = make_shared</*ChosicGirl*/C_Creature>();
+		shared_ptr<C_Creature> ChosicGirl =
+			make_shared<C_Creature>(
+				SetGirlFrendName(),
+				C_Stile::HotGirl,
+				200,
+				30);
 		Player->AddGirlFrends(ChosicGirl);
 		break;
 	}
@@ -231,6 +240,11 @@ void C_World::SetChosicGirl()
 		break;
 	}
 	}
+}
+
+string C_World::SetGirlFrendName()
+{
+	return Player->Input<string>();
 }
 
 bool C_World::CheckInit()

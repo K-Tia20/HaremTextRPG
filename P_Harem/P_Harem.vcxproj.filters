@@ -11,6 +11,19 @@
     <ClCompile Include="Areas\City.cpp" />
     <ClCompile Include="Areas\Shop.cpp" />
     <ClCompile Include="Inventory\Inventory.cpp" />
+    <ClCompile Include="Creature\And.cpp" />
+    <ClCompile Include="Creature\Chashrin.cpp" />
+    <ClCompile Include="Creature\Codelia.cpp" />
+    <ClCompile Include="Creature\Lina.cpp" />
+    <ClCompile Include="Creature\Marry.cpp" />
+    <ClCompile Include="Creature\Oplier.cpp" />
+    <ClCompile Include="Creature\Zhad.cpp" />
+    <ClCompile Include="Framework\Defs.cpp" />
+    <ClCompile Include="Areas\Alba.cpp" />
+    <ClCompile Include="UI\DelegateManager.cpp" />
+    <ClCompile Include="UI\ImageManager.cpp" />
+    <ClCompile Include="UI\ScriptManager.cpp" />
+    <ClCompile Include="UI\UIManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Player\Player.h" />
@@ -24,5 +37,20 @@
     <ClInclude Include="Areas\City.h" />
     <ClInclude Include="Areas\Shop.h" />
     <ClInclude Include="Inventory\Inventory.h" />
+    <ClInclude Include="Creature\And.h" />
+    <ClInclude Include="Creature\Chashrin.h" />
+    <ClInclude Include="Creature\Codelia.h" />
+    <ClInclude Include="Creature\Lina.h" />
+    <ClInclude Include="Creature\Marry.h" />
+    <ClInclude Include="Creature\Oplier.h" />
+    <ClInclude Include="Creature\Zhad.h" />
+    <ClInclude Include="Framework\CreatureInclude.h" />
+    <ClInclude Include="Areas\Alba.h" />
+    <ClInclude Include="UI\DelegateManager.h" />
+    <ClInclude Include="UI\ImageManager.h" />
+    <ClInclude Include="UI\ScriptManager.h" />
+    <ClInclude Include="UI\stb_image.h" />
+    <ClInclude Include="UI\UILayoutDefs.h" />
+    <ClInclude Include="UI\UIManager.h" />
   </ItemGroup>
 </Project>
