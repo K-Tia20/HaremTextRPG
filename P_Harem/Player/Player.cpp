@@ -2,7 +2,6 @@
 #include <iostream>
 #include "Player.h"
 #include "../Creature/Creature.h"
-#include "../Inventory/Inventory.h"
 
 C_Player::C_Player()
 {
@@ -22,8 +21,6 @@ std::shared_ptr<C_Creature> C_Player::SetFightGirl()
 		for (auto Girls : GirlFrends)
 		{
 			std::cout << i << ". " << Girls->GetName() << std::endl;
-
-			i++;
 		}
 
 		std::cout << "0. 안싸우기" << std::endl;
@@ -53,21 +50,4 @@ void C_Player::AddMoney(int addMoney)
 void C_Player::SubMoney(int subMoney)
 {
 	Money -= subMoney;
-}
-
-// 아이템 추가
-void C_Player::AddItem(std::shared_ptr<C_Items> item)
-{
-	Inventory->AddItem(item);
-}
-
-// 아이템 사용
-int C_Player::UsingItem()
-{
-	int randomIndex = rand() % Inventory->GetSize();
-	int Value = Inventory->GetItemValue(randomIndex);
-
-	Inventory->SubItem(randomIndex);
-
-	return Inventory->GetItemValue(randomIndex);
 }
