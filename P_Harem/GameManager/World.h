@@ -16,8 +16,8 @@ enum class WorldState
 enum class WorldArea
 {
 	City,
-	Club,
-	Store
+	Store,
+	Alba
 };
 
 class C_World
@@ -40,6 +40,8 @@ public: // 게임 진행 로직들
 	void GotoCity() { CL = WorldArea::City; }
 
 	void GotoShop() { CL = WorldArea::Store; }
+
+	void GotoAlba() { CL = WorldArea::Alba; }
 
 	// 이름 설정 로직
 	void SetName();
