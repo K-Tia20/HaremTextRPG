@@ -16,12 +16,32 @@ public:
     }
 
     void Init();
-    const std::string& GetCachedImage(const std::string& name);
+    
+    struct LayerData {
+        std::string name;
+        int offsetX = 0; // 0 ~ 100 (너비 기준 백분율)
+        int offsetY = 0; // 0 ~ 100 (높이 기준 백분율)
+    };
+
+    /**
+     * @brief 여러 레이어를 합성합니다.
+     * @param bgName 배경 키
+     * @param characters 캐릭터 목록 (위치 정보 포함)
+     */
+    std::string GetLayeredImage(const std::string& bgName, const std::vector<LayerData>& characters);
 
 private:
     C_ImageManager() = default;
-    std::string ConvertToAnsi(const std::string& filePath, int maxW, int maxH);
 
-    std::unordered_map<std::string, std::string> m_imageCache;
+    // 이미지의 생 픽셀 데이터를 보관하는 구조체
+    struct RawImage {
+        std::vector<unsigned char> data;
+        int w, h, channels;
+    };
+
+    void LoadToRaw(const std::string& name, const std::string& filename);
+    std::string ConvertRawToAnsi(const RawImage& img, int maxW, int maxH);
+
+    std::unordered_map<std::string, RawImage> m_rawAssets;
     std::string m_emptyString = "";
 };

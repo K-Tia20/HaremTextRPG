@@ -1,6 +1,7 @@
-﻿
+
 #include "../GameManager/World.h"
 #include "../Player/Player.h"
+#include "../UI/UIManager.h" 
 #include "Alba.h"
 
 using namespace std;
@@ -8,45 +9,38 @@ using namespace std;
 C_Alba::C_Alba(C_World* world)
 {
 	World = world;
-
 	Player = World->GetPlayer();
 }
 
-// 알바 메뉴
 void C_Alba::SelectMenu()
 {
-	cout << "--------------------------------------------------" << endl;
-	cout << endl;
-	cout << "[알바하기]" << endl;
-	cout << "1. 쿠팡 물류센터 야간 상하차" << endl;
-	cout << "2. 당근마켓 빌런 잡기" << endl;
-	cout << "3. 결혼식 가짜 하객 대행" << endl;
-	cout << "4. 배민커넥트 / 쿠팡이츠 도보 배달" << endl;
-	cout << "5 ~. 알바 안 할래(뒤로가기)" << endl;
-	cout << endl;
-	cout << "--------------------------------------------------" << endl;
+    auto ui = World->GetUI();
+	ui->PrintLog("--- 알바 구직 ---");
+	ui->PrintLog("1. 쿠팡 물류센터 야간 상하차");
+	ui->PrintLog("2. 당근마켓 빌런 잡기");
+	ui->PrintLog("3. 결혼식 가짜 하객 대행");
+	ui->PrintLog("4. 배민커넥트 도보 배달");
+	ui->PrintLog("5. 돌아가기");
 
-	int choice = Player->Input<int>();
+	int choice = Player->InputInt();
+    ui->ClearLog(); // 선택 후 로그 청소
 
 	switch (choice)
 	{
 	case 1:
-		cout << "쿠팡 물류센터 야간 상하차를 완료했습니다!" << endl;
+		ui->PrintLog("시스템: 쿠팡 상하차 완료! 10골드를 벌었습니다.");
 		Player->AddMoney(10);
 		break;
-
 	case 2:
-		cout << "당근마켓 빌런 잡기를 완료했습니다!" << endl;
+		ui->PrintLog("시스템: 빌런 검거 완료! 10골드를 벌었습니다.");
 		Player->AddMoney(10);
 		break;
-
 	case 3:
-		cout << "결혼식 가짜 하객 대행을 완료했습니다!" << endl;
+		ui->PrintLog("시스템: 하객 대행 완료! 10골드를 벌었습니다.");
 		Player->AddMoney(10);
 		break;
-
 	case 4:
-		cout << "배민커넥트 / 쿠팡이츠 도보 배달을 완료했습니다!" << endl;
+		ui->PrintLog("시스템: 배달 완료! 10골드를 벌었습니다.");
 		Player->AddMoney(10);
 		break;
 	default:
@@ -55,14 +49,12 @@ void C_Alba::SelectMenu()
 	}
 }
 
-// 지역 이동
 void C_Alba::MoveArea()
 {
 	AS = AlbaState::SelectMenu;
 	World->GotoCity();
 }
 
-// 업데이트
 void C_Alba::Update()
 {
 	switch (AS)
