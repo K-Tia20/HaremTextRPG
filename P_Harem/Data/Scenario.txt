@@ -1,25 +1,94 @@
 # ==========================================
 # 팀 모태쏠로 시나리오 데이터베이스
-# 형식: KEY : "내용"
+# 형식: KEY : "로그창에 띄울 내용 | 스마트폰 입력창에 띄울 안내문구 [INPUT]"
 # '#'으로 시작하는 줄은 주석입니다.
 # ==========================================
 
-# [오프닝]
+# [오프닝 & 타이틀]
+TITLE_MAIN : "╔══════════════════════════════════════════════════════════════╗\n║                                                              ║\n║         ★★  텍스트 RPG 세계관에서   ★★                  ║\n║                                                              ║\n║                  하렘을 구축하는 방법            ║\n║                                                              ║\n║         \x1b[36m\"소년이여, 신화가 되라.\"\x1b[0m             ║\n║                                                              ║\n╚══════════════════════════════════════════════════════════════╝"
 SCENE_OPENING_1 : "소년이여, 신화가 되라."
 SCENE_OPENING_2 : "길을 걷던 당신 앞에, 운명처럼 한 소녀가 나타났습니다."
-SCENE_OPENING_3 : "저기... 진짜 죄송한데 길을 잃어서 그러거든요? 혹시 '요거프레쏘' 가려면 어디로 가야 하는지 아세요...?"
+SCENE_OPENING_3 : "스마트폰 화면을 심각하게 들여다보던 그녀가 잔뜩 곤란한 표정으로 당신에게 다가옵니다.\n\n\"저기... 진짜 죄송한데 길을 잃어서 그러거든요?\n혹시 '요거프레쏘' 가려면 어디로 가야 하는지 아세요...?\""
 
-# [전투 관련]
-BATTLE_START : "★ 헌팅포차 매력 배틀 START! ★"
-BATTLE_WIN   : "배틀 승리! 당신의 매력이 상대의 마음을 사로잡았습니다."
-BATTLE_LOSE  : "배틀 패배... 185cm 훈남의 등장에 히로인이 마음을 빼앗겼습니다."
+# [이름 및 성격 입력]
+INPUT_PLAYER_NAME : "플레이어 등록을 시작합니다. | 당신의 이름은? : [INPUT]"
+INPUT_PLAYER_NAME_ERROR : "\x1b[31m잘못된 이름 형식입니다.\x1b[0m | 다시 입력하세요 : [INPUT]"
 
-# [성격별 대사 - 핫걸]
-WIN_HOT : "오빠 봤지? 내 매력에 저 기 센 년 한 마디도 못 하고 깨갱한 거? 완전 사이다!"
+INPUT_HEROINE_NAME : "그녀의 이름을 무엇이라 부를까요? | 그녀의 이름 : [INPUT]"
+INPUT_HEROINE_NAME_ERROR : "\x1b[31m잘못된 이름 형식입니다.\x1b[0m | 다시 입력하세요 : [INPUT]"
 
-# [성격별 대사 - 냉미녀]
-WIN_ICE : "처음부터 내 상대도 안 되는 애였어. 이기니까 기분은 나쁘지 않네."
+CONFIRM_HEROINE_NAME : "이름을 \x1b[33m{0}\x1b[0m(으)로 확정하시겠습니까? | 1. 확정  2. 재설정 : [INPUT]"
+CONFIRM_HEROINE_NAME_ERROR : "\x1b[31m잘못된 선택입니다.\x1b[0m | 1. 확정  2. 재설정 : [INPUT]"
+SELECT_DIFFERENT_NAME : "그녀의 진짜 이름을 다시 생각해보세요. | 새로운 이름 : [INPUT]"
 
-# [시스템 메시지]
-SYS_LEVEL_UP : "LEVEL UP! 히로인의 호감도가 상승하여 한층 더 매력적으로 변했습니다."
-SYS_GOLD_GAIN : "일당 10만 원을 획득하였습니다! 잔고가 든든해집니다."
+SELECT_HEROINE_PERSONALITY : "그녀는 어떤 성격인가요?\n\n1) 핫걸\n2) 초식녀\n3) 냉미녀\n4) 평범녀 | 성격 번호 선택 : [INPUT]"
+SELECT_HEROINE_PERSONALITY_ERROR : "\x1b[31m잘못된 입력입니다.\x1b[0m\n다시 선택해주세요.\n\n1) 핫걸  2) 초식녀  3) 냉미녀  4) 평범녀 | 성격 번호 : [INPUT]"
+
+CONFIRM_PERSONALITY_HOT : "소녀의 성격이 [\x1b[31m정열적이고 화끈한 핫걸\x1b[0m] 이 맞나요? | 1. 맞다  2. 아니다 : [INPUT]"
+CONFIRM_PERSONALITY_HERB : "소녀의 성격이 [\x1b[32m순수하고 얌전한 초식녀\x1b[0m] 이 맞나요? | 1. 맞다  2. 아니다 : [INPUT]"
+CONFIRM_PERSONALITY_COOL : "소녀의 성격이 [\x1b[36m도도한 얼음공주 냉미녀\x1b[0m] 가 맞나요? | 1. 맞다  2. 아니다 : [INPUT]"
+CONFIRM_PERSONALITY_NORMAL : "소녀의 성격이 [\x1b[33m털털하고 친근한 평범녀\x1b[0m] 가 맞나요? | 1. 맞다  2. 아니다 : [INPUT]"
+
+# [히로인 소개 및 상태]
+INTRO_HEROINE_HOT : "\x1b[31m✦ 누구보다 정열적이고 화끈한 사이다 성격의\x1b[0m\n{0}과의 설레는 인연이 시작되었습니다!"
+INTRO_HEROINE_HERB : "\x1b[32m✦ 보호본능을 자극하는 순수하고 얌전한 매력의\x1b[0m\n{0}과의 설레는 인연이 시작되었습니다!"
+INTRO_HEROINE_COOL : "\x1b[36m✦ 시종일관 여유롭고 도도한 얼음공주 스타일의\x1b[0m\n{0}과의 설레는 인연이 시작되었습니다!"
+INTRO_HEROINE_NORMAL : "\x1b[33m✦ 털털하고 친근하지만 볼매(볼수록 매력)인 흔녀 스타일의\x1b[0m\n{0}과의 설레는 인연이 시작되었습니다!"
+
+SHOW_HEROINE_STATUS : "- 이름 : {0}\n- 분위기 레벨 : LV.1\n- 체력 : 200\n- 매력 : 30\n- 호감도 : 0\n- 성격 : {1}\n\n[ ! ] 아무 키나 누르면 게임이 시작 됩니다."
+
+# [메인 메뉴]
+MAIN_MENU : "오늘은 무엇을 해야 할까?\n\n1) \x1b[36m요거프레쏘\x1b[0m 가기\n2) \x1b[31m헌팅포차\x1b[0m 가기\n3) \x1b[33m알바\x1b[0m 하기\n4) \x1b[32m연락처\x1b[0m 확인\n5) \x1b[35m가방\x1b[0m 확인\n6) \x1b[37m게임 그만두기\x1b[0m | 행동 선택 : [INPUT]"
+
+# [상점 시스템]
+YOGURT_SHOP_ENTER : "[요거프레쏘] 잔고: {0} 만 원\n\n1) 된장찌개 - 2만\n2) 삼겹살 - 5만\n3) 치킨 - 10만\n4) 영약 - 20만\n5) 뒤로가기 | 메뉴 선택 : [INPUT]"
+YOGURT_SHOP_CONFIRM : "[{0}]를 구매 하시겠습니까? | 1. 예  2. 아니오 : [INPUT]"
+YOGURT_SHOP_CONFIRM_ERROR : "\x1b[31m잘못된 입력입니다.\x1b[0m | 1. 예  2. 아니오 : [INPUT]"
+YOGURT_SHOP_PURCHASE_SUCCESS : "[{0}]를 구매 하셨습니다.\n\n[ ! ] 아무 키나 누르면 메인 화면으로 돌아갑니다."
+YOGURT_SHOP_NOT_ENOUGH_MONEY : "돈이 부족합니다.. | [ ! ] 아무 키나 누르세요 : [INPUT]"
+
+# [헌팅포차 시스템]
+HUNTING_POCHA_EMPTY : "오늘은 날이 아닙니다.. 아무도 없네요.\n\n[ ! ] 아무 키나 누르면 메인 화면으로 돌아갑니다."
+HUNTING_POCHA_EVENT : "=== 헌팅포차 입장 ===\n\n\x1b[36m화려한 조명 아래, {0} {1}가 등장했습니다!\x1b[0m\n\n\"오래 기다리셨습니다! 포차 여신 선발대회 시작합니다!\""
+
+CONTACT_SELECT_ERROR : "\x1b[31m잘못된 선택입니다.\x1b[0m | 다시 선택 : [INPUT]"
+CONTACT_CONFIRM : "{0} 에게 연락을 할까요? | 1. 예  2. 아니오  0. 도망 : [INPUT]"
+CONTACT_CONFIRM_ERROR : "\x1b[31m잘못된 입력입니다.\x1b[0m | 1. 예  2. 아니오 : [INPUT]"
+
+HEROINE_ARRIVAL_HOT : "{0} : \"오빠, 나만 믿어. 저 상금 타서 맛있는 거 사줄게!\""
+HEROINE_ARRIVAL_HERB : "{0} : \"당신이 연락해서 다행이에요. 함께 있으면 안심돼요.\""
+HEROINE_ARRIVAL_COOL : "{0} : \"시간 내 줘서 고마워. 의외로 재밌을지도 모르겠다.\""
+HEROINE_ARRIVAL_NORMAL : "{0} : \"오빠! 와, 나 불렀어? 분위기 완전 내 취향인데?\""
+
+# [전투 시스템]
+BATTLE_START : " === ★ 헌팅포차 매력 배틀 START! ★ ===\n\n{0} vs {5}\n\x1b[32m내 히로인 : {1} (Lv.{2})\x1b[0m\n\x1b[31m상대 히로인 : {6} (Lv.{7})\x1b[0m"
+
+BATTLE_PLAYER_TURN : "▶ 현재 {0}의 턴 입니다. | 1. 공격  2. 아이템 : [INPUT]"
+BATTLE_PLAYER_TURN_ERROR : "\x1b[31m잘못된 선택!\x1b[0m | 1. 공격  2. 아이템 : [INPUT]"
+
+BATTLE_HEROINE_ATTACK : "▶ {0}이 매력을 표출하여 {1}의 기를 죽입니다!\n(체력: {2} -> {3})"
+BATTLE_ENEMY_ATTACK : "▶ {0}의 반격! {1}이 압박을 느낍니다.\n(체력: {2} -> {3})"
+
+# [결과 메시지]
+WIN_MESSAGE_HOT : "배틀 승리! 상금 14만 원 획득!\n\x1b[31m\"오빠 봤지? 역시 나랑 다녀야 꿀릴 일 없다니까?\"\x1b[0m"
+WIN_MESSAGE_COOL : "배틀 승리! 상금 14만 원 획득!\n\x1b[36m\"어쨌든 이기니까 기분은 나쁘지 않네.\"\x1b[0m"
+WIN_MESSAGE_HERB : "배틀 승리! 상금 14만 원 획득!\n\x1b[32m\"저 진짜 이런 거 처음 이겨봐요... 저 잘했죠...?\"\x1b[0m"
+WIN_MESSAGE_NORMAL : "배틀 승리! 상금 14만 원 획득!\n\x1b[33m\"와... 나 같은 흔녀가 1등을 다 하네? 짜릿하다!\"\x1b[0m"
+
+ENEMY_GIVE_CONTACT : "패배한 {0}가 슬그머니 연락처를 쥐어줍니다.\n\x1b[36m- {0}의 연락처 등록 완료!\x1b[0m"
+
+# [알바 시스템]
+WORK_MENU : "어떤 알바를 하시겠습니까?\n1. 상하차 2. 벌레잡기 3. 하객대행 4. 배달 | 알바 번호 : [INPUT]"
+WORK_MENU_ERROR : "\x1b[31m잘못된 입력!\x1b[0m | 다시 선택 : [INPUT]"
+
+WORK_COMPLETE_1 : "\x1b[36m{0}\x1b[0m 완료! 온몸에 알이 배겼습니다.."
+WORK_COMPLETE_2 : "\x1b[36m{0}\x1b[0m 완료! 정신적 대미지가 상당합니다.."
+WORK_COMPLETE_3 : "\x1b[36m{0}\x1b[0m 완료! 폭풍 리액션으로 하얗게 불태웠습니다."
+WORK_COMPLETE_4 : "\x1b[36m{0}\x1b[0m 완료! 유산소 운동이 절로 됩니다."
+
+WORK_PAYMENT : "\x1b[32m일당 10만 원을 획득하였습니다!\x1b[0m | 잔고 : {0}만 원"
+
+# [스마트폰/기타]
+PHONE_MENU_MAIN : "--- 스마트폰 메뉴 ---\n1. 캘린더  2. 연락처  3. 종료 | 선택 : [INPUT]"
+PHONE_CONTACT_SYNC : "데이터 동기화 중... 완료!"
+BAG_CHECK_EMPTY : "=== [ 가방 확인 ] ===\n비어 있음 | [ ! ] 아무 키나 누르세요 : [INPUT]"

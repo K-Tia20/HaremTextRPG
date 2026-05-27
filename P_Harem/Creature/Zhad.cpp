@@ -1,9 +1,7 @@
 #include <iostream>
 #include <string>
-
 #include "Zhad.h"
 
-Zhad::Zhad() : C_Creature("ÀÚµå", C_Stile::NormalGirl, 200, 30)
+Zhad::Zhad() : C_Creature("ì œë“œ", C_Stile::NormalGirl, 200, 30)
 {
-
 }
