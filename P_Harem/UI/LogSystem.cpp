@@ -7,6 +7,7 @@
 #include "../Inventory/Inventory.h"
 #include "../Objects/Items/Item.h"
 #include <iostream>
+#include <sstream>
 
 void C_LogSystem::AddCalendarLog(const std::string& logText) {
     m_calendarLogs.push_back(logText); 
@@ -76,6 +77,8 @@ void C_LogSystem::ShowInventory() {
     auto player = C_World::GetInstance().GetPlayer();
     if (!ui || !player) return;
 
+    std::stringstream ss;
+
     auto inv = player->GetInventory();
     if (!inv) return;
 
@@ -98,8 +101,16 @@ void C_LogSystem::ShowInventory() {
             data.Value,
             typeLabel
         });
+
+        ss << i + 1 << ". "
+               << "[" << typeLabel << "] "
+               << data.Name
+               << " x" << data.Quantity
+               << " / 효과값: " << data.Value
+               << "\n";
     }
-    
+
+    ui->PrintLog(ss.str());
     ui->UpdateInventoryList(displayList);
     UIManager::WaitKey(ui);
 }

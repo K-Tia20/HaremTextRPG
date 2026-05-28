@@ -25,6 +25,7 @@ class C_BattleSystem
 {
 private:
 	std::shared_ptr<C_Player> W_Player;
+	C_World* World;
 	std::shared_ptr<C_Items> UseItem;
 	bool PlayerTurn = true;
 
@@ -44,4 +45,6 @@ public:
 	float StileMultiplier(std::shared_ptr<C_Creature> Attacker, std::shared_ptr<C_Creature> Defenser) const; // 스타일 상성 계산 함수;
 	void Attack(std::shared_ptr<C_Creature> Attacker, std::shared_ptr<C_Creature> Defenser); // 공격을 실행시키는 함수;
 	void Battle(std::shared_ptr<C_Creature> Player, std::shared_ptr<C_Creature> Enemy); // 전투 로직을 처리하는 함수;
+	void BossBattle(std::shared_ptr<C_Creature> Player);
+	void BossBattleIntro(std::shared_ptr<C_Creature> Player, std::shared_ptr<C_Creature> Boss);
 };
