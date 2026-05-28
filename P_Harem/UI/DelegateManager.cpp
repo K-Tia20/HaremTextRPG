@@ -4,6 +4,8 @@
 #include "ScriptManager.h"
 #include "../Battle/BattleSystem.h"
 #include "../GameManager/World.h"
+#include "../Player/Player.h"
+#include "../Creature/Creature.h"
 #include <string>
 
 // [팀 로직 연동] BattleSystem.cpp에 선언된 전역 레벨 시스템을 참조합니다.
@@ -67,14 +69,25 @@ void DelegateManager::BindAll(UIManager* ui, C_BattleSystem* battleSys) {
 
     // 5. [성장 이벤트] 레벨업 신호 연결
     LevelSystem.OnLevelUp = [ui](std::string name, int level) {
-        // 뷰포트에 레벨업 팝업 출력
+        // 플레이어의 여친 목록을 뒤져서 이미지 키를 알아냄
+        std::string imageKey = "CH_Normal";
+        auto player = C_World::GetInstance().GetPlayer();
+        if (player) {
+            for (auto& f : player->GetGirlFrends()) {
+                if (f->GetName() == name) {
+                    imageKey = f->GetImageKey();
+                    break;
+                }
+            }
+        }
+        
+        ui->ClearMainViewport();
+        // 레벨업 전용 배경과 히로인 이미지를 정중앙에 띄움
+        ui->DrawImage(C_ImageManager::GetInstance().GetLayeredImage("BG_LevelUP", {{imageKey, 50, 0, false}}));
         ui->ShowLevelUpEvent(name, level);
         // [SOUND] 여기에 레벨업 축하 사운드를 추가하세요
         
         ui->PrintLog("\x1b[93m✨ [성장] " + name + "님의 등급이 Lv." + std::to_string(level) + "(으)로 상승했습니다! ✨\x1b[0m");
-        ui->WaitEnterSilent();
-        ui->ClearMainViewport();
-        // 원래 배경 복구 (필요시)
         
     };
 }
