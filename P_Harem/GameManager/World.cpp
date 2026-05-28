@@ -11,7 +11,9 @@
 #include "../UI/DelegateManager.h"
 #include "../Battle/BattleSystem.h"
 #include "../UI/LogSystem.h"
+#include "../UI/CSoundManager.h"//추가햇어
 #include "World.h"
+
 
 using namespace std;
 
@@ -29,7 +31,7 @@ C_World::C_World()
     m_battle = make_unique<C_BattleSystem>(this);
 
 	Areas[WorldArea::City] = make_shared<C_City>(this);
-	Areas[WorldArea::Store] = make_shared<C_Shop>(this);
+	Areas[WorldArea::Store] = make_shared<C_Shop>(this); 
     Areas[WorldArea::Alba] = make_shared<C_Alba>(this);
 }
 
@@ -48,11 +50,16 @@ void C_World::Init() {
     auto& script = C_ScriptManager::GetInstance();
     auto& img = C_ImageManager::GetInstance();
 
+    //[음악시작 : 오프닝]
+    auto& sound = CSoundManager::GetInstance();
+    sound.PlayBGM(L"../P_Harem/Sound/BGM/Opening.wav");
+    
     // 1. [프롤로그] 운명적인 첫 문구
-    m_ui->CenteredTypeLog(script.Get("SCENE_OPENING_1"), 22);
+    m_ui->CenteredTypeLog(script.Get("SCENE_OPENING_1"), 22, 1000);
     Sleep(2000);
     m_ui->PlayBlueTransition(); // 화면 정화
-
+    
+    
     // 2. [팀 로고] BG_TeamName.png 출력
     // (뷰포트가 아닌 전체 화면 중앙 느낌을 위해 DrawImage를 일시 활용)
     m_ui->DrawImage(img.GetLayeredImage("BG_TeamName", {})); 
@@ -63,6 +70,13 @@ void C_World::Init() {
     m_ui->DrawImage(img.GetLayeredImage("BG_Title", {}));
     Sleep(3000);
 
+    //[음악종료 : 오프닝]
+    sound.StopBGM();
+    
+    //[음악시작 : 첫만남]
+    sound.PlayBGM(L"../P_Harem/Sound/BGM/MainMenu.wav");
+
+  
     // 4. [UI 조립] 테두리가 보이면서 뷰포트에 타이틀 안착
     m_ui->RenderMainUI();
     m_ui->UpdateDate(GetCurrentDateString());
@@ -74,6 +88,7 @@ void C_World::Init() {
 
     DelegateManager dm;
     dm.BindAll(m_ui.get(), m_battle.get());
+    
 }
 
 void C_World::Update()
@@ -217,24 +232,55 @@ void C_World::SetGirlFrends()
     // [Visual Upgrade] 속성을 모르는 상태이므로 CH_Null 실루엣 출력
     m_ui->DrawImage(img.GetLayeredImage("BG_City2", {{"CH_Null", 50, 0, false}})); 
 
-	m_ui->PrintLog(script.Get("SCENE_OPENING_2")); 
+	  m_ui->PrintLog(script.Get("SCENE_OPENING_2")); 
     UIManager::WaitKey(m_ui.get());
 
-	m_ui->PrintLog(script.Get("INPUT_HEROINE_NAME"));
-	string girlName = SetGirlFrendName();
+	  m_ui->PrintLog(script.Get("INPUT_HEROINE_NAME"));
+	  string girlName = SetGirlFrendName();
     m_ui->ClearLog();
+  
+    //[음악설정뭔가]
+    auto& sound = CSoundManager::GetInstance();
+    //[음악종료 : 첫만남]
+    sound.StopBGM();
+    
+    //[음악시작 : 선택 첫여친]
+    sound.PlayBGM(L"../P_Harem/Sound/BGM/Firstcoffee.wav");
+    
+    bool isValidChoice = false;
+  
+    // 캐릭터 선택 시 1~4번만 선택 가능하도록 예외 처리 추가
+    do
+    {
+        m_ui->PrintLog(script.Get("SELECT_HEROINE_PERSONALITY"));
+        int choice = Player->InputInt();
+        m_ui->ClearLog();
 
-	m_ui->PrintLog(script.Get("SELECT_HEROINE_PERSONALITY"));
-	int choice = Player->InputInt();
-    m_ui->ClearLog();
+        switch (choice)
+        {
+        case 1: 
+            SetTetoGirl(girlName); 
+            isValidChoice = true; 
+            break;
+        case 2: 
+            SetChosicGirl(girlName); 
+            isValidChoice = true; 
+            break;
+        case 3: 
+            SetCoolPretyGirl(girlName); 
+            isValidChoice = true; 
+            break;
+        case 4: 
+            SetNormalGirl(girlName); 
+            isValidChoice = true; 
+            break;
+        default: 
+            m_ui->PrintLog(script.Get("FAILED_SELECT_HEROINE_PERSONALITY"));
+            break;
+        }
+    }
+    while (!isValidChoice);
 
-	switch (choice)
-	{
-	case 1: SetTetoGirl(girlName); break;
-	case 2: SetChosicGirl(girlName); break;
-	case 3: SetCoolPretyGirl(girlName); break;
-	default: SetNormalGirl(girlName); break;
-	}
 
 	if (!Player->GetGirlFrends().empty())
 	{
@@ -247,6 +293,9 @@ void C_World::SetGirlFrends()
         // [사용자 요청] 엔터 누른 후 방으로 복귀
         m_ui->ClearMainViewport();
         m_ui->DrawImage(img.GetLayeredImage("BG_Room", {})); 
+	    
+	    //[음악종료 : 선택 첫여친]
+	    sound.StopBGM();
 	}
 }
 
