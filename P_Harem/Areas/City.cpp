@@ -5,6 +5,8 @@
 #include "../GameManager/World.h"
 #include "../Player/Player.h"
 #include "../UI/UIManager.h" 
+#include "../UI/ImageManager.h"
+#include "../UI/ScriptManager.h"
 #include "../Framework/CreatureInclude.h"
 #include "City.h"
 
@@ -23,18 +25,21 @@ C_City::C_City(C_World* world)
 	Girls.push_back(make_shared<Marry>());
 	Girls.push_back(make_shared<Oplier>());
 	Girls.push_back(make_shared<Zhad>());
-	Girls.push_back(make_shared<C_Creature>("지나가는 행인", C_Stile::NormalGirl, 200, 30));
+	Girls.push_back(make_shared<C_Creature>("평범녀", C_Stile::NormalGirl, 200, 30));
 }
 
 void C_City::SelectMenu()
 {
     auto ui = World->GetUI();
+    auto& script = C_ScriptManager::GetInstance();
     if (!ui) return;
 
-	ui->PrintLog("--- 시내 광장 ---");
-    ui->PrintLog("1. 헌팅 시도 (전투)");
-    ui->PrintLog("2. 여자친구 목록 보기");
-    ui->PrintLog("3. 다른 지역으로 이동");
+	ui->PrintLog(script.Get("UI_DIVIDER_PURPLE"));
+	ui->PrintLog(script.Get("CITY_HEADER"));
+	ui->PrintLog(script.Get("UI_DIVIDER_PURPLE"));
+	ui->PrintLog(script.Get("CITY_MENU_1"));
+	ui->PrintLog(script.Get("CITY_MENU_2"));
+	ui->PrintLog(script.Get("CITY_MENU_3"));
     
 	int choice = Player->InputInt();
     ui->ClearLog(); 
@@ -43,123 +48,146 @@ void C_City::SelectMenu()
 	{
 	case 1:
 	{
+        // [Visual Upgrade] 헌팅포차 진입 배경 출력 (허탕 쳐도 유지)
+        ui->ClearMainViewport();
+        ui->DrawImage(C_ImageManager::GetInstance().GetLayeredImage("BG_HunPo", {}));
+
 		int randomIndex = rand() % 100;
 		if (randomIndex < 70) Encounter();
-		else ui->PrintLog("오늘은 허탕 쳤습니다. 조용히 집으로 돌아갑니다.");
+		else {
+            ui->PrintLog("\x1b[90m시스템: 한참을 서성였지만 허탕만 쳤습니다...\x1b[0m");
+            UIManager::WaitKey(ui);
+        }
+        
+        // 헌팅 시도 후 무조건 집으로 귀가
+        World->SetHubBG("BG_Room");
+        CS = CityState::Exit;
 	}
 		break;
 	case 2:
 		ViewYeuchin();
 		break;
-	case 3:
-		CS = CityState::MoveArea;
+	case 0:
+        World->SetHubBG("BG_City");
+		CS = CityState::Exit;
 		break;
 	default:
 		ui->PrintLog("시스템: 잘못된 입력입니다.");
+        UIManager::WaitKey(ui);
 		break;
 	}
 }
 
-void C_City::MoveArea()
-{
-    auto ui = World->GetUI();
-    if (!ui) return;
-
-	ui->PrintLog("--- 지역 이동 ---");
-    ui->PrintLog("1. 상점 (요거프레쏘)");
-    ui->PrintLog("2. 알바하러 가기");
-
-	int choice = Player->InputInt();
-    ui->ClearLog(); 
-
-	switch (choice)
-	{
-	case 1:
-		CS = CityState::SelectMenu;
-		World->GotoShop();
-		break;
-	case 2:
-		CS = CityState::SelectMenu;
-		World->GotoAlba();
-		break;
-	default:
-		ui->PrintLog("시스템: 다시 골라주세요...");
-		break;
-	}
-}
+void C_City::MoveArea() {}
 
 void C_City::Update()
 {
-	switch (CS)
+    bool isLooping = true;
+	while (isLooping)
 	{
-	case CityState::SelectMenu: SelectMenu(); break;
-	case CityState::MoveArea: MoveArea(); break;
+		switch (CS)
+		{
+		case CityState::SelectMenu: 
+            SelectMenu(); 
+            break;
+		case CityState::Exit: 
+            isLooping = false;
+            break;
+		}
 	}
 }
 
 void C_City::Encounter()
 {
     auto ui = World->GetUI();
+    auto& script = C_ScriptManager::GetInstance();
     if (!ui) return;
 
 	if (Girls.empty())
 	{
-		ui->PrintLog("시스템: 더 이상 만날 사람이 없습니다.");
+		ui->PrintLog("\x1b[90m시스템: 거리에는 더 이상 마주칠 사람이 없습니다...\x1b[0m");
+        UIManager::WaitKey(ui);
 		return;
 	}
 
 	int randomIndex = rand() % static_cast<int>(Girls.size());
 	BattleGirl = Girls[randomIndex];
 
-    ui->PrintLog("운명적인 만남! [" + BattleGirl->GetName() + "]을(를) 만났습니다.");
+    std::string styleColor = "\x1b[37m";
+    if (BattleGirl->GetStile() == C_Stile::HotGirl) styleColor = "\x1b[31m";
+    else if (BattleGirl->GetStile() == C_Stile::IceGirl) styleColor = "\x1b[36m";
+    else if (BattleGirl->GetStile() == C_Stile::GrassGirl) styleColor = "\x1b[32m";
+
+    ui->PrintLog(script.Get("CITY_ENCOUNTER_ALERT"));
+    ui->PrintLog(script.GetFormatStr("CITY_HEROINE_APPEAR", {styleColor, BattleGirl->GetName()}));
 	
 	auto FightGirl = Player->SetFightGirl();
     ui->ClearLog(); 
 
 	if (FightGirl == nullptr)
 	{
-		ui->PrintLog("시스템: 전투를 취소했습니다.");
+		ui->PrintLog("시스템: 오늘은 이만 물러나기로 했습니다.");
+        UIManager::WaitKey(ui);
 		return;
 	}
 
-    ui->PrintLog("=== 배틀 시작: [" + FightGirl->GetName() + "] VS [" + BattleGirl->GetName() + "] ===");
+    // [Visual Upgrade] 헌팅포차 배경 + 내 여친(좌측/반전) + 적 여친(우측) 레이어링
+    ui->ClearMainViewport();
+    ui->DrawImage(C_ImageManager::GetInstance().GetLayeredImage("BG_HunPo", {
+        {FightGirl->GetImageKey(), 5, 0, true}, // 플레이어 여친: 좌측 위치, 좌우 반전 적용
+        {BattleGirl->GetImageKey(), 97, 0, false} // 상대 여친: 우측 위치로 더 밀어냄
+    }));
+
+    std::string myStyleColor = "\x1b[37m";
+    if (FightGirl->GetStile() == C_Stile::HotGirl) myStyleColor = "\x1b[31m";
+    else if (FightGirl->GetStile() == C_Stile::IceGirl) myStyleColor = "\x1b[36m";
+    else if (FightGirl->GetStile() == C_Stile::GrassGirl) myStyleColor = "\x1b[32m";
+
+    ui->PrintLog(script.Get("CITY_BATTLE_TITLE"));
+    ui->PrintLog(script.GetFormatStr("CITY_BATTLE_VS", {myStyleColor + FightGirl->GetName(), styleColor + BattleGirl->GetName()}));
+    ui->PrintLog(script.Get("UI_LINE_THIN"));
+
 	Battle->Battle(FightGirl, BattleGirl);
 
     UIManager::WaitKey(ui);
 
-	// 여친 획득
 	if (BattleGirl->IsDefeated()) Gatcha();
-
-	// 여친 방생
-	if (FightGirl->IsDefeated())
-	{
-		Player->RemoveGirlFriend(FightGirl);
-	}
+	if (FightGirl->IsDefeated()) { Player->RemoveGirlFriend(FightGirl); }
 }
 
 void C_City::Gatcha()
 {
+    auto ui = World->GetUI();
+    auto& script = C_ScriptManager::GetInstance();
 	int randomIndex = rand() % 100;
-	if (randomIndex < 30)
+	if (randomIndex < 40) 
 	{
 		BattleGirl->SetMaxHp(200);
 		BattleGirl->SetAttack(30);
 		Player->AddGirlFrends(BattleGirl);
 		Girls.erase(remove(Girls.begin(), Girls.end(), BattleGirl), Girls.end());
-	}
+        ui->PrintLog(script.GetFormatStr("CITY_CONTACT_SUCCESS", {BattleGirl->GetName()}));
+	} else {
+        ui->PrintLog(script.GetFormatStr("CITY_CONTACT_FAIL", {BattleGirl->GetName()}));
+    }
 }
 
 void C_City::ViewYeuchin()
 {
     auto ui = World->GetUI();
+    auto& script = C_ScriptManager::GetInstance();
     if (!ui) return;
 
-    ui->PrintLog("--- 내 여자친구들 ---");
+    ui->PrintLog(script.Get("UI_DIVIDER_PURPLE"));
+    ui->PrintLog("\x1b[97m      📱 등록된 여자친구 리스트       \x1b[0m");
+    ui->PrintLog(script.Get("UI_DIVIDER_PURPLE"));
 	auto friends = Player->GetGirlFrends();
-    if (friends.empty()) ui->PrintLog("(아직 아무도 없습니다...)");
+    if (friends.empty()) ui->PrintLog("\x1b[90m(아직 텅 비어 있습니다...)\x1b[0m");
     else {
         for (const auto& f : friends) {
-            ui->PrintLog("- " + f->GetName() + " (HP: " + to_string(f->GetCurrentHp()) + ")");
+            ui->PrintLog("💖 \x1b[97m" + f->GetName() + "\x1b[0m (HP: " + to_string(f->GetCurrentHp()) + ")");
         }
     }
+    ui->PrintLog(script.Get("UI_LINE_THIN"));
+    UIManager::WaitKey(ui);
 }
