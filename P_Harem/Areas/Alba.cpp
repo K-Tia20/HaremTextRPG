@@ -77,6 +77,8 @@ void C_Alba::SelectMenu()
     UIManager::WaitKey(ui);
     
     World->SetHubBG("BG_Room"); 
+	// 알바 끝나고 하루가 지난다아
+	World->AdvanceDay();
     AS = AlbaState::Exit;
 }
 
