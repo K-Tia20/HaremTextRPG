@@ -163,6 +163,7 @@ void C_City::Gatcha()
 	if (randomIndex < 40) 
 	{
 		BattleGirl->SetMaxHp(200);
+		BattleGirl->SetCurrentHp(200);
 		BattleGirl->SetAttack(30);
 		Player->AddGirlFrends(BattleGirl);
 		Girls.erase(remove(Girls.begin(), Girls.end(), BattleGirl), Girls.end());
