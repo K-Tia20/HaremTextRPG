@@ -484,8 +484,9 @@ void UIManager::DrawImageAtCenter(const std::string& imageAnsi) {
 void UIManager::WaitKey(UIManager* ui) {
     if (!ui) return;
     ui->PrintLog("\x1b[90m[ 엔터를 눌러 계속... ]\x1b[0m");
-    std::string dummy;
-    std::getline(std::cin, dummy);
+    while (_kbhit()) _getch(); 
+    _getch(); 
+
     ui->ClearLog();
 }
 
