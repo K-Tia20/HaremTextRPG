@@ -16,14 +16,9 @@ int main()
 
 	// 2. [팀의 의도 수용] 싱글톤이 아닌 shared_ptr로 월드를 생성합니다.
 	shared_ptr<C_World> World = make_shared<C_World>();
-
-	while (true)
-	{
-		// 3. 월드의 업데이트 루프 가동
-		// 이 안에서 팀원들이 짠 로직이 우리 UI 프레임 안에서 돌아가게 됩니다.
-        // 첫 프레임에서 Init()과 오프닝이 실행되도록 설계되었습니다.
-		World->Update();
-	}
-
+	
+	World->Run();
+	
 	return 0;
+	
 }

@@ -130,6 +130,7 @@
     <ClCompile Include="Areas\Shop.cpp" />
     <ClCompile Include="Battle\BattleSystem.cpp" />
     <ClCompile Include="Creature\And.cpp" />
+    <ClCompile Include="Creature\Boss.cpp" />
     <ClCompile Include="Creature\Chashrin.cpp" />
     <ClCompile Include="Creature\Codelia.cpp" />
     <ClCompile Include="Creature\Creature.cpp" />
@@ -158,6 +159,7 @@
     <ClInclude Include="Areas\Shop.h" />
     <ClInclude Include="Battle\BattleSystem.h" />
     <ClInclude Include="Creature\And.h" />
+    <ClInclude Include="Creature\Boss.h" />
     <ClInclude Include="Creature\Chashrin.h" />
     <ClInclude Include="Creature\Codelia.h" />
     <ClInclude Include="Creature\Creature.h" />
