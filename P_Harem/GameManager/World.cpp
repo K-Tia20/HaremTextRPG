@@ -232,18 +232,13 @@ void C_World::SetGirlFrends()
     // [Visual Upgrade] 속성을 모르는 상태이므로 CH_Null 실루엣 출력
     m_ui->DrawImage(img.GetLayeredImage("BG_City2", {{"CH_Null", 50, 0, false}})); 
 
-	m_ui->PrintLog(script.Get("SCENE_OPENING_2")); 
+	  m_ui->PrintLog(script.Get("SCENE_OPENING_2")); 
     UIManager::WaitKey(m_ui.get());
 
-	m_ui->PrintLog(script.Get("INPUT_HEROINE_NAME"));
-	string girlName = SetGirlFrendName();
+	  m_ui->PrintLog(script.Get("INPUT_HEROINE_NAME"));
+	  string girlName = SetGirlFrendName();
     m_ui->ClearLog();
-
-	m_ui->PrintLog(script.Get("SELECT_HEROINE_PERSONALITY"));
-	int choice = Player->InputInt();
-    
-    
-    
+  
     //[음악설정뭔가]
     auto& sound = CSoundManager::GetInstance();
     //[음악종료 : 첫만남]
@@ -252,17 +247,41 @@ void C_World::SetGirlFrends()
     //[음악시작 : 선택 첫여친]
     sound.PlayBGM(L"../P_Harem/Sound/BGM/Firstcoffee.wav");
     
-    
-    m_ui->ClearLog();
+    bool isValidChoice = false;
+  
+    // 캐릭터 선택 시 1~4번만 선택 가능하도록 예외 처리 추가
+    do
+    {
+        m_ui->PrintLog(script.Get("SELECT_HEROINE_PERSONALITY"));
+        int choice = Player->InputInt();
+        m_ui->ClearLog();
 
-	switch (choice)
-	{
-	case 1: SetTetoGirl(girlName); break;
-	case 2: SetChosicGirl(girlName); break;
-	case 3: SetCoolPretyGirl(girlName); break;
-	default: SetNormalGirl(girlName); break;
-	}
-    
+        switch (choice)
+        {
+        case 1: 
+            SetTetoGirl(girlName); 
+            isValidChoice = true; 
+            break;
+        case 2: 
+            SetChosicGirl(girlName); 
+            isValidChoice = true; 
+            break;
+        case 3: 
+            SetCoolPretyGirl(girlName); 
+            isValidChoice = true; 
+            break;
+        case 4: 
+            SetNormalGirl(girlName); 
+            isValidChoice = true; 
+            break;
+        default: 
+            m_ui->PrintLog(script.Get("FAILED_SELECT_HEROINE_PERSONALITY"));
+            break;
+        }
+    }
+    while (!isValidChoice);
+
+
 	if (!Player->GetGirlFrends().empty())
 	{
         // [사용자 요청] 데이트 연출 추가
