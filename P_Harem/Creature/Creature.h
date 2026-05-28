@@ -41,7 +41,14 @@ public:
 	void SetAttack(int SetAttack) { Attack = SetAttack; }
 
 	void AddHp(int Add);
-	//이름과 스타일은 Setter가 없으니 필요하면 추가할 것;
+	
+	// [Visual Binding] 히로인 성격에 따른 동적 이미지 매핑
+    virtual std::string GetImageKey() const {
+        if (Stile == C_Stile::HotGirl) return "CH_Red";
+        if (Stile == C_Stile::IceGirl) return "CH_Blue";
+        if (Stile == C_Stile::GrassGirl) return "CH_Green";
+        return "CH_Normal";
+    }
 
 	void SetEnemyStat(int level);
 };

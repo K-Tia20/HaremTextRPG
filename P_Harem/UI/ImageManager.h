@@ -21,6 +21,7 @@ public:
         std::string name;
         int offsetX = 0; // 0 ~ 100 (너비 기준 백분율)
         int offsetY = 0; // 0 ~ 100 (높이 기준 백분율)
+        bool flipHorizontal = false; // 좌우 반전 여부
     };
 
     /**
@@ -29,6 +30,7 @@ public:
      * @param characters 캐릭터 목록 (위치 정보 포함)
      */
     std::string GetLayeredImage(const std::string& bgName, const std::vector<LayerData>& characters);
+    std::string GetFullScreenImage(const std::string& assetName);
 
 private:
     C_ImageManager() = default;
