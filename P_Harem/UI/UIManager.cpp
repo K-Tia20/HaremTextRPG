@@ -376,7 +376,7 @@ void UIManager::UpdateInventoryList(const std::vector<ItemDisplayData>& list, in
     std::cout << std::flush;
 }
 
-// 레벨업 이벤트 팝업
+/*/ 레벨업 이벤트 팝업(구)
 void UIManager::ShowLevelUpEvent(const std::string& name, int level) {
     int centerX = VIEWPORT_X + (VIEWPORT_W / 2);
     int centerY = VIEWPORT_Y + (VIEWPORT_H / 2);
@@ -391,6 +391,54 @@ void UIManager::ShowLevelUpEvent(const std::string& name, int level) {
     std::cout << "\x1b[97m[" << name << "]\x1b[0m 님의 등급이 \x1b[92mLv." << level << "\x1b[0m 로 상승!";
     std::cout << std::flush;
 }
+*/
+
+// 레벨업 이벤트 팝업(신)
+void UIManager::ShowLevelUpEvent(const std::string& name, int level) {
+    int centerX = VIEWPORT_X + (VIEWPORT_W / 2);
+    int centerY = VIEWPORT_Y + (VIEWPORT_H / 2);
+
+    int boxW = 50;
+    int boxH = 7;
+
+    int startX = centerX - (boxW / 2);
+    int startY = centerY - (boxH / 2);
+
+    // 박스 내부 검정색으로 채우기
+    for (int y = 1; y < boxH - 1; y++)
+    {
+        gotoxy(startX + 1, startY + y);
+
+        std::cout << "\x1b[40m";
+
+        for (int x = 1; x < boxW - 1; x++)
+        {
+            std::cout << " ";
+        }
+
+        std::cout << "\x1b[0m";
+    }
+
+    // 테두리 박스
+    DrawSolidBox(startX, startY, boxW, boxH, " LEVEL UP!! ");
+
+    // 텍스트 출력
+    this->gotoxy(startX + 5, startY + 2);
+    std::cout << "\x1b[40m\x1b[93m★축하합니다!★\x1b[0m";
+
+    this->gotoxy(startX + 5, startY + 4);
+    std::cout << "\x1b[40m\x1b[97m[" << name << "]\x1b[0m"
+              << "\x1b[40m 님의 등급이 "
+              << "\x1b[92mLv." << level << "\x1b[0m"
+              << "\x1b[40m 로 상승!\x1b[0m";
+
+    std::cout << std::flush;
+}
+
+
+
+
+
 
 // 메인 뷰포트 영역 청소
 void UIManager::ClearMainViewport() {
@@ -481,13 +529,21 @@ void UIManager::DrawImageAtCenter(const std::string& imageAnsi) {
 }
 
 // 키 대기 유틸리티
-void UIManager::WaitKey(UIManager* ui) {
+void UIManager::
+WaitKey(UIManager* ui) {
     if (!ui) return;
     ui->PrintLog("\x1b[90m[ 엔터를 눌러 계속... ]\x1b[0m");
     while (_kbhit()) _getch(); 
     _getch(); 
 
     ui->ClearLog();
+}
+
+// 입력만 대기 (메시지 출력 없음)
+void UIManager::WaitEnterSilent()
+{
+    std::string dummy;
+    std::getline(std::cin, dummy);
 }
 
 int UIManager::GetInputInt() {
