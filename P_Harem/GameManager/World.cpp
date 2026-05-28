@@ -11,7 +11,10 @@
 #include "../UI/DelegateManager.h"
 #include "../Battle/BattleSystem.h"
 #include "../UI/LogSystem.h"
+#include "../UI/CSoundManager.h"//추가햇어
 #include "World.h"
+
+
 
 using namespace std;
 
@@ -29,7 +32,7 @@ C_World::C_World()
     m_battle = make_unique<C_BattleSystem>(this);
 
 	Areas[WorldArea::City] = make_shared<C_City>(this);
-	Areas[WorldArea::Store] = make_shared<C_Shop>(this);
+	Areas[WorldArea::Store] = make_shared<C_Shop>(this); 
     Areas[WorldArea::Alba] = make_shared<C_Alba>(this);
 }
 
