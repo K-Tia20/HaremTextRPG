@@ -58,24 +58,25 @@ float C_BattleSystem::StileMultiplier(std::shared_ptr<C_Creature> Attacker, std:
 
 void C_BattleSystem::Attack(std::shared_ptr<C_Creature> Attacker, std::shared_ptr<C_Creature> Defenser)
 {
-    if (!Attacker || !Defenser) return;
+	if (!Attacker || !Defenser) return;
 	int Damage = CalculateDamage(Attacker, Defenser);
 
-    // [Stability Fix & Team Intent Respect] 아이템 타입별 로직 내부에 델리게이트 배치
-    if (UseItem) {
-        if (UseItem->GetItem().Type == ItemType::Power && PlayerTurn) {
-            Damage += UseItem->GetItem().Value;
-            if (OnUseItem) OnUseItem(Attacker->GetName(), 1, UseItem->GetItem().Value);
-        } else if (UseItem->GetItem().Type == ItemType::Defence && PlayerTurn) {
-            Damage -= UseItem->GetItem().Value;
-            if (Damage < 0) Damage = 0;
-            if (OnUseItem) OnUseItem(Attacker->GetName(), 2, UseItem->GetItem().Value);
-        }
-    }
+	if (UseItem) {
+		if (UseItem->GetItem().Type == ItemType::Power && PlayerTurn) {
+			Damage += UseItem->GetItem().Value;
+			//  GetColoredName() 적용
+			if (OnUseItem) OnUseItem(Attacker->GetColoredName(), 1, UseItem->GetItem().Value);
+		} else if (UseItem->GetItem().Type == ItemType::Defence && PlayerTurn) {
+			Damage -= UseItem->GetItem().Value;
+			if (Damage < 0) Damage = 0;
+			//  GetColoredName() 적용
+			if (OnUseItem) OnUseItem(Attacker->GetColoredName(), 2, UseItem->GetItem().Value);
+		}
+	}
 
-	if (OnAttack) OnAttack(Attacker->GetName());
-
-	if (OnHit) OnHit(Defenser->GetName(), Damage, (int)StileMultiplier(Attacker, Defenser));
+	//  GetColoredName() 적용
+	if (OnAttack) OnAttack(Attacker->GetColoredName());
+	if (OnHit) OnHit(Defenser->GetColoredName(), Damage, (int)StileMultiplier(Attacker, Defenser));
 	
 	Defenser->TakeDamage(Damage);
 	UseItem = nullptr;
@@ -97,7 +98,7 @@ void C_BattleSystem::Battle(std::shared_ptr<C_Creature> Player, std::shared_ptr<
         if (UseItem && UseItem->GetItem().Type == ItemType::Heal) {
             Player->AddHp(UseItem->GetItem().Value);
 
-			if (OnUseItem) OnUseItem(Player->GetName(), 3, UseItem->GetItem().Value);
+			if (OnUseItem) OnUseItem(Player->GetColoredName(), 3, UseItem->GetItem().Value);
         }
 
 		Attack(Player, Enemy); 
@@ -106,7 +107,7 @@ void C_BattleSystem::Battle(std::shared_ptr<C_Creature> Player, std::shared_ptr<
 
 		if (Enemy->IsDefeated())
 		{
-			if (OnDefeat) OnDefeat(Enemy->GetName());
+			if (OnDefeat) OnDefeat(Enemy->GetColoredName());
 			LevelSystem.GainAffinity(Player, 50); 
 			break;
 		}
@@ -117,7 +118,7 @@ void C_BattleSystem::Battle(std::shared_ptr<C_Creature> Player, std::shared_ptr<
 
 		if (Player->IsDefeated())
 		{
-			if (OnDefeat) OnDefeat(Player->GetName());
+			if (OnDefeat) OnDefeat(Player->GetColoredName());
 			break;
 		}
 	}
@@ -141,7 +142,7 @@ void C_BattleSystem::BossBattle(std::shared_ptr<C_Creature> Player)
 
 		if (Player->IsDefeated())
 		{
-			if (OnDefeat) OnDefeat(Player->GetName());
+			if (OnDefeat) OnDefeat(Player->GetColoredName());
 
 			W_Player->RemoveGirlFriend(Player);
 
@@ -169,7 +170,7 @@ void C_BattleSystem::BossBattle(std::shared_ptr<C_Creature> Player)
 		if (UseItem && UseItem->GetItem().Type == ItemType::Heal) {
 			Player->AddHp(UseItem->GetItem().Value);
 
-			if (OnUseItem) OnUseItem(Player->GetName(), 3, UseItem->GetItem().Value);
+			if (OnUseItem) OnUseItem(Player->GetColoredName(), 3, UseItem->GetItem().Value);
 		}
 		
 		Attack(Player, Boss); 
@@ -178,7 +179,7 @@ void C_BattleSystem::BossBattle(std::shared_ptr<C_Creature> Player)
 		
 		if (Boss->IsDefeated())
 		{
-			if (OnDefeat) OnDefeat(Boss->GetName());
+			if (OnDefeat) OnDefeat(Boss->GetColoredName());
 			LevelSystem.GainAffinity(Player, 50);
 			World->RealEnd();
 			break;
