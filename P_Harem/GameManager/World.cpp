@@ -11,7 +11,10 @@
 #include "../UI/DelegateManager.h"
 #include "../Battle/BattleSystem.h"
 #include "../UI/LogSystem.h"
+#include "../UI/CSoundManager.h"//추가햇어
 #include "World.h"
+
+
 
 using namespace std;
 
@@ -30,7 +33,7 @@ C_World::C_World()
     m_battle = make_unique<C_BattleSystem>(this); // 배선 연결
 
 	Areas[WorldArea::City] = make_shared<C_City>(this);
-	Areas[WorldArea::Store] = make_shared<C_Shop>(this);
+	Areas[WorldArea::Store] = make_shared<C_Shop>(this); 
     Areas[WorldArea::Alba] = make_shared<C_Alba>(this);
 }
 
@@ -46,9 +49,21 @@ void C_World::Init() {
     C_ScriptManager::GetInstance().Init();
     m_ui->Init();
     
+    //사운드 추가d 작업
+    auto& sound = CSoundManager::GetInstance();
+    sound.PlayBGM(L"../Sound/BGM/Opening.wav");
+
+
     // 시네마틱 오프닝 연출
-    m_ui->CenteredTypeLog("소년이여, 신화가 되라.", 22);
-    Sleep(2000);
+    m_ui->CenteredTypeLog("소년이여, 신화가 되라.", 22, 1000);
+    m_ui->CenteredTypeLog("     ★★     텍스트 RPG 세계관에서   ★★  ", 25, 10);
+    m_ui->CenteredTypeLog("        하렘을 구축하는 방법       ", 26, 10);
+    m_ui->CenteredTypeLog("        +미친 연애 시뮬레이션+       ", 28, 10);
+    Sleep(8000);
+    
+    //PlaySound(NULL, 0, 0); //추가 사운드정지
+    
+    
     m_ui->PlayBlueTransition();
 
     m_ui->RenderMainUI();
@@ -57,9 +72,11 @@ void C_World::Init() {
     m_ui->ClearMainViewport();
     m_ui->DrawImage(C_ImageManager::GetInstance().GetLayeredImage("BG_Title", {}));
     
+    //sound.PlayBGM(L"Sound/BGM/MainMenu.wav");
+    
     auto& script = C_ScriptManager::GetInstance();
-    m_ui->PrintLog(script.Get("TITLE_MAIN"));
-    UIManager::WaitKey(m_ui.get());
+    //m_ui->PrintLog(script.Get("TITLE_MAIN"));
+    //UIManager::WaitKey(m_ui.get());
 
     // 로직과 UI의 가교를 놓습니다. (팀의 로직을 UI에 연결)
     DelegateManager dm;

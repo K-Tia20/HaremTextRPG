@@ -27,7 +27,7 @@ void C_ImageManager::Init() {
     LoadWithFallback("BG_Title", "BG_Title.png");
     LoadWithFallback("BG_City", "BG_City.png");
     LoadWithFallback("BG_Room", "BG_Room.png");
-    LoadWithFallback("BG_Test", "BG_Test.png");
+    //LoadWithFallback("BG_Test", "BG_Test.png");
 
     // [캐릭터 로드]
     LoadWithFallback("CH_Red", "CH_Red.png");
