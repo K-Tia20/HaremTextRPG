@@ -47,6 +47,10 @@ public:
     void ShowLevelUpEvent(const std::string& name, int level);
     void ClearMainViewport();
     void ClearLog(); 
+    
+    //추가(레벨업 딜레이 줄이기)
+    void WaitEnterSilent();
+    
     void DrawImage(const std::string& imageAnsi);
     void DrawImageAtCenter(const std::string& imageAnsi);
     void DrawInputBox(const std::string& prompt = ""); 
