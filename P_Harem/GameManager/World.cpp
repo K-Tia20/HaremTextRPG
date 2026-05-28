@@ -226,18 +226,40 @@ void C_World::SetGirlFrends()
 	m_ui->PrintLog(script.Get("INPUT_HEROINE_NAME"));
 	string girlName = SetGirlFrendName();
     m_ui->ClearLog();
+    bool isValidChoice = false;
+    
+    // 캐릭터 선택 시 1~4번만 선택 가능하도록 예외 처리 추가
+    do
+    {
+        m_ui->PrintLog(script.Get("SELECT_HEROINE_PERSONALITY"));
+        int choice = Player->InputInt();
+        m_ui->ClearLog();
 
-	m_ui->PrintLog(script.Get("SELECT_HEROINE_PERSONALITY"));
-	int choice = Player->InputInt();
-    m_ui->ClearLog();
+        switch (choice)
+        {
+        case 1: 
+            SetTetoGirl(girlName); 
+            isValidChoice = true; 
+            break;
+        case 2: 
+            SetChosicGirl(girlName); 
+            isValidChoice = true; 
+            break;
+        case 3: 
+            SetCoolPretyGirl(girlName); 
+            isValidChoice = true; 
+            break;
+        case 4: 
+            SetNormalGirl(girlName); 
+            isValidChoice = true; 
+            break;
+        default: 
+            m_ui->PrintLog(script.Get("FAILED_SELECT_HEROINE_PERSONALITY"));
+            break;
+        }
+    }
+    while (!isValidChoice);
 
-	switch (choice)
-	{
-	case 1: SetTetoGirl(girlName); break;
-	case 2: SetChosicGirl(girlName); break;
-	case 3: SetCoolPretyGirl(girlName); break;
-	default: SetNormalGirl(girlName); break;
-	}
 
 	if (!Player->GetGirlFrends().empty())
 	{
