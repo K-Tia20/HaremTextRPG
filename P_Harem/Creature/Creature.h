@@ -30,6 +30,15 @@ public:
 	int GetMaxHp() const { return MaxHp; }
 	int GetCurrentHp() const { return CurrentHp; }
 	int GetAttack() const { return Attack; }
+	
+	// 스스로 색을 칠하는 기능 추가함다
+	std::string GetColoredName() const {
+		std::string c = "\x1b[37m";
+		if (Stile == C_Stile::HotGirl) c = "\x1b[31m";
+		else if (Stile == C_Stile::IceGirl) c = "\x1b[36m";
+		else if (Stile == C_Stile::GrassGirl) c = "\x1b[32m";
+		return c + Name + "\x1b[0m";
+	}
 
 	void TakeDamage(int Damage); // Damage를 입력하면 CurrentHp를 Damage만큼 감소시키는 함수;
 	bool IsDefeated() const { return CurrentHp <= 0; } // Creature가 쓰러졌는지 확	인하는 함수;

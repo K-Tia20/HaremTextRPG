@@ -16,7 +16,7 @@ shared_ptr<C_Creature> C_Player::SetFightGirl()
 {
     auto ui = C_World::GetInstance().GetUI();
     if (GirlFrends.empty()) {
-        ui->PrintLog("시스템: 함께 싸울 여자친구가 없습니다.");
+        ui->PrintLog("\x1b[90m⚙️ 시스템: 함께 싸울 여자친구가 없습니다.\x1b[0m");
         return nullptr;
     }
 
@@ -24,16 +24,8 @@ shared_ptr<C_Creature> C_Player::SetFightGirl()
     
     std::string lineBuf = "";
     for (size_t i = 0; i < GirlFrends.size(); ++i) {
-        std::string styleColor = "\x1b[37m"; 
+        lineBuf += to_string(i + 1) + ". " + GirlFrends[i]->GetColoredName() + " (HP:" + to_string(GirlFrends[i]->GetCurrentHp()) + ")   ";
         
-        if (GirlFrends[i]->GetStile() == C_Stile::HotGirl) styleColor = "\x1b[31m";       
-        else if (GirlFrends[i]->GetStile() == C_Stile::IceGirl) styleColor = "\x1b[36m";  
-        else if (GirlFrends[i]->GetStile() == C_Stile::GrassGirl) styleColor = "\x1b[32m";
-        
-        // 텍스트를 한 줄(lineBuf)에 계속 이어 붙임
-        lineBuf += to_string(i + 1) + ". " + styleColor + GirlFrends[i]->GetName() + "\x1b[0m (체력:" + to_string(GirlFrends[i]->GetCurrentHp()) + ")   ";
-        
-        // 2명씩 묶어서 출력하거나, 마지막 히로인이면 출력하고 줄바꿈
         if (i % 2 == 1 || i == GirlFrends.size() - 1) {
             ui->PrintLog(lineBuf);
             lineBuf = "";
