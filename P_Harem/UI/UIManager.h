@@ -58,4 +58,5 @@ public:
     static void WaitKey(UIManager* ui); 
 
     std::string GetCurrentPrompt() const { return m_currentPrompt; }
+    std::string GetInputString();
 };

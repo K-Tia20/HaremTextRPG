@@ -118,6 +118,9 @@ void UIManager::Init() {
     SetConsoleMode(hOut, dwMode);
 
     std::cout << "\x1b[?1049h" << std::flush;
+    
+    CONSOLE_CURSOR_INFO cursorInfo = { 1, FALSE }; 
+    SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
 }
 
 // 메인 프레임워크 렌더링
@@ -166,8 +169,11 @@ void UIManager::SetCursorToInputArea(const std::string& prompt) {
     if (!prompt.empty()) m_currentPrompt = prompt;
     DrawInputBox(m_currentPrompt);
     this->gotoxy(INPUT_BOX_X + 2, INPUT_BOX_Y + 2);
+    
+    // [수정] 입력을 받을 때만 커서를 다시 켜줌 (TRUE)
     CONSOLE_CURSOR_INFO ci = { 100, TRUE };
     SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &ci);
+    
     std::cout << "\x1b[93m>> \x1b[0m" << std::flush;
 }
 
@@ -509,4 +515,42 @@ int UIManager::GetInputInt() {
     
     if (input.empty()) return -1;
     return std::stoi(input);
+}
+
+// 한글이나 띄어쓰기 입력 지원, 엔터 줄바꿈은 막아내기
+std::string UIManager::GetInputString() {
+    std::string input = "";
+    
+    // 쌓인 엔터 찌꺼기 청소
+    while (_kbhit()) _getch();
+
+    while (true) {
+        int ch = _getch();
+
+        if (ch == '\r') { 
+            if (input.empty()) continue; 
+            break;
+        }
+        else if (ch == '\b') {
+            if (!input.empty()) {
+                if (input.back() & 0x80) { 
+                    input.pop_back(); 
+                    if (!input.empty()) input.pop_back();
+                    std::cout << "\b\b  \b\b" << std::flush; 
+                } else {
+                    input.pop_back();
+                    std::cout << "\b \b" << std::flush;
+                }
+            }
+        }
+        else if (ch >= 32 && ch <= 126 || (ch & 0x80)) { 
+            input += (char)ch;
+            std::cout << (char)ch << std::flush; 
+        }
+    }
+    
+    CONSOLE_CURSOR_INFO cursorInfo = { 1, FALSE }; 
+    SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
+    
+    return input;
 }
