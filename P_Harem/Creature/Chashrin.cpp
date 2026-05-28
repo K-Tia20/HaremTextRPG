@@ -1,9 +1,9 @@
-#include <iostream>
+ï»¿#include <iostream>
 #include <string>
 
 #include "Chashrin.h"
 
-Chashrin::Chashrin() : C_Creature("Ä³¼­¸° ½ºÆæ¼­", C_Stile::IceGirl, 200, 30)
+Chashrin::Chashrin() : C_Creature("Ä³ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½æ¼­", C_Stile::HotGirl, 200, 30)
 {
 
 }

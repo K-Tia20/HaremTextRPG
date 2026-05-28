@@ -4,6 +4,8 @@
 #include "../GameManager/World.h"
 #include "../Player/Player.h"
 #include "../Creature/Creature.h" 
+#include "../Inventory/Inventory.h"
+#include "../Objects/Items/Item.h"
 #include <iostream>
 
 void C_LogSystem::AddCalendarLog(const std::string& logText) {
@@ -14,33 +16,34 @@ void C_LogSystem::ShowSmartphoneMenu() {
     UIManager* ui = C_World::GetInstance().GetUI(); 
     auto& script = C_ScriptManager::GetInstance(); 
     auto player = C_World::GetInstance().GetPlayer();
-    if (!player) return;
+    if (!player || !ui) return;
 
     ui->PrintLog(script.Get("PHONE_MENU_MAIN"));
     int choice = player->InputInt();
     
     switch (choice) {
         case 1:
-            ui->PrintLog(script.Get("PHONE_CALENDAR_TITLE")); 
+            ui->PrintLog("\x1b[96m--- 📅 캘린더 기록 ---\x1b[0m"); 
             if (m_calendarLogs.empty()) {
-                ui->PrintLog(script.Get("PHONE_CALENDAR_EMPTY")); 
+                ui->PrintLog("\x1b[90m(기록된 사건이 없습니다.)\x1b[0m"); 
             } else {
                 for (const auto& log : m_calendarLogs) {
-                    ui->PrintLog("- " + log); 
+                    ui->PrintLog("• " + log); 
                 }
             }
+            UIManager::WaitKey(ui);
             break;
         case 2:
             ShowContactList(); 
             break;
         default:
-            ui->PrintLog(script.Get("PHONE_BACK_MAIN")); 
             break;
     }
 }
 
 void C_LogSystem::ShowContactList() {
     UIManager* ui = C_World::GetInstance().GetUI();
+    if (!ui) return;
     ui->PrintLog(C_ScriptManager::GetInstance().Get("PHONE_CONTACT_SYNC")); 
     
     std::vector<UIManager::HeroineDisplayData> displayList;
@@ -65,10 +68,38 @@ void C_LogSystem::ShowContactList() {
         });
     }
     ui->UpdateHeroineList(displayList);
+    UIManager::WaitKey(ui);
 }
 
 void C_LogSystem::ShowInventory() {
     UIManager* ui = C_World::GetInstance().GetUI();
-    ui->PrintLog(C_ScriptManager::GetInstance().Get("PHONE_INV_OPEN")); 
-    ui->PrintLog("[ 된장찌개 ], [ 삼겹살 ] ... (개발 중)");
+    auto player = C_World::GetInstance().GetPlayer();
+    if (!ui || !player) return;
+
+    auto inv = player->GetInventory();
+    if (!inv) return;
+
+    ui->PrintLog("\x1b[95m--- 🎒 가방 열기 ---\x1b[0m"); 
+    
+    std::vector<UIManager::ItemDisplayData> displayList;
+    for (int i = 0; i < inv->GetSize(); ++i) {
+        auto itemObj = inv->GetItem(i);
+        if (!itemObj) continue;
+
+        const auto& data = itemObj->GetItem();
+        std::string typeLabel = "기타";
+        if (data.Type == ItemType::Heal) typeLabel = "🍱 회복";
+        else if (data.Type == ItemType::Power) typeLabel = "🍗 강화";
+        else if (data.Type == ItemType::Defence) typeLabel = "🛡️ 방어";
+
+        displayList.push_back({
+            data.Name,
+            data.Quantity,
+            data.Value,
+            typeLabel
+        });
+    }
+    
+    ui->UpdateInventoryList(displayList);
+    UIManager::WaitKey(ui);
 }

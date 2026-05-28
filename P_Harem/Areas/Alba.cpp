@@ -1,7 +1,10 @@
 #include "../GameManager/World.h"
 #include "../Player/Player.h"
 #include "../UI/UIManager.h" 
+#include "../UI/ScriptManager.h"
+#include "../UI/ImageManager.h"
 #include "Alba.h"
+#include <windows.h>
 
 using namespace std;
 
@@ -14,57 +17,84 @@ C_Alba::C_Alba(C_World* world)
 void C_Alba::SelectMenu()
 {
     auto ui = World->GetUI();
+    auto& script = C_ScriptManager::GetInstance();
     if (!ui) return;
 
-	ui->PrintLog("--- 알바 구직 ---");
-	ui->PrintLog("1. 쿠팡 물류센터 야간 상하차");
-	ui->PrintLog("2. 당근마켓 빌런 잡기");
-	ui->PrintLog("3. 결혼식 가짜 하객 대행");
-	ui->PrintLog("4. 배민커넥트 도보 배달");
-	ui->PrintLog("5. 돌아가기");
+    // [Data-Driven] Scenario.txt에서 레이아웃 호출
+	ui->PrintLog(script.Get("UI_DIVIDER_YELLOW"));
+	ui->PrintLog(script.Get("ALBA_HEADER"));
+	ui->PrintLog(script.Get("UI_DIVIDER_YELLOW"));
+	ui->PrintLog(script.Get("ALBA_MENU_1"));
+	ui->PrintLog(script.Get("ALBA_MENU_2"));
+	ui->PrintLog(script.Get("ALBA_MENU_3"));
+	ui->PrintLog(script.Get("ALBA_MENU_4"));
+	ui->PrintLog(script.Get("UI_LINE_THIN"));
+	ui->PrintLog(script.Get("ALBA_BACK"));
 
 	int choice = Player->InputInt();
     ui->ClearLog(); 
 
+    string jobName = "";
+    string bgName = "";
+    int pay = 100000;
+
 	switch (choice)
 	{
-	case 1:
-		ui->PrintLog("시스템: 쿠팡 상하차 완료! 100,000 원을 벌었습니다.");
-		Player->AddMoney(100000);
-		break;
-	case 2:
-		ui->PrintLog("시스템: 빌런 검거 완료! 100,000 원을 벌었습니다.");
-		Player->AddMoney(100000);
-		break;
-	case 3:
-		ui->PrintLog("시스템: 하객 대행 완료! 100,000 원을 벌었습니다.");
-		Player->AddMoney(100000);
-		break;
-	case 4:
-		ui->PrintLog("시스템: 배달 완료! 100,000 원을 벌었습니다.");
-		Player->AddMoney(100000);
-		break;
-	default:
-		AS = AlbaState::MoveArea;
-		break;
+	case 1: jobName = "상하차 알바"; bgName = "BG_Coupang"; break;
+	case 2: jobName = "벌레잡기 알바"; bgName = "BG_Danggun"; break;
+	case 3: jobName = "하객대행 알바"; bgName = "BG_Wedding"; break;
+	case 4: jobName = "배달 알바"; bgName = "BG_Bemin"; break;
+	case 0: 
+        World->SetHubBG("BG_City"); 
+        AS = AlbaState::Exit; 
+        return;
+	default: 
+        ui->PrintLog("시스템: 잘못된 선택입니다.");
+        UIManager::WaitKey(ui);
+        return;
 	}
+
+    // [Visual Upgrade] 알바 전용 배경 출력
+    ui->ClearMainViewport();
+    ui->DrawImage(C_ImageManager::GetInstance().GetLayeredImage(bgName, {}));
+
+    // [Data-Driven] 작업 진행 연출
+    ui->PrintLog(script.GetFormatStr("ALBA_START", {jobName}));
+    for (int i = 1; i <= 5; ++i) {
+        string gage = "[";
+        for (int j = 0; j < 5; ++j) gage += (j < i) ? "\x1b[93m■\x1b[0m" : "\x1b[90m□\x1b[0m";
+        gage += "] \x1b[90m작업 진행 중...\x1b[0m";
+        ui->PrintLog(gage, true); 
+        Sleep(400);
+    }
+
+    ui->ClearLog();
+	ui->PrintLog(script.GetFormatStr("ALBA_COMPLETE", {jobName}));
+	ui->PrintLog(script.GetFormatStr("ALBA_PAYMENT", {to_string(pay)}));
+    // [SOUND] 여기에 알바 정산 효과음을 추가하세요
+    Player->AddMoney(pay);
+    
+    UIManager::WaitKey(ui);
+    
+    World->SetHubBG("BG_Room"); 
+    AS = AlbaState::Exit;
 }
 
-void C_Alba::MoveArea()
-{
-	AS = AlbaState::SelectMenu;
-	World->GotoCity();
-}
+void C_Alba::MoveArea() {}
 
 void C_Alba::Update()
 {
-	switch (AS)
+    bool isLooping = true;
+	while (isLooping)
 	{
-	case AlbaState::SelectMenu:
-		SelectMenu();
-		break;
-	case AlbaState::MoveArea:
-		MoveArea();
-		break;
+		switch (AS)
+		{
+		case AlbaState::SelectMenu:
+			SelectMenu();
+			break;
+		case AlbaState::Exit:
+            isLooping = false;
+			break;
+		}
 	}
 }
