@@ -363,6 +363,56 @@ void UIManager::UpdateHeroineList(const std::vector<HeroineDisplayData>& list) {
     std::cout << std::flush;
 }
 
+void UIManager::UpdateInventoryList(const std::vector<ItemDisplayData>& list) {
+    // 스마트폰 화면 영역 초기화
+    for (int y = PHONE_Y + 1; y < PHONE_Y + PHONE_H - 1; ++y) {
+        gotoxy(PHONE_X + 2, y);
+        std::cout << std::string(PHONE_W - 4, ' ');
+    }
+
+    if (list.empty()) {
+        gotoxy(PHONE_X + (PHONE_W - 14) / 2, PHONE_Y + PHONE_H / 2);
+        std::cout << "\x1b[90m[ 가방이 비어있음 ]\x1b[0m";
+        return;
+    }
+
+    for (size_t i = 0; i < list.size(); ++i) {
+        int baseY = PHONE_Y + 1 + (int)i * 3;
+        if (baseY + 2 >= PHONE_Y + PHONE_H - 1) break;
+        
+        const auto& item = list[i];
+        
+        // 아이템 정보 출력
+        gotoxy(PHONE_X + 3, baseY);
+        std::cout << "\x1b[97m" << item.name << "\x1b[0m \x1b[93m(x" << item.quantity << ")\x1b[0m";
+        
+        gotoxy(PHONE_X + 3, baseY + 1);
+        std::cout << "\x1b[90m└ " << item.typeStr << " 효과: " << item.value << "\x1b[0m";
+    }
+    std::cout << std::flush;
+}
+
+void UIManager::ShowLevelUpEvent(const std::string& name, int level) {
+    int centerX = VIEWPORT_X + (VIEWPORT_W / 2);
+    int centerY = VIEWPORT_Y + (VIEWPORT_H / 2);
+    
+    int boxW = 50;
+    int boxH = 7;
+    int startX = centerX - (boxW / 2);
+    int startY = centerY - (boxH / 2);
+
+    // 축하 박스 그리기
+    DrawSolidBox(startX, startY, boxW, boxH, " LEVEL UP!! ");
+    
+    gotoxy(startX + 5, startY + 2);
+    std::cout << "\x1b[93m★축하합니다!★\x1b[0m";
+    
+    gotoxy(startX + 5, startY + 4);
+    std::cout << "\x1b[97m[" << name << "]\x1b[0m 님의 등급이 \x1b[92mLv." << level << "\x1b[0m 로 상승!";
+    
+    std::cout << std::flush;
+}
+
 void UIManager::ClearMainViewport() {
     std::string blank(VIEWPORT_W - 2, ' ');
     for (int y = VIEWPORT_Y + 1; y < VIEWPORT_Y + VIEWPORT_H - 1; ++y) {
@@ -389,6 +439,30 @@ void UIManager::DrawImage(const std::string& imageAnsi) {
         std::cout << line;
     }
     gotoxy(CONSOLE_WIDTH - 2, 0);
+    std::cout << std::flush;
+}
+
+void UIManager::DrawImageAtCenter(const std::string& imageAnsi) {
+    if (imageAnsi.empty()) return;
+    
+    // C_ImageManager::GetLayeredImage가 반환하는 이미지의 논리적 가로/세로 크기는 
+    // VIEWPORT_W - 2 (118) / VIEWPORT_H - 2 (28) 블록으로 고정되어 있습니다.
+    int imgW = VIEWPORT_W - 2; 
+    int imgH = VIEWPORT_H - 2; 
+
+    // 콘솔 전체(160x45)를 기준으로 정중앙 좌표를 계산합니다.
+    int startX = (CONSOLE_WIDTH - imgW) / 2;
+    int startY = (CONSOLE_HEIGHT - imgH) / 2;
+
+    int currentY = startY;
+    std::string line;
+    std::stringstream ss(imageAnsi);
+    while (std::getline(ss, line)) {
+        if (currentY >= CONSOLE_HEIGHT - 2) break; // 데드존 보호
+        gotoxy(startX, currentY++);
+        std::cout << line;
+    }
+    gotoxy(CONSOLE_WIDTH - 2, 0); // 커서 대피
     std::cout << std::flush;
 }
 
