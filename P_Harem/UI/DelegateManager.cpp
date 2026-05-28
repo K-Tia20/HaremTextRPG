@@ -72,8 +72,9 @@ void DelegateManager::BindAll(UIManager* ui, C_BattleSystem* battleSys) {
         // [SOUND] 여기에 레벨업 축하 사운드를 추가하세요
         
         ui->PrintLog("\x1b[93m✨ [성장] " + name + "님의 등급이 Lv." + std::to_string(level) + "(으)로 상승했습니다! ✨\x1b[0m");
-        UIManager::WaitKey(ui);
+        ui->WaitEnterSilent();
         ui->ClearMainViewport();
         // 원래 배경 복구 (필요시)
+        
     };
 }
