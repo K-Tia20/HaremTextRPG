@@ -59,14 +59,12 @@ void C_World::Init() {
     m_ui->PlayBlueTransition(); // 화면 정화
     
     // 2. [팀 로고] BG_TeamName.png 출력
-<<<<<<< HEAD
     m_ui->DrawImageAtCenter(img.GetLayeredImage("BG_TeamName", {})); 
     Sleep(2000);
-=======
     // (뷰포트가 아닌 전체 화면 중앙 느낌을 위해 DrawImage를 일시 활용)
     m_ui->DrawImage(img.GetLayeredImage("BG_TeamName", {})); 
     Sleep(3000);
->>>>>>> b3bbc6cd962b625981363cab7bfa8043daae963d
+    
     m_ui->PlayBlueTransition();
 
     // 3. [게임 타이틀] BG_Title.png 출력

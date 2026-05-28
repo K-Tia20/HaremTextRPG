@@ -52,20 +52,12 @@ void C_City::SelectMenu()
 			ui->ClearMainViewport();
 			ui->DrawImage(C_ImageManager::GetInstance().GetLayeredImage("BG_HunPo", {}));
 			
-<<<<<<< HEAD
 			if (Player->GetHighlevel() >= 10)
 			{
+				// TODO: 보스전 돌입 전 대사
 				ui->PrintLog("\x1b[90m이젠 준비된거 같다...주체할 수 없는 내 마음을 전하러갈까?\x1b[0m");
 				ui->PrintLog("\x1b[90m1. 가자\x1b[0m");
 				ui->PrintLog("\x1b[90m0. 안가\x1b[0m");
-=======
-        if (Player->GetHighlevel() >= 10)
-        {
-        	// TODO: 보스전 돌입 전 대사
-        	ui->PrintLog("\x1b[90m이젠 준비된거 같다...주체할 수 없는 내 마음을 전하러갈까?\x1b[0m");
-        	ui->PrintLog("\x1b[90m1. 가자\x1b[0m");
-        	ui->PrintLog("\x1b[90m0. 안가\x1b[0m");
->>>>>>> b3bbc6cd962b625981363cab7bfa8043daae963d
         	
 				if (Player->InputInt() == 1) {
 					Battle->BossBattle(Player->SetFightGirl());
