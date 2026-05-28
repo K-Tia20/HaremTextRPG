@@ -18,12 +18,14 @@
     <ClCompile Include="Creature\Marry.cpp" />
     <ClCompile Include="Creature\Oplier.cpp" />
     <ClCompile Include="Creature\Zhad.cpp" />
-    <ClCompile Include="Framework\Defs.cpp" />
     <ClCompile Include="Areas\Alba.cpp" />
     <ClCompile Include="UI\DelegateManager.cpp" />
     <ClCompile Include="UI\ImageManager.cpp" />
     <ClCompile Include="UI\ScriptManager.cpp" />
     <ClCompile Include="UI\UIManager.cpp" />
+    <ClCompile Include="UI\LogSystem.cpp" />
+    <ClCompile Include="Creature\Elizabeth.cpp" />
+    <ClCompile Include="Framework\Defs.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Player\Player.h" />
@@ -52,5 +54,13 @@
     <ClInclude Include="UI\stb_image.h" />
     <ClInclude Include="UI\UILayoutDefs.h" />
     <ClInclude Include="UI\UIManager.h" />
+    <ClInclude Include="UI\LogSystem.h" />
+    <ClInclude Include="Creature\Elizabeth.h" />
+    <ClInclude Include="UI\SoundManager.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Data\Scenario.txt" />
+    <None Include="Data\Scenario_Guide.md" />
+    <None Include="UI\IMG\SeA.jpg" />
   </ItemGroup>
 </Project>
