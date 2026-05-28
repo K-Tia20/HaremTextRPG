@@ -80,6 +80,17 @@ BATTLE_HIT_CRITICAL : "\x1b[93m[ CRITICAL HIT!! ] \x1b[0m"
 BATTLE_HIT_GUARD : "\x1b[90m[ GUARDED... ] \x1b[0m"
 BATTLE_HIT_FORMAT : "반격! \x1b[97m{0}\x1b[0m이(가) 압박을 느낍니다.\n(입힌 대미지: {1}{2}\x1b[0m)"
 BATTLE_DEFEAT_ALERT : "  💀 [{0}]이(가) 버티지 못하고 패배했습니다!  "
+BATTLE_BOSS_INTRO0 : ""\x1b[36m나는 주체할 수 없는 마음을 안고 헌팅포차의 문을 열었다.""
+BATTLE_BOSS_INTRO1 : "\x1b[35m문이 열리자 우아하게 종업원이 걸어오고 있다."
+BATTLE_BOSS_INTRO2 : "\x1b[36m 어서오세요! 손님!!"
+BATTLE_BOSS_INTRO3 : ""\x1b[31m 1년전 고백했다 차였던 기억을 되짚어본다.""
+BATTLE_BOSS_INTRO4 : ""\x1b[31m    이번엔 다를 것이다!    ""
+BATTLE_BOSS_INTRO5 : "\x1b[33m어머! 손님!! 여친분들이 매력이 넘치시네요~"
+BATTLE_BOSS_INTRO6 : "\x1b[33m하지만 그런 나약한 여성분들이 저의 매력을..."
+BATTLE_BOSS_INTRO7 : "\x1b[31m[감당가능 하실까요?]\x1b[0m"
+BATTLE_BOSS_DETEAT : "\x1b[31m나는 패배했다...\x1b[0m"
+BATTLE_BOSS_GAMEOVER : "[게임 오버]"
+
 
 # [스마트폰/기타]
 PHONE_MENU_MAIN : "--- 스마트폰 메뉴 ---\n1. 캘린더  2. 연락처  3. 종료 | 선택 : [INPUT]"
