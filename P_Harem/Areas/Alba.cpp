@@ -49,7 +49,7 @@ void C_Alba::SelectMenu()
         AS = AlbaState::Exit; 
         return;
 	default: 
-        ui->PrintLog("시스템: 잘못된 선택입니다.");
+        ui->PrintLog("\x1b[90m⚙️시스템: 잘못된 선택입니다.");
         UIManager::WaitKey(ui);
         return;
 	}

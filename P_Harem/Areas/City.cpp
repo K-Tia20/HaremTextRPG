@@ -71,7 +71,7 @@ void C_City::SelectMenu()
 				int randomIndex = rand() % 100;
 				if (randomIndex < 70) Encounter();
 				else {
-					ui->PrintLog("\x1b[90m시스템: 한참을 서성였지만 허탕만 쳤습니다...\x1b[0m");
+					ui->PrintLog("\x1b[90m⚙️시스템: 한참을 서성였지만 허탕만 쳤습니다...\x1b[0m");
 					UIManager::WaitKey(ui);
 				}
 			}
@@ -91,7 +91,7 @@ void C_City::SelectMenu()
 		CS = CityState::Exit;
 		break;
 	default:
-		ui->PrintLog("시스템: 잘못된 입력입니다.");
+		ui->PrintLog("\x1b[90m⚙️시스템: 잘못된 입력입니다.");
         UIManager::WaitKey(ui);
 		break;
 	}
@@ -122,7 +122,7 @@ void C_City::Encounter()
 
 	if (Girls.empty())
 	{
-		ui->PrintLog("\x1b[90m시스템: 거리에는 더 이상 마주칠 사람이 없습니다...\x1b[0m");
+		ui->PrintLog("\x1b[90m⚙️ 시스템: 거리에는 더 이상 마주칠 사람이 없습니다...\x1b[0m");
 		UIManager::WaitKey(ui);
 		return;
 	}
@@ -130,50 +130,40 @@ void C_City::Encounter()
 	int randomIndex = rand() % static_cast<int>(Girls.size());
 	BattleGirl = Girls[randomIndex];
 
-	std::string styleColor = "\x1b[37m";
-	if (BattleGirl->GetStile() == C_Stile::HotGirl) styleColor = "\x1b[31m";
-	else if (BattleGirl->GetStile() == C_Stile::IceGirl) styleColor = "\x1b[36m";
-	else if (BattleGirl->GetStile() == C_Stile::GrassGirl) styleColor = "\x1b[32m";
-
-	// [추가된 연출] 내 여친을 고르기 전에, 헌팅포차 배경과 마주친 적을 정중앙에 띄우기
+	// [추가된 연출] 헌팅포차 배경과 마주친 적 정중앙 띄우기
 	ui->ClearMainViewport();
 	ui->DrawImage(C_ImageManager::GetInstance().GetLayeredImage("BG_HunPo", {
 		{BattleGirl->GetImageKey(), 50, 0, false}
 	}));
 
 	ui->PrintLog(script.Get("CITY_ENCOUNTER_ALERT"));
-	ui->PrintLog(script.GetFormatStr("CITY_HEROINE_APPEAR", {styleColor, BattleGirl->GetName()}));
+	// 🚨 수정완료: GetColoredName() 하나만 넘깁니다!
+	ui->PrintLog(script.GetFormatStr("CITY_HEROINE_APPEAR", {BattleGirl->GetColoredName()}));
 	
-	// 그 후에 내 여친을 선택합니다.
 	auto FightGirl = Player->SetFightGirl();
 	ui->ClearLog();
 
 	if (FightGirl == nullptr)
 	{
-		ui->PrintLog("시스템: 오늘은 이만 물러나기로 했습니다.");
-        UIManager::WaitKey(ui);
+		ui->PrintLog("\x1b[90m⚙️ 시스템: 오늘은 이만 물러나기로 했습니다.\x1b[0m");
+		UIManager::WaitKey(ui);
 		return;
 	}
 
-    // [Visual Upgrade] 헌팅포차 배경 + 내 여친(좌측/반전) + 적 여친(우측) 레이어링
-    ui->ClearMainViewport();
-    ui->DrawImage(C_ImageManager::GetInstance().GetLayeredImage("BG_HunPo", {
-        {FightGirl->GetImageKey(), 5, 0, true}, // 플레이어 여친: 좌측 위치, 좌우 반전 적용
-        {BattleGirl->GetImageKey(), 97, 0, false} // 상대 여친: 우측 위치로 더 밀어냄
-    }));
+	ui->ClearMainViewport();
+	ui->DrawImage(C_ImageManager::GetInstance().GetLayeredImage("BG_HunPo", {
+		{FightGirl->GetImageKey(), 5, 0, true},
+		{BattleGirl->GetImageKey(), 97, 0, false} 
+	}));
 
-    std::string myStyleColor = "\x1b[37m";
-    if (FightGirl->GetStile() == C_Stile::HotGirl) myStyleColor = "\x1b[31m";
-    else if (FightGirl->GetStile() == C_Stile::IceGirl) myStyleColor = "\x1b[36m";
-    else if (FightGirl->GetStile() == C_Stile::GrassGirl) myStyleColor = "\x1b[32m";
-
-    ui->PrintLog(script.Get("CITY_BATTLE_TITLE"));
-    ui->PrintLog(script.GetFormatStr("CITY_BATTLE_VS", {myStyleColor + FightGirl->GetName(), styleColor + BattleGirl->GetName()}));
-    ui->PrintLog(script.Get("UI_LINE_THIN"));
+	ui->PrintLog(script.Get("CITY_BATTLE_TITLE"));
+	// 🚨 수정완료: 양쪽 모두 GetColoredName() 넘기기
+	ui->PrintLog(script.GetFormatStr("CITY_BATTLE_VS", {FightGirl->GetColoredName(), BattleGirl->GetColoredName()}));
+	ui->PrintLog(script.Get("UI_LINE_THIN"));
 
 	Battle->Battle(FightGirl, BattleGirl);
 
-    UIManager::WaitKey(ui);
+	UIManager::WaitKey(ui);
 
 	if (BattleGirl->IsDefeated()) Gatcha();
 	if (FightGirl->IsDefeated()) { Player->RemoveGirlFriend(FightGirl); }
@@ -186,15 +176,16 @@ void C_City::Gatcha()
 	
 	int randomIndex = rand() % 100;
     
-	ui->ClearMainViewport(); // 1. 일단 뷰포트를 깨끗하게 비웁니다.
+	ui->ClearMainViewport(); 
     
 	if (randomIndex < 40) 
 	{
 		if (BattleGirl->GetName() == "평범녀")
 		{
-			ui->DrawImage(C_ImageManager::GetInstance().GetLayeredImage("BG_HunPo", {})); // 배경만 출력
-			ui->PrintLog(script.GetFormatStr("CITY_CONTACT_FAIL", {BattleGirl->GetName()}));
-			UIManager::WaitKey(ui); // 대기
+			ui->DrawImage(C_ImageManager::GetInstance().GetLayeredImage("BG_HunPo", {})); 
+			// 🚨 GetColoredName() 적용
+			ui->PrintLog(script.GetFormatStr("CITY_CONTACT_FAIL", {BattleGirl->GetColoredName()}));
+			UIManager::WaitKey(ui);
 			return ;
 		}
         
@@ -206,16 +197,15 @@ void C_City::Gatcha()
 		Player->AddGirlFrends(BattleGirl);
 		Girls.erase(remove(Girls.begin(), Girls.end(), BattleGirl), Girls.end());
         
-		// 2. 획득 성공! 헌팅포차 배경 + 해당 히로인을 정중앙(50%)에 출력
 		ui->DrawImage(C_ImageManager::GetInstance().GetLayeredImage("BG_HunPo", {{BattleGirl->GetImageKey(), 50, 0, false}}));
-		ui->PrintLog(script.GetFormatStr("CITY_CONTACT_SUCCESS", {BattleGirl->GetName()}));
+		// 🚨 GetColoredName() 적용
+		ui->PrintLog(script.GetFormatStr("CITY_CONTACT_SUCCESS", {BattleGirl->GetColoredName()}));
 	} else {
-		// 3. 획득 실패! 헌팅포차 배경만 쓸쓸하게 출력
 		ui->DrawImage(C_ImageManager::GetInstance().GetLayeredImage("BG_HunPo", {}));
-		ui->PrintLog(script.GetFormatStr("CITY_CONTACT_FAIL", {BattleGirl->GetName()}));
+		// 🚨 GetColoredName() 적용
+		ui->PrintLog(script.GetFormatStr("CITY_CONTACT_FAIL", {BattleGirl->GetColoredName()}));
 	}
     
-	// 4. 결과를 천천히 감상할 수 있도록 엔터 대기
 	UIManager::WaitKey(ui); 
 }
 
