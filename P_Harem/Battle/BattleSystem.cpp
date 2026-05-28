@@ -4,12 +4,14 @@
 #include "../GameManager/World.h"
 #include "../Player/Player.h"
 #include "../Objects/Items/Item.h"
+#include "../Creature/Boss.h"
 #include <cmath>
 
 C_LevelSystem LevelSystem; 
 
 C_BattleSystem::C_BattleSystem(C_World* world)
 {
+	World = world;
 	W_Player = world->GetPlayer();
 }
 
@@ -76,10 +78,12 @@ void C_BattleSystem::Attack(std::shared_ptr<C_Creature> Attacker, std::shared_pt
 void C_BattleSystem::Battle(std::shared_ptr<C_Creature> Player, std::shared_ptr<C_Creature> Enemy)
 {
     if (!Player || !Enemy) return;
-
+	
+	Enemy->SetEnemyStat(W_Player->GetHighlevel());
+	
 	while (!Player->IsDefeated() && !Enemy->IsDefeated())
 	{
-		if (rand() % 100 < 40) // 40% 확률로 아이템 사용 시도
+		if (rand() % 100 < 60) // 40% 확률로 아이템 사용 시도
 		{
 			UseItem = W_Player->UsingItem();
 		}
@@ -111,4 +115,63 @@ void C_BattleSystem::Battle(std::shared_ptr<C_Creature> Player, std::shared_ptr<
 			break;
 		}
 	}
+}
+
+void C_BattleSystem::BossBattle(std::shared_ptr<C_Creature> Player)
+{
+	if (!Player) return;
+
+	std::shared_ptr<C_Creature> Boss = std::make_shared<C_Boss>();
+
+	BossBattleIntro(Player, Boss);
+
+	PlayerTurn = false;
+
+	while (!Boss->IsDefeated())
+	{
+		Attack(Boss, Player); 
+		PlayerTurn = !PlayerTurn;
+		Sleep(1000); // 연출을 위해 1초 대기
+
+		if (Player->IsDefeated())
+		{
+			if (OnDefeat) OnDefeat(Player->GetName());
+
+			W_Player->GetGirlFrends().erase(std::remove(
+				W_Player->GetGirlFrends().begin(),
+				W_Player->GetGirlFrends().end(),
+				Player),
+				W_Player->GetGirlFrends().end());
+			
+			if (!W_Player->GetGirlFrends().empty()) Player = W_Player->SetFightGirl();
+			else { World->BadEnd(); return; } // 여친 다 죽으면 배드엔딩
+		}
+
+		if (rand() % 100 < 60) // 40% 확률로 아이템 사용 시도
+		{
+			UseItem = W_Player->UsingItem();
+		}
+
+		if (UseItem && UseItem->GetItem().Type == ItemType::Heal) {
+			Player->AddHp(UseItem->GetItem().Value);
+
+			if (OnUseItem) OnUseItem(Player->GetName(), 3, UseItem->GetItem().Value);
+		}
+		
+		Attack(Player, Boss); 
+		PlayerTurn = !PlayerTurn;
+		Sleep(1000);
+		
+		if (Boss->IsDefeated())
+		{
+			if (OnDefeat) OnDefeat(Boss->GetName());
+			LevelSystem.GainAffinity(Player, 50); 
+			break;
+		}
+	}
+}
+
+void C_BattleSystem::BossBattleIntro(std::shared_ptr<C_Creature> Player, std::shared_ptr<C_Creature> Boss)
+{
+	
 }

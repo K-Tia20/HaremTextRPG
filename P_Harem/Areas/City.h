@@ -22,7 +22,7 @@ public:
 	// 메뉴고르기
 	virtual void SelectMenu() override;
 	// 지역이동
-	virtual void MoveArea() override;
+	virtual void MoveArea() override {};
 	// 게임 진행 
 	virtual void Update() override;
 	// 배틀 진입

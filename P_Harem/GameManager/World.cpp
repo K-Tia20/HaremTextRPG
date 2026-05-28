@@ -12,7 +12,6 @@
 #include "../Battle/BattleSystem.h"
 #include "../UI/LogSystem.h"
 #include "../UI/CSoundManager.h"//추가햇어
-#include "World.h"
 
 
 using namespace std;
@@ -99,12 +98,14 @@ void C_World::Update()
         return;
     }
 
+    // if (Player->GetGirlFrends().empty()) SoloEnd();
+    
     if (!IsRunning) return;
 
     SyncUI();
-
+    
     auto& script = C_ScriptManager::GetInstance();
-
+    
 	switch (WS)
 	{
 	case WorldState::NewGame:    NewGame(); break;
@@ -281,7 +282,6 @@ void C_World::SetGirlFrends()
     }
     while (!isValidChoice);
 
-
 	if (!Player->GetGirlFrends().empty())
 	{
         // [사용자 요청] 데이트 연출 추가
@@ -336,7 +336,25 @@ void C_World::SetNormalGirl(string name) {
     UIManager::WaitKey(m_ui.get());
 }
 
+// 여기는 
+void C_World::SoloEnd()
+{
+    IsRunning = false;
+}
+
+// 여기서 이김 엔딩
+void C_World::RealEnd()
+{
+    IsRunning = false;
+}
+
+// 여기서 배드엔딩
+void C_World::BadEnd()
+{
+    IsRunning = false;
+}
+
 UIManager* C_World::GetUI() { return m_ui.get(); }
 C_BattleSystem* C_World::GetBattle() { return m_battle.get(); }
 string C_World::SetGirlFrendName() { return Player->InputString(); }
-bool C_World::CheckInit() { return false; }
+
