@@ -51,7 +51,7 @@ void C_World::Init() {
 
     //[음악시작 : 오프닝]
     auto& sound = CSoundManager::GetInstance();
-    //sound.PlayBGM(L"../P_Harem/Sound/BGM/Opening.wav");
+    sound.PlayBGM(L"../P_Harem/Sound/BGM/Opening.wav");
     
     // 1. [프롤로그] 운명적인 첫 문구
     m_ui->CenteredTypeLog(script.Get("SCENE_OPENING_1"), 22, 1000);
@@ -60,16 +60,16 @@ void C_World::Init() {
     
     // 2. [팀 로고] BG_TeamName.png 출력
     // (뷰포트가 아닌 전체 화면 중앙 느낌을 위해 DrawImage를 일시 활용)
-    //m_ui->DrawImage(img.GetLayeredImage("BG_TeamName", {})); 
-    //Sleep(3000);
-    //m_ui->PlayBlueTransition();
+    m_ui->DrawImage(img.GetLayeredImage("BG_TeamName", {})); 
+    Sleep(3000);
+    m_ui->PlayBlueTransition();
 
     // 3. [게임 타이틀] BG_Title.png 출력
     m_ui->DrawImage(img.GetLayeredImage("BG_Title", {}));
     Sleep(10000);
 
     //[음악종료 : 오프닝]
-    //sound.StopBGM();
+    sound.StopBGM();
     
     //[음악시작 : 첫만남]
     sound.PlayBGM(L"../P_Harem/Sound/BGM/Good.wav");
