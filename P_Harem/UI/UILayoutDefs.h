@@ -58,4 +58,5 @@ namespace UI_LAYOUT {
     constexpr int LOG_H = MAX_SAFE_Y - LOG_Y + 1; 
 }
 
-#define UI_BRUSH "█"
+
+#define UI_BRUSH " "

@@ -3,7 +3,7 @@
 
 #include "Lina.h"
 
-Lina::Lina() : C_Creature("���� �Ʒη���", C_Stile::IceGirl, 200, 30)
+Lina::Lina() : C_Creature("리나 맥로레인", C_Stile::IceGirl, 200, 30)
 {
 
 }
