@@ -51,9 +51,14 @@ public: // 지역 이동 및 셋팅 로직 (팀의 기존 멤버 보존)
 	void SetCoolPretyGirl(std::string name);
 	void SetChosicGirl(std::string name);
 	void SetNormalGirl(std::string name);
+	
+	// 여친전부 방출엔딩
+	void SoloEnd();
+	// 보스 잡음
+	void RealEnd();
+	// 보스한테 죽음
+	void BadEnd();
 	std::string SetGirlFrendName();
-
-	bool CheckInit();
 
 private:
 	std::shared_ptr<C_Player> Player;
