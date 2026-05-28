@@ -173,6 +173,7 @@ void C_City::Gatcha()
 {
     auto ui = World->GetUI();
     auto& script = C_ScriptManager::GetInstance();
+	
 	int randomIndex = rand() % 100;
 	if (randomIndex < 40) 
 	{
@@ -181,12 +182,18 @@ void C_City::Gatcha()
 			ui->PrintLog(script.GetFormatStr("CITY_CONTACT_FAIL", {BattleGirl->GetName()}));
 			return ;
 		}
+		//레벨을 1로 리셋
+		BattleGirl->SetLevel(1);
 		
 		BattleGirl->SetMaxHp(200);
 		BattleGirl->SetCurrentHp(200);
 		BattleGirl->SetAttack(30);
+		
 		Player->AddGirlFrends(BattleGirl);
+		
+		// 도시 목록에서 제거 (중복 획득 방지)
 		Girls.erase(remove(Girls.begin(), Girls.end(), BattleGirl), Girls.end());
+		
         ui->PrintLog(script.GetFormatStr("CITY_CONTACT_SUCCESS", {BattleGirl->GetName()}));
 	} else {
         ui->PrintLog(script.GetFormatStr("CITY_CONTACT_FAIL", {BattleGirl->GetName()}));

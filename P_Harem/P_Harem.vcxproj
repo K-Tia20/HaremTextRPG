@@ -163,6 +163,7 @@
     <ClInclude Include="Areas\Shop.h" />
     <ClInclude Include="Battle\BattleSystem.h" />
     <ClInclude Include="Creature\And.h" />
+    <ClInclude Include="Creature\Boss.h" />
     <ClInclude Include="Creature\Chashrin.h" />
     <ClInclude Include="Creature\Codelia.h" />
     <ClInclude Include="Creature\Creature.h" />
