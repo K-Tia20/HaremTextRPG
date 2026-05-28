@@ -116,7 +116,6 @@ void C_City::Update()
 
 void C_City::Encounter()
 {
-    auto ui = World->GetUI();
 	auto ui = World->GetUI();
 	auto& script = C_ScriptManager::GetInstance();
 	if (!ui) return;
@@ -131,8 +130,6 @@ void C_City::Encounter()
 	int randomIndex = rand() % static_cast<int>(Girls.size());
 	BattleGirl = Girls[randomIndex];
 
-    std::string styleColor = "\x1b[37m";
-    if (BattleGirl->GetStile() == C_Stile::HotGirl) styleColor = "\x1b[31m";
 	std::string styleColor = "\x1b[37m";
 	if (BattleGirl->GetStile() == C_Stile::HotGirl) styleColor = "\x1b[31m";
 	else if (BattleGirl->GetStile() == C_Stile::IceGirl) styleColor = "\x1b[36m";
@@ -200,7 +197,7 @@ void C_City::Gatcha()
 			UIManager::WaitKey(ui); // 대기
 			return ;
 		}
-		//레벨을 1로 리셋
+        
 		BattleGirl->SetLevel(1);
 		BattleGirl->SetMaxHp(200);
 		BattleGirl->SetCurrentHp(200);
