@@ -20,9 +20,9 @@ shared_ptr<C_Creature> C_Player::SetFightGirl()
         return nullptr;
     }
 
-    // 헤더 장식 추가
     ui->PrintLog("\x1b[96m--- ⚔️ 출격 히로인 선택 ---\x1b[0m");
     
+    std::string lineBuf = "";
     for (size_t i = 0; i < GirlFrends.size(); ++i) {
         std::string styleColor = "\x1b[37m"; 
         
@@ -30,7 +30,14 @@ shared_ptr<C_Creature> C_Player::SetFightGirl()
         else if (GirlFrends[i]->GetStile() == C_Stile::IceGirl) styleColor = "\x1b[36m";  
         else if (GirlFrends[i]->GetStile() == C_Stile::GrassGirl) styleColor = "\x1b[32m";
         
-        ui->PrintLog(to_string(i + 1) + ". " + styleColor + GirlFrends[i]->GetName() + "\x1b[0m (체력: " + to_string(GirlFrends[i]->GetCurrentHp()) + ")");
+        // 텍스트를 한 줄(lineBuf)에 계속 이어 붙임
+        lineBuf += to_string(i + 1) + ". " + styleColor + GirlFrends[i]->GetName() + "\x1b[0m (체력:" + to_string(GirlFrends[i]->GetCurrentHp()) + ")   ";
+        
+        // 2명씩 묶어서 출력하거나, 마지막 히로인이면 출력하고 줄바꿈
+        if (i % 2 == 1 || i == GirlFrends.size() - 1) {
+            ui->PrintLog(lineBuf);
+            lineBuf = "";
+        }
     }
     
     ui->PrintLog("0. 뒤로 가기 | 누구를 보낼까요? : [INPUT]");

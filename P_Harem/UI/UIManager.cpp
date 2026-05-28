@@ -319,18 +319,29 @@ void UIManager::UpdateHeroineList(const std::vector<HeroineDisplayData>& list, i
         
         this->gotoxy(PHONE_X + 3, baseY + 2);
         std::cout << "체력 ["; 
-        int hpBarW = 15;
+        int hpBarW = 10; 
         int hpGage = (d.maxHp > 0) ? (d.hp * hpBarW / d.maxHp) : 0;
         for (int b = 0; b < hpBarW; ++b) std::cout << (b < hpGage ? "\x1b[92m■\x1b[0m" : "\x1b[90m□\x1b[0m");
         std::cout << "] " << d.hp << "/" << d.maxHp;
 
         this->gotoxy(PHONE_X + 3, baseY + 3);
         std::cout << "애정 ["; 
-        int afBarW = 15;
-        int afGage = (d.affinity * afBarW / 100);
+        
+        int reqs[9] = {100, 100, 150, 150, 200, 250, 300, 300, 300};
+        int maxAf = (d.level > 0 && d.level < 10) ? reqs[d.level - 1] : 0;
+        int percent = (maxAf > 0) ? (d.affinity * 100 / maxAf) : 100;
+        
+        int afBarW = 10; 
+        int afGage = (percent * afBarW / 100);
         if (afGage > afBarW) afGage = afBarW;
+        
         for (int b = 0; b < afBarW; ++b) std::cout << (b < afGage ? "\x1b[95m■\x1b[0m" : "\x1b[90m□\x1b[0m");
-        std::cout << "] " << d.affinity << "%";
+        
+        if (maxAf == 0) {
+            std::cout << "] MAX";
+        } else {
+            std::cout << "] " << d.affinity << "/" << maxAf;
+        }
         
         this->gotoxy(PHONE_X + 3, baseY + 4);
         std::cout << "\x1b[90m----------------------------\x1b[0m";
