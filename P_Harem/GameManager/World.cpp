@@ -48,7 +48,7 @@ void C_World::Init() {
     
     auto& script = C_ScriptManager::GetInstance();
     auto& img = C_ImageManager::GetInstance();
-
+    
     //[음악시작 : 오프닝]
     auto& sound = CSoundManager::GetInstance();
     sound.PlayBGM(L"../P_Harem/Sound/BGM/Opening.wav");
@@ -86,7 +86,6 @@ void C_World::Init() {
 
     DelegateManager dm;
     dm.BindAll(m_ui.get(), m_battle.get());
-
 }
 
 void C_World::Update()
@@ -98,7 +97,7 @@ void C_World::Update()
     }
     
     if (!IsRunning) return;
-
+    
     SyncUI();
     
     auto& script = C_ScriptManager::GetInstance();
@@ -182,6 +181,12 @@ void C_World::StartGame()
 
 void C_World::InProgress()
 {
+    if (Player->GetGirlFrends().empty())
+    {
+        WS = WorldState::QuitGame;
+        return;
+    }
+    
 	Areas[CL]->Update();
 }
 
@@ -388,16 +393,48 @@ void C_World::AdvanceDay() {
     }
 }
 
-// 여기는 
+// 여기는 다 잃음 엔딩
 void C_World::SoloEnd()
 {
-    IsRunning = false;
+    auto& script = C_ScriptManager::GetInstance();
+    system("cls");
+    std::string fullImg = C_ImageManager::GetInstance().GetFullScreenImage("BG_SoloEnd");
+    m_ui->DrawImageAtCenter(fullImg);
+    m_ui->CenteredTypeLog(script.Get("ENDING_SOLO_TEXT1"), 18, 100);
+    Sleep(1000);
+    m_ui->CenteredTypeLog(script.Get("ENDING_SOLO_TEXT2"), 22, 100);
+    Sleep(1000);
+    UIManager::WaitKey(m_ui.get());
+    WS = WorldState::QuitGame;
 }
 
 // 여기서 이김 엔딩
 void C_World::RealEnd()
 {
-    IsRunning = false;
+    auto& script = C_ScriptManager::GetInstance();
+    system("cls");
+    std::string fullImg = C_ImageManager::GetInstance().GetFullScreenImage("BG_HappyEnd1");
+    m_ui->CenteredTypeLog(script.Get("ENDING_HAPPY_TEXT1"), 18, 100);
+    Sleep(1000);
+    m_ui->DrawImageAtCenter(fullImg);
+    Sleep(2000);
+    m_ui->CenteredTypeLog(script.Get("ENDING_HAPPY_TEXT2"), 18, 100);
+    Sleep(1000);
+    system("cls");
+    m_ui->DrawImageAtCenter(fullImg);
+    m_ui->CenteredTypeLog(script.Get("ENDING_HAPPY_TEXT3"), 18, 100);
+    Sleep(1000);
+    
+    system("cls");
+    fullImg = C_ImageManager::GetInstance().GetFullScreenImage("BG_HappyEnd2");
+    m_ui->CenteredTypeLog(script.Get("ENDING_HAPPY_TEXT4"), 18, 100);
+    Sleep(1000);
+    m_ui->DrawImageAtCenter(fullImg);
+    Sleep(2000);
+    m_ui->DrawImageAtCenter(fullImg);
+    m_ui->CenteredTypeLog(script.Get("ENDING_HAPPY_TEXT5"), 18, 100);
+    UIManager::WaitKey(m_ui.get());
+    WS = WorldState::QuitGame;
 }
 
 // 여기서 배드엔딩
@@ -405,11 +442,30 @@ void C_World::BadEnd()
 {
     auto& script = C_ScriptManager::GetInstance();
     system("cls");
-    std::string fullImg = C_ImageManager::GetInstance().GetFullScreenImage("BG_DefeatEnd");
+    std::string fullImg = C_ImageManager::GetInstance().GetFullScreenImage("BG_DefeatEnd1");
+    m_ui->CenteredTypeLog(script.Get("ENDING_BOSS_TEXT1"), 18, 100);
+    Sleep(1000);
     m_ui->DrawImageAtCenter(fullImg);
-    m_ui->CenteredTypeLog(script.Get("BATTLE_BOSS_GAMEOVER"), 18, 100);
-    m_ui->CenteredTypeLog(script.Get("BATTLE_BOSS_DETEAT"), 22, 100);
-    IsRunning = false;
+    m_ui->CenteredTypeLog(script.Get("ENDING_BOSS_TEXT2"), 18, 100);
+    Sleep(1000);
+    m_ui->DrawImageAtCenter(fullImg);
+    m_ui->CenteredTypeLog(script.Get("ENDING_BOSS_TEXT3"), 18, 100);
+    Sleep(1000);
+    m_ui->DrawImageAtCenter(fullImg);
+    m_ui->CenteredTypeLog(script.Get("ENDING_BOSS_TEXT4"), 18, 100);
+    Sleep(1000);
+    
+    fullImg = C_ImageManager::GetInstance().GetFullScreenImage("BG_DefeatEnd2");
+    m_ui->DrawImageAtCenter(fullImg);
+    m_ui->CenteredTypeLog(script.Get("ENDING_BOSS_TEXT5"), 18, 100);
+    Sleep(1000);
+    
+    m_ui->DrawImageAtCenter(fullImg);
+    m_ui->CenteredTypeLog(script.Get("ENDING_BOSS_TEXT6"), 18, 100);
+    Sleep(1000);
+    
+    UIManager::WaitKey(m_ui.get());
+    WS = WorldState::QuitGame;
 }
 
 UIManager* C_World::GetUI() { return m_ui.get(); }
