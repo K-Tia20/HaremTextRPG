@@ -55,25 +55,24 @@ void C_World::Init() {
     
     // 1. [프롤로그] 운명적인 첫 문구
     m_ui->CenteredTypeLog(script.Get("SCENE_OPENING_1"), 22, 1000);
-    Sleep(2000);
+    Sleep(1000);
     m_ui->PlayBlueTransition(); // 화면 정화
     
-    
     // 2. [팀 로고] BG_TeamName.png 출력
-    // (뷰포트가 아닌 전체 화면 중앙 느낌을 위해 DrawImage를 일시 활용)
-    m_ui->DrawImage(img.GetLayeredImage("BG_TeamName", {})); 
-    Sleep(3000);
-    m_ui->PlayBlueTransition();
+    m_ui->DrawImageAtCenter(img.GetLayeredImage("BG_TeamName", {}));
+    Sleep(2000); // 2초 대기
+    m_ui->PlayBlueTransition(); // 화면 정화
 
     // 3. [게임 타이틀] BG_Title.png 출력
-    m_ui->DrawImage(img.GetLayeredImage("BG_Title", {}));
+    m_ui->DrawImageAtCenter(img.GetLayeredImage("BG_Title", {}));
     Sleep(3000);
+    m_ui->PlayBlueTransition();
 
     //[음악종료 : 오프닝]
     sound.StopBGM();
     
     //[음악시작 : 첫만남]
-    sound.PlayBGM(L"../P_Harem/Sound/BGM/MainMenu.wav");
+    sound.PlayBGM(L"../P_Harem/Sound/BGM/Good.wav");
 
   
     // 4. [UI 조립] 테두리가 보이면서 뷰포트에 타이틀 안착
@@ -87,7 +86,7 @@ void C_World::Init() {
 
     DelegateManager dm;
     dm.BindAll(m_ui.get(), m_battle.get());
-    
+
 }
 
 void C_World::Update()
@@ -97,8 +96,6 @@ void C_World::Update()
         m_isFirstFrame = false;
         return;
     }
-
-    // if (Player->GetGirlFrends().empty()) SoloEnd();
     
     if (!IsRunning) return;
 
@@ -126,7 +123,7 @@ void C_World::Update()
             case 3: Areas[WorldArea::Alba]->Enter(); GotoAlba(); goToArea = true; break;
             case 4: C_LogSystem::GetInstance().ShowContactList(); break;
             case 5: C_LogSystem::GetInstance().ShowInventory(); break;
-            case 0: WS = WorldState::QuitGame; break;
+            case 0: { CSoundManager::GetInstance().StopBGM(); IsRunning = false; return; }
             default: m_ui->PrintLog("시스템: 잘못된 선택입니다."); UIManager::WaitKey(m_ui.get()); break;
         }
 
@@ -157,6 +154,13 @@ void C_World::NewGame()
 
 void C_World::StartGame()
 { 
+    auto& sound = CSoundManager::GetInstance();
+    
+    // 메인 허브 BGM 시작
+    sound.PlayBGM(L"../P_Harem/Sound/BGM/Main.wav");
+    
+    AdvanceDay();
+    
     CL = WorldArea::City;
     WS = WorldState::InProgress;
 }
@@ -241,12 +245,12 @@ void C_World::SetGirlFrends()
     m_ui->ClearLog();
   
     //[음악설정뭔가]
-    auto& sound = CSoundManager::GetInstance();
+    auto& sound = CSoundManager::GetInstance(); 
     //[음악종료 : 첫만남]
     sound.StopBGM();
     
     //[음악시작 : 선택 첫여친]
-    sound.PlayBGM(L"../P_Harem/Sound/BGM/Firstcoffee.wav");
+    sound.PlayBGM(L"../P_Harem/Sound/BGM/RealFirst.wav");
     
     bool isValidChoice = false;
   
@@ -336,6 +340,31 @@ void C_World::SetNormalGirl(string name) {
     UIManager::WaitKey(m_ui.get());
 }
 
+void C_World::AdvanceDay() {
+    m_day++;
+    
+    // 일단 한 달은 20일
+    if (m_day > 20) {
+        m_day = 1;
+        m_month++;
+        if (m_month > 12) m_month = 1; // 12월이 넘어가면 다시 1월로 순환
+    }
+    
+    // 하루가 지나면 보유한 모든 히로인의 체력 회복 (예: 50 회복)
+    if (Player) {
+        for (auto& girl : Player->GetGirlFrends()) {
+            girl->AddHp(50);
+        }
+    }
+    
+    // 날짜 및 체력 변경 사항을 좌측 스마트폰 화면에 즉시 동기화
+    SyncUI();
+    
+    if (m_ui) {
+        m_ui->PrintLog("\x1b[93m[시스템] 하루가 지나 " + GetCurrentDateString() + "이 되었습니다.\n(휴식을 취하여 히로인들의 체력이 회복되었습니다.)\x1b[0m");
+    }
+}
+
 // 여기는 
 void C_World::SoloEnd()
 {
@@ -351,6 +380,12 @@ void C_World::RealEnd()
 // 여기서 배드엔딩
 void C_World::BadEnd()
 {
+    auto& script = C_ScriptManager::GetInstance();
+    system("cls");
+    std::string fullImg = C_ImageManager::GetInstance().GetFullScreenImage("BG_DefeatEnd");
+    m_ui->DrawImageAtCenter(fullImg);
+    m_ui->CenteredTypeLog(script.Get("BATTLE_BOSS_GAMEOVER"), 18, 100);
+    m_ui->CenteredTypeLog(script.Get("BATTLE_BOSS_DETEAT"), 22, 100);
     IsRunning = false;
 }
 
