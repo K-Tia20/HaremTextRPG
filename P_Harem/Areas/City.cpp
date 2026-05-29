@@ -44,7 +44,7 @@ void C_City::SelectMenu()
     
 	int choice = Player->InputInt();
     ui->ClearLog(); 
-
+	
 	switch (choice)
 	{
 	case 1:
@@ -105,6 +105,14 @@ void C_City::SelectMenu()
 void C_City::Update()
 {
     bool isLooping = true;
+
+	
+	if (Player->GetGirlFrends().empty())
+	{
+		World->SoloEnd();
+		CS = CityState::Exit;
+	}
+	
 	while (isLooping)
 	{
 		switch (CS)
