@@ -35,11 +35,17 @@ void C_ImageManager::Init() {
     LoadWithFallback("BG_Bemin", "BG_Bemin.png");
     LoadWithFallback("BG_Coupang", "BG_Coupang.png");
     LoadWithFallback("BG_Danggun", "BG_Danggun.png");
+    
     LoadWithFallback("BG_HunPo", "BG_HunPo.png");
     LoadWithFallback("BG_Wedding", "BG_Wedding.png");
     LoadWithFallback("BG_Boss", "BG_Boss.png");
-    LoadWithFallback("BG_DefeatEnd", "BG_DefeatEnd.png");
+    LoadWithFallback("BG_DefeatEnd1", "BG_DefeatEnd1.png");
+    LoadWithFallback("BG_DefeatEnd2", "BG_DefeatEnd2.png");
     LoadWithFallback("BG_LevelUP", "BG_LevelUP.png");
+    LoadWithFallback("BG_HappyEnd1", "BG_HappyEnd1.png");
+    LoadWithFallback("BG_HappyEnd2", "BG_HappyEnd2.png");
+    LoadWithFallback("BG_SoloEnd", "BG_SoloEnd.png");
+    
 
     // [캐릭터 로드]
     LoadWithFallback("CH_Red", "CH_Red.png");
