@@ -88,11 +88,24 @@ BATTLE_BOSS_INTRO4 : ""\x1b[31m    이번엔 다를 것이다!    ""
 BATTLE_BOSS_INTRO5 : "\x1b[33m어머! 손님!! 여친분들이 매력이 넘치시네요~"
 BATTLE_BOSS_INTRO6 : "\x1b[33m하지만 그런 나약한 여성분들이 저의 매력을..."
 BATTLE_BOSS_INTRO7 : "\x1b[31m[감당가능 하실까요?]\x1b[0m"
-BATTLE_BOSS_DETEAT : "\x1b[31m나는 패배했다...\x1b[0m"
-BATTLE_BOSS_GAMEOVER : "[게임 오버]"
+
 
 
 # [스마트폰/기타]
 PHONE_MENU_MAIN : "--- 스마트폰 메뉴 ---\n1. 캘린더  2. 연락처  3. 종료 | 선택 : [INPUT]"
 PHONE_CONTACT_SYNC : "데이터 동기화 중... 완료!"
 BAG_CHECK_EMPTY : "=== [ 가방 확인 ] ===\n비어 있음 | [ ! ] 아무 키나 누르세요 : [INPUT]"
+ENDING_HAPPY_TEXT1 : "\x1b[36m내 매력에 사방팔방 여성들이 달려오기 시작한다.\x1b[0m"
+ENDING_HAPPY_TEXT2 : "\x1b[36m어떠냐 한마 유지로...\x1b[0m"
+ENDING_HAPPY_TEXT3 : "\x1b[36m이 여성들을 봐라 넌 아무것도 아니라고!\x1b[0m"
+ENDING_HAPPY_TEXT4 : "\x1b[33m난 아름다운 여성들과 함께 걸어가기 시작했다.\x1b[0m"
+ENDING_HAPPY_TEXT5 : "\x1b[33m [ 난 최강이다. ] \x1b[0m"
+ENDING_BOSS_TEXT1 : "\x1b[31m격렬한 전투 끝에 결국 패배하고 말았다.\x1b[0m"
+ENDING_BOSS_TEXT2 : "\x1b[31m사실 결과는 알고 있었다...\x1b[0m"
+ENDING_BOSS_TEXT3 : "\x1b[31m그리고 한마 유지로는 너무나도 매력적이었다.\x1b[0m"
+ENDING_BOSS_TEXT4 : "\x1b[31m여자친구들이 유지로에게 처참히 짓 밟힌 결과...\x1b[0m"
+ENDING_BOSS_TEXT5 : "\x1b[31m내 곁엔 아무도 없었다.\x1b[0m"
+ENDING_BOSS_TEXT6 : "[게임 오버]"
+ENDING_SOLO_TEXT1 : "내가...그렇게 못생겼니?"
+ENDING_SOLO_TEXT2 : "[게임 오버]"
+

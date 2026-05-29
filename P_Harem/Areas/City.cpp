@@ -44,7 +44,7 @@ void C_City::SelectMenu()
     
 	int choice = Player->InputInt();
     ui->ClearLog(); 
-
+	
 	switch (choice)
 	{
 	case 1:
@@ -59,22 +59,26 @@ void C_City::SelectMenu()
 				ui->PrintLog("\x1b[90m이젠 준비된거 같다...주체할 수 없는 내 마음을 전하러갈까?\x1b[0m");
 				ui->PrintLog("\x1b[90m1. 가자\x1b[0m");
 				ui->PrintLog("\x1b[90m0. 안가\x1b[0m");
+
+				int choice = Player->InputInt();
         	
-				if (Player->InputInt() == 1) {
+				if (choice == 1) {
 					Battle->BossBattle(Player->SetFightGirl());
-				} else {
+					return;
+				}
+				else if(choice == 0)
+				{
 					ui->ClearLog();
 				}
 			}
-			else // 레벨 10 미만 일반 헌팅 조우
-			{
-				int randomIndex = rand() % 100;
-				if (randomIndex < 70) Encounter();
-				else {
-					ui->PrintLog("\x1b[90m⚙️시스템: 한참을 서성였지만 허탕만 쳤습니다...\x1b[0m");
-					UIManager::WaitKey(ui);
-				}
+
+			int randomIndex = rand() % 100;
+			if (randomIndex < 70) Encounter();
+			else {
+				ui->PrintLog("\x1b[90m⚙️시스템: 한참을 서성였지만 허탕만 쳤습니다...\x1b[0m");
+				UIManager::WaitKey(ui);
 			}
+
         
 			// 헌팅(전투 성공, 실패, 도망, 허탕, 보스전)이 끝나면 무조건 귀가하며 하루가 지남
 			World->SetHubBG("BG_Room");
@@ -100,6 +104,14 @@ void C_City::SelectMenu()
 void C_City::Update()
 {
     bool isLooping = true;
+
+	
+	if (Player->GetGirlFrends().empty())
+	{
+		World->SoloEnd();
+		CS = CityState::Exit;
+	}
+	
 	while (isLooping)
 	{
 		switch (CS)
@@ -129,11 +141,6 @@ void C_City::Encounter()
 
 	int randomIndex = rand() % static_cast<int>(Girls.size());
 	BattleGirl = Girls[randomIndex];
-
-	//낑겨보겠습니다
-	int playerMaxLevel = Player->GetHighlevel();
-	BattleGirl->SetEnemyStat(playerMaxLevel);
-	
 	
 	// [추가된 연출] 헌팅포차 배경과 마주친 적 정중앙 띄우기
 	ui->ClearMainViewport();
@@ -165,34 +172,9 @@ void C_City::Encounter()
 	// 🚨 수정완료: 양쪽 모두 GetColoredName() 넘기기
 	ui->PrintLog(script.GetFormatStr("CITY_BATTLE_VS", {FightGirl->GetColoredName(), BattleGirl->GetColoredName()}));
 	ui->PrintLog(script.Get("UI_LINE_THIN"));
-
-	//낑겨보겠습니다
-	// ================= 4. 전투 정보 출력 (Player -> FightGirl로 변경) =================
-
-	ui->PrintLog(script.Get("UI_DIVIDER_PURPLE"));
-
-	ui->PrintLog(
-		FightGirl->GetColoredName() +
-		" / Lv." + std::to_string(FightGirl->GetLevel()) +
-		" / HP : " + std::to_string(FightGirl->GetCurrentHp())
-		
-		);
-	
-	ui->PrintLog("- VS -");
-	
-	ui->PrintLog(
-		BattleGirl->GetColoredName() +
-		" / Lv." + std::to_string(BattleGirl->GetLevel()) +	
-		" / HP : " + std::to_string(BattleGirl->GetCurrentHp())
-		);
-		
-	ui->PrintLog(script.Get("UI_DIVIDER_PURPLE"));
-	
-	Sleep(1500);
-	// =================================================
 	
 	Battle->Battle(FightGirl, BattleGirl);
-
+	
 	UIManager::WaitKey(ui);
 
 	if (BattleGirl->IsDefeated()) Gatcha();
