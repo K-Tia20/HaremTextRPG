@@ -23,14 +23,13 @@ void DelegateManager::BindAll(UIManager* ui, C_BattleSystem* battleSys) {
     // 1. 공격 개시 신호
     battleSys->OnAttack = [ui, &script](std::string name) {
         ui->PrintLog(script.GetFormatStr("BATTLE_ATTACK_FX", {name}));
+        
         // [SOUND] 여기에 공격 효과음을 추가하세요
         
         //BGM담당 헛짓거리
         //[음악시작 : 간다 공격]
         auto& sound = CSoundManager::GetInstance();
         sound.PlayES(L"../P_Harem/Sound/BGM/Go1.wav");
-        
-        
     };
 
     // 2. 피격 및 상성 결과 신호
@@ -42,14 +41,16 @@ void DelegateManager::BindAll(UIManager* ui, C_BattleSystem* battleSys) {
             effectPrefix = script.Get("BATTLE_HIT_CRITICAL");
             damageColor = "\x1b[93m"; 
             // [SOUND] 여기에 크리티컬 효과음을 추가하세요
-
+            auto& sound = CSoundManager::GetInstance();
+            sound.PlayES(L"../P_Harem/Sound/BGM/Op.wav");
+            
             
         } else if (multiplier == 0) {
             effectPrefix = script.Get("BATTLE_HIT_GUARD");
             damageColor = "\x1b[90m"; 
             // [SOUND] 여기에 방어 효과음을 추가하세요
-            
-            
+            auto& sound = CSoundManager::GetInstance();
+            sound.PlayES(L"../P_Harem/Sound/BGM/EEEEE.wav");
         }
 
         ui->PrintLog(effectPrefix + script.GetFormatStr("BATTLE_HIT_FORMAT", {name, damageColor, std::to_string(damage)}));
