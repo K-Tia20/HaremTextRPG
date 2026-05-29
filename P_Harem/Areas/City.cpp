@@ -70,7 +70,6 @@ void C_City::SelectMenu()
 				{
 					ui->ClearLog();
 				}
-				return;
 			}
 
 			int randomIndex = rand() % 100;
