@@ -319,18 +319,29 @@ void UIManager::UpdateHeroineList(const std::vector<HeroineDisplayData>& list, i
         
         this->gotoxy(PHONE_X + 3, baseY + 2);
         std::cout << "체력 ["; 
-        int hpBarW = 15;
+        int hpBarW = 10; 
         int hpGage = (d.maxHp > 0) ? (d.hp * hpBarW / d.maxHp) : 0;
         for (int b = 0; b < hpBarW; ++b) std::cout << (b < hpGage ? "\x1b[92m■\x1b[0m" : "\x1b[90m□\x1b[0m");
         std::cout << "] " << d.hp << "/" << d.maxHp;
 
         this->gotoxy(PHONE_X + 3, baseY + 3);
         std::cout << "애정 ["; 
-        int afBarW = 15;
-        int afGage = (d.affinity * afBarW / 100);
+        
+        int reqs[9] = {100, 100, 150, 150, 200, 250, 300, 300, 300};
+        int maxAf = (d.level > 0 && d.level < 10) ? reqs[d.level - 1] : 0;
+        int percent = (maxAf > 0) ? (d.affinity * 100 / maxAf) : 100;
+        
+        int afBarW = 10; 
+        int afGage = (percent * afBarW / 100);
         if (afGage > afBarW) afGage = afBarW;
+        
         for (int b = 0; b < afBarW; ++b) std::cout << (b < afGage ? "\x1b[95m■\x1b[0m" : "\x1b[90m□\x1b[0m");
-        std::cout << "] " << d.affinity << "%";
+        
+        if (maxAf == 0) {
+            std::cout << "] MAX";
+        } else {
+            std::cout << "] " << d.affinity << "/" << maxAf;
+        }
         
         this->gotoxy(PHONE_X + 3, baseY + 4);
         std::cout << "\x1b[90m----------------------------\x1b[0m";
@@ -376,7 +387,7 @@ void UIManager::UpdateInventoryList(const std::vector<ItemDisplayData>& list, in
     std::cout << std::flush;
 }
 
-// 레벨업 이벤트 팝업
+/*/ 레벨업 이벤트 팝업(구)
 void UIManager::ShowLevelUpEvent(const std::string& name, int level) {
     int centerX = VIEWPORT_X + (VIEWPORT_W / 2);
     int centerY = VIEWPORT_Y + (VIEWPORT_H / 2);
@@ -391,6 +402,54 @@ void UIManager::ShowLevelUpEvent(const std::string& name, int level) {
     std::cout << "\x1b[97m[" << name << "]\x1b[0m 님의 등급이 \x1b[92mLv." << level << "\x1b[0m 로 상승!";
     std::cout << std::flush;
 }
+*/
+
+// 레벨업 이벤트 팝업(신)
+void UIManager::ShowLevelUpEvent(const std::string& name, int level) {
+    int centerX = VIEWPORT_X + (VIEWPORT_W / 2);
+    int centerY = VIEWPORT_Y + (VIEWPORT_H / 2);
+
+    int boxW = 50;
+    int boxH = 7;
+
+    int startX = centerX - (boxW / 2);
+    int startY = centerY - (boxH / 2);
+
+    // 박스 내부 검정색으로 채우기
+    for (int y = 1; y < boxH - 1; y++)
+    {
+        gotoxy(startX + 1, startY + y);
+
+        std::cout << "\x1b[40m";
+
+        for (int x = 1; x < boxW - 1; x++)
+        {
+            std::cout << " ";
+        }
+
+        std::cout << "\x1b[0m";
+    }
+
+    // 테두리 박스
+    DrawSolidBox(startX, startY, boxW, boxH, " LEVEL UP!! ");
+
+    // 텍스트 출력
+    this->gotoxy(startX + 5, startY + 2);
+    std::cout << "\x1b[40m\x1b[93m★축하합니다!★\x1b[0m";
+
+    this->gotoxy(startX + 5, startY + 4);
+    std::cout << "\x1b[40m\x1b[97m[" << name << "]\x1b[0m"
+              << "\x1b[40m 님의 등급이 "
+              << "\x1b[92mLv." << level << "\x1b[0m"
+              << "\x1b[40m 로 상승!\x1b[0m";
+
+    std::cout << std::flush;
+}
+
+
+
+
+
 
 // 메인 뷰포트 영역 청소
 void UIManager::ClearMainViewport() {
@@ -481,40 +540,39 @@ void UIManager::DrawImageAtCenter(const std::string& imageAnsi) {
 }
 
 // 키 대기 유틸리티
-void UIManager::WaitKey(UIManager* ui) {
+void UIManager::
+WaitKey(UIManager* ui) {
     if (!ui) return;
-    ui->PrintLog("\x1b[90m[ 엔터를 눌러 계속... ]\x1b[0m");
-    std::string dummy;
-    std::getline(std::cin, dummy);
+    ui->PrintLog("\x1b[90m[ ⌨️ 아무 키나 눌러 계속 ]\x1b[0m");
+    while (_kbhit()) _getch(); 
+    _getch(); 
+
     ui->ClearLog();
 }
 
+// 입력만 대기 (메시지 출력 없음)
+void UIManager::WaitEnterSilent()
+{
+    std::string dummy;
+    std::getline(std::cin, dummy);
+}
+
+// [반응형 숫자 입력]으로 변경함다
 int UIManager::GetInputInt() {
-    std::string input = "";
-    
-    // 쌓인 엔터 찌꺼기 청소
+    // 1. 유저가 연타해서 쌓인 키보드 찌꺼기 청소
     while (_kbhit()) _getch();
 
     while (true) {
         int ch = _getch();
-
-        if (ch == '\r') { 
-            break;
-        }
-        else if (ch == '\b') { 
-            if (!input.empty()) {
-                input.pop_back();
-                std::cout << "\b \b" << std::flush;
-            }
-        }
-        else if (isdigit(ch)) {
-            input += (char)ch;
+        
+        if (isdigit(ch)) {
             std::cout << (char)ch << std::flush;
+            
+            Sleep(100); 
+            
+            return ch - '0'; 
         }
     }
-    
-    if (input.empty()) return -1;
-    return std::stoi(input);
 }
 
 // 한글이나 띄어쓰기 입력 지원, 엔터 줄바꿈은 막아내기

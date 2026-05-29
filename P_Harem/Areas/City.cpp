@@ -8,6 +8,7 @@
 #include "../UI/ImageManager.h"
 #include "../UI/ScriptManager.h"
 #include "../Framework/CreatureInclude.h"
+#include "../UI/LogSystem.h"
 #include "City.h"
 
 using namespace std;
@@ -47,48 +48,50 @@ void C_City::SelectMenu()
 	switch (choice)
 	{
 	case 1:
-	{
-        // [Visual Upgrade] 헌팅포차 진입 배경 출력 (허탕 쳐도 유지)
-        ui->ClearMainViewport();
-        ui->DrawImage(C_ImageManager::GetInstance().GetLayeredImage("BG_HunPo", {}));
+		{
+			// [Visual Upgrade] 헌팅포차 진입 배경 출력
+			ui->ClearMainViewport();
+			ui->DrawImage(C_ImageManager::GetInstance().GetLayeredImage("BG_HunPo", {}));
 			
-        if (Player->GetHighlevel() >= 0)
-        {
-        	// TODO: 보스전 돌입 전 대사
-        	ui->PrintLog("\x1b[90m이젠 준비된거 같다...주체할 수 없는 내 마음을 전하러갈까?\x1b[0m");
-        	ui->PrintLog("\x1b[90m1. 가자\x1b[0m");
-        	ui->PrintLog("\x1b[90m0. 안가\x1b[0m");
+			if (Player->GetHighlevel() >= 10)
+			{
+				// TODO: 보스전 돌입 전 대사
+				ui->PrintLog("\x1b[90m이젠 준비된거 같다...주체할 수 없는 내 마음을 전하러갈까?\x1b[0m");
+				ui->PrintLog("\x1b[90m1. 가자\x1b[0m");
+				ui->PrintLog("\x1b[90m0. 안가\x1b[0m");
         	
-        	if (Player->InputInt() == 1)
-        	{
-        		Battle->BossBattle(Player->SetFightGirl());
-        		CS = CityState::Exit; 
-        		return;
-        	}
-        	ui->ClearLog();
-        	return;
-        }
-			int randomIndex = rand() % 100;
-
-			if (randomIndex < 70) Encounter();
-        	else {
-        		ui->PrintLog("\x1b[90m시스템: 한참을 서성였지만 허탕만 쳤습니다...\x1b[0m");
-        		UIManager::WaitKey(ui);
-        	}
-        // 헌팅 시도 후 무조건 집으로 귀가
-        World->SetHubBG("BG_Room");
-        CS = CityState::Exit;
-	}
+				if (Player->InputInt() == 1) {
+					Battle->BossBattle(Player->SetFightGirl());
+				} else {
+					ui->ClearLog();
+				}
+			}
+			else // 레벨 10 미만 일반 헌팅 조우
+			{
+				int randomIndex = rand() % 100;
+				if (randomIndex < 70) Encounter();
+				else {
+					ui->PrintLog("\x1b[90m⚙️시스템: 한참을 서성였지만 허탕만 쳤습니다...\x1b[0m");
+					UIManager::WaitKey(ui);
+				}
+			}
+        
+			// 헌팅(전투 성공, 실패, 도망, 허탕, 보스전)이 끝나면 무조건 귀가하며 하루가 지남
+			World->SetHubBG("BG_Room");
+			World->AdvanceDay();
+			CS = CityState::Exit;
+		}
 		break;
 	case 2:
-		ViewYeuchin();
+		// ViewYeuchin(); 대신 좌측 스마트폰 스크롤 UI 호출!
+		C_LogSystem::GetInstance().ShowContactList();
 		break;
 	case 0:
         World->SetHubBG("BG_City");
 		CS = CityState::Exit;
 		break;
 	default:
-		ui->PrintLog("시스템: 잘못된 입력입니다.");
+		ui->PrintLog("\x1b[90m⚙️시스템: 잘못된 입력입니다.");
         UIManager::WaitKey(ui);
 		break;
 	}
@@ -113,57 +116,84 @@ void C_City::Update()
 
 void C_City::Encounter()
 {
-    auto ui = World->GetUI();
-    auto& script = C_ScriptManager::GetInstance();
-    if (!ui) return;
+	auto ui = World->GetUI();
+	auto& script = C_ScriptManager::GetInstance();
+	if (!ui) return;
 
 	if (Girls.empty())
 	{
-		ui->PrintLog("\x1b[90m시스템: 거리에는 더 이상 마주칠 사람이 없습니다...\x1b[0m");
-        UIManager::WaitKey(ui);
+		ui->PrintLog("\x1b[90m⚙️ 시스템: 거리에는 더 이상 마주칠 사람이 없습니다...\x1b[0m");
+		UIManager::WaitKey(ui);
 		return;
 	}
 
 	int randomIndex = rand() % static_cast<int>(Girls.size());
 	BattleGirl = Girls[randomIndex];
 
-    std::string styleColor = "\x1b[37m";
-    if (BattleGirl->GetStile() == C_Stile::HotGirl) styleColor = "\x1b[31m";
-    else if (BattleGirl->GetStile() == C_Stile::IceGirl) styleColor = "\x1b[36m";
-    else if (BattleGirl->GetStile() == C_Stile::GrassGirl) styleColor = "\x1b[32m";
+	//낑겨보겠습니다
+	int playerMaxLevel = Player->GetHighlevel();
+	BattleGirl->SetEnemyStat(playerMaxLevel);
+	
+	
+	// [추가된 연출] 헌팅포차 배경과 마주친 적 정중앙 띄우기
+	ui->ClearMainViewport();
+	ui->DrawImage(C_ImageManager::GetInstance().GetLayeredImage("BG_HunPo", {
+		{BattleGirl->GetImageKey(), 50, 0, false}
+	}));
 
-    ui->PrintLog(script.Get("CITY_ENCOUNTER_ALERT"));
-    ui->PrintLog(script.GetFormatStr("CITY_HEROINE_APPEAR", {styleColor, BattleGirl->GetName()}));
+	ui->PrintLog(script.Get("CITY_ENCOUNTER_ALERT"));
+	// 🚨 수정완료: GetColoredName() 하나만 넘깁니다!
+	ui->PrintLog(script.GetFormatStr("CITY_HEROINE_APPEAR", {BattleGirl->GetColoredName()}));
 	
 	auto FightGirl = Player->SetFightGirl();
-    ui->ClearLog(); 
+	ui->ClearLog();
 
 	if (FightGirl == nullptr)
 	{
-		ui->PrintLog("시스템: 오늘은 이만 물러나기로 했습니다.");
-        UIManager::WaitKey(ui);
+		ui->PrintLog("\x1b[90m⚙️ 시스템: 오늘은 이만 물러나기로 했습니다.\x1b[0m");
+		UIManager::WaitKey(ui);
 		return;
 	}
 
-    // [Visual Upgrade] 헌팅포차 배경 + 내 여친(좌측/반전) + 적 여친(우측) 레이어링
-    ui->ClearMainViewport();
-    ui->DrawImage(C_ImageManager::GetInstance().GetLayeredImage("BG_HunPo", {
-        {FightGirl->GetImageKey(), 5, 0, true}, // 플레이어 여친: 좌측 위치, 좌우 반전 적용
-        {BattleGirl->GetImageKey(), 97, 0, false} // 상대 여친: 우측 위치로 더 밀어냄
-    }));
+	ui->ClearMainViewport();
+	ui->DrawImage(C_ImageManager::GetInstance().GetLayeredImage("BG_HunPo", {
+		{FightGirl->GetImageKey(), 5, 0, true},
+		{BattleGirl->GetImageKey(), 97, 0, false} 
+	}));
 
-    std::string myStyleColor = "\x1b[37m";
-    if (FightGirl->GetStile() == C_Stile::HotGirl) myStyleColor = "\x1b[31m";
-    else if (FightGirl->GetStile() == C_Stile::IceGirl) myStyleColor = "\x1b[36m";
-    else if (FightGirl->GetStile() == C_Stile::GrassGirl) myStyleColor = "\x1b[32m";
+	ui->PrintLog(script.Get("CITY_BATTLE_TITLE"));
+	// 🚨 수정완료: 양쪽 모두 GetColoredName() 넘기기
+	ui->PrintLog(script.GetFormatStr("CITY_BATTLE_VS", {FightGirl->GetColoredName(), BattleGirl->GetColoredName()}));
+	ui->PrintLog(script.Get("UI_LINE_THIN"));
 
-    ui->PrintLog(script.Get("CITY_BATTLE_TITLE"));
-    ui->PrintLog(script.GetFormatStr("CITY_BATTLE_VS", {myStyleColor + FightGirl->GetName(), styleColor + BattleGirl->GetName()}));
-    ui->PrintLog(script.Get("UI_LINE_THIN"));
+	//낑겨보겠습니다
+	// ================= 4. 전투 정보 출력 (Player -> FightGirl로 변경) =================
 
+	ui->PrintLog(script.Get("UI_DIVIDER_PURPLE"));
+
+	ui->PrintLog(
+		FightGirl->GetColoredName() +
+		" / Lv." + std::to_string(FightGirl->GetLevel()) +
+		" / HP : " + std::to_string(FightGirl->GetCurrentHp())
+		
+		);
+	
+	ui->PrintLog("- VS -");
+	
+	ui->PrintLog(
+		BattleGirl->GetColoredName() +
+		" / Lv." + std::to_string(BattleGirl->GetLevel()) +	
+		" / HP : " + std::to_string(BattleGirl->GetCurrentHp())
+		);
+		
+	ui->PrintLog(script.Get("UI_DIVIDER_PURPLE"));
+	
+	Sleep(1500);
+	// =================================================
+	
 	Battle->Battle(FightGirl, BattleGirl);
 
-    UIManager::WaitKey(ui);
+	UIManager::WaitKey(ui);
 
 	if (BattleGirl->IsDefeated()) Gatcha();
 	if (FightGirl->IsDefeated()) { Player->RemoveGirlFriend(FightGirl); }
@@ -171,33 +201,42 @@ void C_City::Encounter()
 
 void C_City::Gatcha()
 {
-    auto ui = World->GetUI();
-    auto& script = C_ScriptManager::GetInstance();
+	auto ui = World->GetUI();
+	auto& script = C_ScriptManager::GetInstance();
 	
 	int randomIndex = rand() % 100;
+    
+	ui->ClearMainViewport(); 
+    
 	if (randomIndex < 40) 
 	{
 		if (BattleGirl->GetName() == "평범녀")
 		{
-			ui->PrintLog(script.GetFormatStr("CITY_CONTACT_FAIL", {BattleGirl->GetName()}));
+			ui->DrawImage(C_ImageManager::GetInstance().GetLayeredImage("BG_HunPo", {})); 
+			// 🚨 GetColoredName() 적용
+			ui->PrintLog(script.GetFormatStr("CITY_CONTACT_FAIL", {BattleGirl->GetColoredName()}));
+			UIManager::WaitKey(ui);
 			return ;
 		}
-		//레벨을 1로 리셋
+        
 		BattleGirl->SetLevel(1);
-		
 		BattleGirl->SetMaxHp(200);
 		BattleGirl->SetCurrentHp(200);
 		BattleGirl->SetAttack(30);
-		
+        
 		Player->AddGirlFrends(BattleGirl);
-		
-		// 도시 목록에서 제거 (중복 획득 방지)
 		Girls.erase(remove(Girls.begin(), Girls.end(), BattleGirl), Girls.end());
-		
-        ui->PrintLog(script.GetFormatStr("CITY_CONTACT_SUCCESS", {BattleGirl->GetName()}));
+        
+		ui->DrawImage(C_ImageManager::GetInstance().GetLayeredImage("BG_HunPo", {{BattleGirl->GetImageKey(), 50, 0, false}}));
+		// 🚨 GetColoredName() 적용
+		ui->PrintLog(script.GetFormatStr("CITY_CONTACT_SUCCESS", {BattleGirl->GetColoredName()}));
 	} else {
-        ui->PrintLog(script.GetFormatStr("CITY_CONTACT_FAIL", {BattleGirl->GetName()}));
-    }
+		ui->DrawImage(C_ImageManager::GetInstance().GetLayeredImage("BG_HunPo", {}));
+		// 🚨 GetColoredName() 적용
+		ui->PrintLog(script.GetFormatStr("CITY_CONTACT_FAIL", {BattleGirl->GetColoredName()}));
+	}
+    
+	UIManager::WaitKey(ui); 
 }
 
 void C_City::ViewYeuchin()

@@ -39,6 +39,7 @@ void C_ImageManager::Init() {
     LoadWithFallback("BG_Wedding", "BG_Wedding.png");
     LoadWithFallback("BG_Boss", "BG_Boss.png");
     LoadWithFallback("BG_DefeatEnd", "BG_DefeatEnd.png");
+    LoadWithFallback("BG_LevelUP", "BG_LevelUP.png");
 
     // [캐릭터 로드]
     LoadWithFallback("CH_Red", "CH_Red.png");
@@ -90,14 +91,11 @@ std::string C_ImageManager::GetLayeredImage(const std::string& bgName, const std
                 int srcIdx = (srcY * asset.w + srcX) * 4;
                 int destIdx = (destY * maxW + destX) * 4;
 
+                // 배경도 투명도 적용
                 float alpha = asset.data[srcIdx + 3] / 255.0f;
                 
-                if (isBG) {
-                    for (int c = 0; c < 3; ++c) canvas[destIdx + c] = asset.data[srcIdx + c];
-                } else {
-                    for (int c = 0; c < 3; ++c) {
-                        canvas[destIdx + c] = (unsigned char)(asset.data[srcIdx + c] * alpha + canvas[destIdx + c] * (1.0f - alpha));
-                    }
+                for (int c = 0; c < 3; ++c) {
+                    canvas[destIdx + c] = (unsigned char)(asset.data[srcIdx + c] * alpha + canvas[destIdx + c] * (1.0f - alpha));
                 }
             }
         }
