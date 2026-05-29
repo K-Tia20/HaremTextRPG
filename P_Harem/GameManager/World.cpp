@@ -219,11 +219,13 @@ void C_World::SetName()
     m_ui->DrawImage(C_ImageManager::GetInstance().GetLayeredImage("BG_Title", {})); 
 
     m_ui->ClearLog();
-	m_ui->PrintLog(script.Get("INPUT_PLAYER_NAME"));
-	string newname = Player->InputString(); 
+    
+    m_ui->TypeLog(script.Get("INPUT_PLAYER_NAME")); 
+    
+    string newname = Player->InputString(); 
 
     m_ui->ClearLog();
-	m_ui->PrintLog("시스템: [" + newname + "] 님으로 등록되었습니다.");
+    m_ui->PrintLog("\x1b[90m⚙️시스템: [" + newname + "] 님으로 등록되었습니다.\x1b[0m");
     Player->SetName(newname);
     SyncUI();
 }
@@ -237,10 +239,10 @@ void C_World::SetGirlFrends()
     // [Visual Upgrade] 속성을 모르는 상태이므로 CH_Null 실루엣 출력
     m_ui->DrawImage(img.GetLayeredImage("BG_City2", {{"CH_Null", 50, 0, false}})); 
 
-	  m_ui->PrintLog(script.Get("SCENE_OPENING_2")); 
+	  m_ui->TypeLog(script.Get("SCENE_OPENING_2")); 
     UIManager::WaitKey(m_ui.get());
 
-	  m_ui->PrintLog(script.Get("INPUT_HEROINE_NAME"));
+	  m_ui->TypeLog(script.Get("INPUT_HEROINE_NAME"));
 	  string girlName = SetGirlFrendName();
     m_ui->ClearLog();
   
@@ -257,7 +259,7 @@ void C_World::SetGirlFrends()
     // 캐릭터 선택 시 1~4번만 선택 가능하도록 예외 처리 추가
     do
     {
-        m_ui->PrintLog(script.Get("SELECT_HEROINE_PERSONALITY"));
+        m_ui->TypeLog(script.Get("SELECT_HEROINE_PERSONALITY"));
         int choice = Player->InputInt();
         m_ui->ClearLog();
 
@@ -288,13 +290,13 @@ void C_World::SetGirlFrends()
 
 	if (!Player->GetGirlFrends().empty())
 	{
-        // [사용자 요청] 데이트 연출 추가
+        //  데이트 연출 추가
         m_ui->ClearMainViewport();
         m_ui->DrawImage(img.GetLayeredImage("BG_YogerPresso_I", {})); 
-        m_ui->PrintLog("시스템: 그녀와 요거플레쏘에서 즐거운 시간을 보낸 뒤, 전화번호를 교환했습니다.");
+        m_ui->TypeLog("\x1b[90m⚙️시스템: 그녀와 요거플레쏘에서 즐거운 시간을 보낸 뒤, 전화번호를 교환했습니다.\x1b[0m");
         UIManager::WaitKey(m_ui.get());
         
-        // [사용자 요청] 엔터 누른 후 방으로 복귀
+        // 엔터 누른 후 방으로 복귀
         m_ui->ClearMainViewport();
         m_ui->DrawImage(img.GetLayeredImage("BG_Room", {})); 
 	    
