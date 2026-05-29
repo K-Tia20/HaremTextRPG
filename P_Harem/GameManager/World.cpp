@@ -49,6 +49,7 @@ void C_World::Init() {
     auto& script = C_ScriptManager::GetInstance();
     auto& img = C_ImageManager::GetInstance();
     
+    
     //[음악시작 : 오프닝]
     auto& sound = CSoundManager::GetInstance();
     sound.PlayBGM(L"../P_Harem/Sound/BGM/Opening.wav");
@@ -413,6 +414,9 @@ void C_World::RealEnd()
 {
     auto& script = C_ScriptManager::GetInstance();
     system("cls");
+    auto& sound = CSoundManager::GetInstance();
+    sound.PlayBGM(L"../P_Harem/Sound/BGM/PSYP_join.wav");
+    
     std::string fullImg = C_ImageManager::GetInstance().GetFullScreenImage("BG_HappyEnd1");
     m_ui->CenteredTypeLog(script.Get("ENDING_HAPPY_TEXT1"), 18, 100);
     Sleep(1000);
@@ -442,6 +446,9 @@ void C_World::BadEnd()
 {
     auto& script = C_ScriptManager::GetInstance();
     system("cls");
+
+    auto& sound = CSoundManager::GetInstance();
+    sound.PlayBGM(L"../P_Harem/Sound/BGM/end.wav");
     std::string fullImg = C_ImageManager::GetInstance().GetFullScreenImage("BG_DefeatEnd1");
     m_ui->CenteredTypeLog(script.Get("ENDING_BOSS_TEXT1"), 18, 100);
     Sleep(1000);
