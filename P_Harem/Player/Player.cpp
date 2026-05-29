@@ -16,14 +16,22 @@ shared_ptr<C_Creature> C_Player::SetFightGirl()
 {
     auto ui = C_World::GetInstance().GetUI();
     if (GirlFrends.empty()) {
-        ui->PrintLog("시스템: 함께 싸울 여자친구가 없습니다.");
+        ui->PrintLog("\x1b[90m⚙️ 시스템: 함께 싸울 여자친구가 없습니다.\x1b[0m");
         return nullptr;
     }
 
-    ui->PrintLog("--- 출격 히로인 선택 ---");
+    ui->PrintLog("\x1b[96m--- ⚔️ 출격 히로인 선택 ---\x1b[0m");
+    
+    std::string lineBuf = "";
     for (size_t i = 0; i < GirlFrends.size(); ++i) {
-        ui->PrintLog(to_string(i + 1) + ". " + GirlFrends[i]->GetName() + " (체력: " + to_string(GirlFrends[i]->GetCurrentHp()) + ")");
+        lineBuf += to_string(i + 1) + ". " + GirlFrends[i]->GetColoredName() + " (HP:" + to_string(GirlFrends[i]->GetCurrentHp()) + ")   ";
+        
+        if (i % 2 == 1 || i == GirlFrends.size() - 1) {
+            ui->PrintLog(lineBuf);
+            lineBuf = "";
+        }
     }
+    
     ui->PrintLog("0. 뒤로 가기 | 누구를 보낼까요? : [INPUT]");
 
     int choice = InputInt();
@@ -59,25 +67,25 @@ void C_Player::RemoveGirlFriend(std::shared_ptr<C_Creature> girl) {
 
 string C_Player::InputString() {
     auto ui = C_World::GetInstance().GetUI();
-    if (ui) ui->SetCursorToInputArea();
-    string value;
-    getline(cin >> ws, value);
-    if (ui) ui->DrawInputBox(""); 
-    return value;
+    if (ui) {
+        ui->SetCursorToInputArea();
+        
+        // [수정] std::getline(cin) 대신 UIManager의 무음 입력 함수 호출!
+        string value = ui->GetInputString(); 
+        
+        ui->DrawInputBox(""); 
+        return value;
+    }
+    return "";
 }
 
 int C_Player::InputInt() {
     auto ui = C_World::GetInstance().GetUI();
-    int value;
-    while (true) {
-        if (ui) ui->SetCursorToInputArea();
-        if (cin >> value) {
-            string dummy; getline(cin, dummy);
-            if (ui) ui->DrawInputBox(""); 
-            return value;
-        }
-        cin.clear();
-        string dummy; getline(cin, dummy);
-        if (ui) ui->PrintLog("\x1b[31mError: 숫자만 입력 가능합니다.\x1b[0m");
+    if (ui) {
+        ui->SetCursorToInputArea();
+        int value = ui->GetInputInt();
+        ui->DrawInputBox("");
+        return value;
     }
+    return -1;
 }

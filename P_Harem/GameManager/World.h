@@ -38,6 +38,8 @@ public:
     
     // 동적 거점 배경 제어
     void SetHubBG(const std::string& bgName) { m_hubBG = bgName; }
+	void AdvanceDay();
+	// 날짜 기능 추가합니다 -똥쟁이 우현
 
 public: // 지역 이동 및 셋팅 로직 (팀의 기존 멤버 보존)
 	void GotoCity() { CL = WorldArea::City; }
@@ -80,7 +82,7 @@ private:
     size_t m_lastHeroineCount = 0;
 
     int m_month = 3;
-    int m_day = 2;
+    int m_day = 1;
     bool m_isFirstFrame = true;
     std::string m_hubBG = "BG_Room"; // 초기 거점은 내 방
 };

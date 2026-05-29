@@ -54,7 +54,7 @@ void C_Shop::SelectMenu()
         SS = ShopState::Exit;
         break;
 	default:
-        ui->PrintLog("시스템: 잘못된 선택입니다.");
+        ui->PrintLog("\x1b[90m⚙️시스템: 잘못된 선택입니다.");
         UIManager::WaitKey(ui);
         break;
 	}
@@ -108,7 +108,7 @@ void C_Shop::Purchase()
 	choice -= 1;
 	if (choice < 0 || choice >= static_cast<int>(Items.size()))
 	{
-        ui->PrintLog("\x1b[31m시스템: 그런 메뉴는 없습니다.\x1b[0m");
+        ui->PrintLog("\x1b[90m⚙️시스템: 그런 메뉴는 없습니다.\x1b[0m");
 		SS = ShopState::SelectMenu;
 		return;
 	}
@@ -134,7 +134,7 @@ void C_Shop::Purchase()
 		break;
 	}
 	default:
-        ui->PrintLog("시스템: 주문을 취소했습니다.");
+        ui->PrintLog("\x1b[90m⚙️시스템: 주문을 취소했습니다.");
 		break;
 	}
     UIManager::WaitKey(ui);
