@@ -142,11 +142,6 @@ void C_City::Encounter()
 
 	int randomIndex = rand() % static_cast<int>(Girls.size());
 	BattleGirl = Girls[randomIndex];
-
-	//낑겨보겠습니다
-	int playerMaxLevel = Player->GetHighlevel();
-	BattleGirl->SetEnemyStat(playerMaxLevel);
-	
 	
 	// [추가된 연출] 헌팅포차 배경과 마주친 적 정중앙 띄우기
 	ui->ClearMainViewport();
@@ -178,34 +173,9 @@ void C_City::Encounter()
 	// 🚨 수정완료: 양쪽 모두 GetColoredName() 넘기기
 	ui->PrintLog(script.GetFormatStr("CITY_BATTLE_VS", {FightGirl->GetColoredName(), BattleGirl->GetColoredName()}));
 	ui->PrintLog(script.Get("UI_LINE_THIN"));
-
-	//낑겨보겠습니다
-	// ================= 4. 전투 정보 출력 (Player -> FightGirl로 변경) =================
-
-	ui->PrintLog(script.Get("UI_DIVIDER_PURPLE"));
-
-	ui->PrintLog(
-		FightGirl->GetColoredName() +
-		" / Lv." + std::to_string(FightGirl->GetLevel()) +
-		" / HP : " + std::to_string(FightGirl->GetCurrentHp())
-		
-		);
-	
-	ui->PrintLog("- VS -");
-	
-	ui->PrintLog(
-		BattleGirl->GetColoredName() +
-		" / Lv." + std::to_string(BattleGirl->GetLevel()) +	
-		" / HP : " + std::to_string(BattleGirl->GetCurrentHp())
-		);
-		
-	ui->PrintLog(script.Get("UI_DIVIDER_PURPLE"));
-	
-	Sleep(1500);
-	// =================================================
 	
 	Battle->Battle(FightGirl, BattleGirl);
-
+	
 	UIManager::WaitKey(ui);
 
 	if (BattleGirl->IsDefeated()) Gatcha();
