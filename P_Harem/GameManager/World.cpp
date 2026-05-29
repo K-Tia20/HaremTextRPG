@@ -122,7 +122,22 @@ void C_World::Update()
             case 3: Areas[WorldArea::Alba]->Enter(); GotoAlba(); goToArea = true; break;
             case 4: C_LogSystem::GetInstance().ShowContactList(); break;
             case 5: C_LogSystem::GetInstance().ShowInventory(); break;
-            case 0: { CSoundManager::GetInstance().StopBGM(); IsRunning = false; return; }
+            case 0: { 
+                    CSoundManager::GetInstance().StopBGM();
+                    
+                    system("cls");
+
+                    m_ui->CenteredTypeLog("게임이 종료 되었습니다", 22, 100);
+                    
+                    Sleep(20000);
+                    
+                    IsRunning = false; 
+                    return; 
+            }
+            
+            
+            
+            
             default: m_ui->PrintLog("시스템: 잘못된 선택입니다."); UIManager::WaitKey(m_ui.get()); break;
         }
 
@@ -364,11 +379,17 @@ void C_World::AdvanceDay() {
         }
     }
     
+    // 여기에 추가: 날짜가 지날 때 BGM을 새로 고침
+    auto& sound = CSoundManager::GetInstance();
+    sound.StopBGM();
+    sound.PlayBGM(L"../P_Harem/Sound/BGM/Main.wav");
+    
     // 날짜 및 체력 변경 사항을 좌측 스마트폰 화면에 즉시 동기화
     SyncUI();
     
     if (m_ui) {
         m_ui->PrintLog("\x1b[93m[시스템] 하루가 지나 " + GetCurrentDateString() + "이 되었습니다.\n(휴식을 취하여 히로인들의 체력이 회복되었습니다.)\x1b[0m");
+
     }
 }
 
