@@ -13,6 +13,8 @@
 
 #include "../UI/UIManager.h"
 
+#include "../UI/CSoundManager.h"//추가햇어 음악큐
+
 C_LevelSystem LevelSystem; 
 
 C_BattleSystem::C_BattleSystem(C_World* world)
@@ -100,10 +102,18 @@ void C_BattleSystem::Battle(std::shared_ptr<C_Creature> Player, std::shared_ptr<
 
 			if (OnUseItem) OnUseItem(Player->GetColoredName(), 3, UseItem->GetItem().Value);
         }
-
-		Attack(Player, Enemy); 
+		
+		//BGM담당 헛짓거리
+		//[음악시작 : 간다 공격]
+		//auto& sound = CSoundManager::GetInstance();
+		//sound.PlayES(L"../P_Harem/Sound/BGM/Go1.wav");
+	
+		
+		Attack(Player, Enemy);
         PlayerTurn = !PlayerTurn;
-        Sleep(1000); // 연출을 위해 1초 대기
+		
+		
+        Sleep(2000); // 연출을 위해 3초 대기
 
 		if (Enemy->IsDefeated())
 		{
@@ -112,9 +122,12 @@ void C_BattleSystem::Battle(std::shared_ptr<C_Creature> Player, std::shared_ptr<
 			break;
 		}
 
+		//BGM담당 헛짓거리
+		//sound.PlayES(L"../P_Harem/Sound/BGM/Go1.wav");
+		
 		Attack(Enemy, Player); 
         PlayerTurn = !PlayerTurn;
-        Sleep(1000);
+        Sleep(2000);
 
 		if (Player->IsDefeated())
 		{
